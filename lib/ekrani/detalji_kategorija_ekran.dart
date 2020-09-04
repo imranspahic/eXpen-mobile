@@ -1,0 +1,613 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../model/data_provider.dart';
+import 'package:intl/intl.dart';
+import 'dart:math';
+
+class DetaljiKategorijaEkran extends StatefulWidget {
+  @override
+  _DetaljiKategorijaEkranState createState() => _DetaljiKategorijaEkranState();
+}
+
+class _DetaljiKategorijaEkranState extends State<DetaljiKategorijaEkran> {
+  Future rashodFuture;
+  double ukupnoPotroseno = 0.0;
+  bool isExpanded = false;
+  String trenutnaVrijednostDropdown =
+      DateFormat.MMMM().format(DateTime.now()).toString();
+
+  // double ostalo(int index) {
+  //   final katData = Provider.of<KategorijaLista>(context, listen: false);
+  //   final potkatData = Provider.of<PotrosnjaLista>(context, listen: false);
+
+  //   double first = katData.kategorijaLista[index].rashodGodina;
+  //   double second =
+  //       potkatData.trosakPoKategoriji(katData.kategorijaLista[index].id);
+
+  //   return first - second;
+  // }
+ 
+  String dobijUkupnoPotroseno(String mjesec) {
+    final potkatData = Provider.of<PotrosnjaLista>(context, listen: false);
+
+    List<PotrosnjaModel> filterovanaLista;
+
+    filterovanaLista = potkatData.listaSvihPotrosnji.where((item) {
+      var vrijednostMjesec = item.datum.month;
+      String vrijednostString;
+      switch (vrijednostMjesec) {
+        case 1:
+          vrijednostString = 'Januar';
+          break;
+        case 2:
+          vrijednostString = 'Februar';
+          break;
+        case 3:
+          vrijednostString = 'Mart';
+          break;
+        case 4:
+          vrijednostString = 'April';
+          break;
+        case 5:
+          vrijednostString = 'Maj';
+          break;
+        case 6:
+          vrijednostString = 'Juni';
+          break;
+        case 7:
+          vrijednostString = 'Juli';
+          break;
+        case 8:
+          vrijednostString = 'August';
+          break;
+        case 9:
+          vrijednostString = 'Septembar';
+          break;
+        case 10:
+          vrijednostString = 'Oktobar';
+          break;
+        case 11:
+          vrijednostString = 'Novembar';
+          break;
+        case 12:
+          vrijednostString = 'Decembar';
+          break;
+
+        default:
+      }
+      return vrijednostString == mjesec;
+    }).toList();
+    double ukupniTrosak = 0;
+    for (int i = 0; i < filterovanaLista.length; i++) {
+      ukupniTrosak = ukupniTrosak + filterovanaLista[i].trosak;
+    }
+    trosakSecond = ukupniTrosak;
+    return ukupniTrosak.toStringAsFixed(2);
+  }
+
+  double trosakFirst;
+  double dobijVrijednost(String vrijednostDropdown) {
+    final svekatData = Provider.of<SveKategorije>(context, listen: false);
+    trosakFirst = svekatData.rashodSveKategorijeMapa[vrijednostDropdown];
+    return svekatData.rashodSveKategorijeMapa[vrijednostDropdown];
+  }
+
+  String formatirajMjesecNaBosanski(trenutaVrijednostDropdown) {
+    switch (trenutnaVrijednostDropdown) {
+      case 'January':
+        trenutnaVrijednostDropdown = 'Januar';
+        break;
+      case 'February':
+        trenutnaVrijednostDropdown = 'Februar';
+        break;
+      case 'March':
+        trenutnaVrijednostDropdown = 'Mart';
+        break;
+
+      case 'April':
+        trenutnaVrijednostDropdown = 'April';
+        break;
+      case 'May':
+        trenutnaVrijednostDropdown = 'Maj';
+        break;
+      case 'June':
+        trenutnaVrijednostDropdown = 'Juni';
+        break;
+      case 'July':
+        trenutnaVrijednostDropdown = 'Juli';
+        break;
+      case 'August':
+        trenutnaVrijednostDropdown = 'August';
+        break;
+      case 'September':
+        trenutnaVrijednostDropdown = 'Septembar';
+        break;
+      case 'October':
+        trenutnaVrijednostDropdown = 'Oktobar';
+        break;
+      case 'November':
+        trenutnaVrijednostDropdown = 'Novembar';
+        break;
+      case 'December':
+        trenutnaVrijednostDropdown = 'Decembar';
+        break;
+
+      default:
+    }
+
+    return trenutnaVrijednostDropdown;
+  }
+
+  int potrosnjeMjesec(String mjesec, int index) {
+    final potData = Provider.of<PotrosnjaLista>(context, listen: false);
+    final katData = Provider.of<KategorijaLista>(context, listen: false);
+    List<PotrosnjaModel> potrosnjeKategorija = [];
+    potrosnjeKategorija = potData.listaSvihPotrosnji
+        .where((element) =>
+            element.idKategorije == katData.kategorijaLista[index].id)
+        .toList();
+    List<PotrosnjaModel> filterovanaLista;
+
+    filterovanaLista = potrosnjeKategorija.where((item) {
+      var vrijednostMjesec = item.datum.month;
+      String vrijednostString;
+      switch (vrijednostMjesec) {
+        case 1:
+          vrijednostString = 'Januar';
+          break;
+        case 2:
+          vrijednostString = 'Februar';
+          break;
+        case 3:
+          vrijednostString = 'Mart';
+          break;
+        case 4:
+          vrijednostString = 'April';
+          break;
+        case 5:
+          vrijednostString = 'Maj';
+          break;
+        case 6:
+          vrijednostString = 'Juni';
+          break;
+        case 7:
+          vrijednostString = 'Juli';
+          break;
+        case 8:
+          vrijednostString = 'August';
+          break;
+        case 9:
+          vrijednostString = 'Septembar';
+          break;
+        case 10:
+          vrijednostString = 'Oktobar';
+          break;
+        case 11:
+          vrijednostString = 'Novembar';
+          break;
+        case 12:
+          vrijednostString = 'Decembar';
+          break;
+
+        default:
+      }
+      return vrijednostString == mjesec;
+    }).toList();
+
+    return filterovanaLista.length;
+  }
+
+  double razlika() {
+    return trosakFirst - trosakSecond;
+  }
+
+  double trosakSecond;
+
+  String trosakMjesec(String mjesec, int index) {
+    final potData = Provider.of<PotrosnjaLista>(context, listen: false);
+    final katData = Provider.of<KategorijaLista>(context, listen: false);
+    List<PotrosnjaModel> potrosnjeKategorija = [];
+    potrosnjeKategorija = potData.listaSvihPotrosnji
+        .where((element) =>
+            element.idKategorije == katData.kategorijaLista[index].id)
+        .toList();
+
+    List<PotrosnjaModel> filterovanaLista;
+
+    filterovanaLista = potrosnjeKategorija.where((item) {
+      var vrijednostMjesec = item.datum.month;
+      String vrijednostString;
+      switch (vrijednostMjesec) {
+        case 1:
+          vrijednostString = 'Januar';
+          break;
+        case 2:
+          vrijednostString = 'Februar';
+          break;
+        case 3:
+          vrijednostString = 'Mart';
+          break;
+        case 4:
+          vrijednostString = 'April';
+          break;
+        case 5:
+          vrijednostString = 'Maj';
+          break;
+        case 6:
+          vrijednostString = 'Juni';
+          break;
+        case 7:
+          vrijednostString = 'Juli';
+          break;
+        case 8:
+          vrijednostString = 'August';
+          break;
+        case 9:
+          vrijednostString = 'Septembar';
+          break;
+        case 10:
+          vrijednostString = 'Oktobar';
+          break;
+        case 11:
+          vrijednostString = 'Novembar';
+          break;
+        case 12:
+          vrijednostString = 'Decembar';
+          break;
+
+        default:
+      }
+      return vrijednostString == mjesec;
+    }).toList();
+    double ukupniTrosak = 0;
+    for (int i = 0; i < filterovanaLista.length; i++) {
+      ukupniTrosak = ukupniTrosak + filterovanaLista[i].trosak;
+    }
+
+    return ukupniTrosak.toStringAsFixed(2);
+  }
+
+  Widget buildRashod(
+      String title, String vrijednost, TextStyle style, bool minusTrue) {
+    return Container(
+      margin: EdgeInsets.only(top: 0),
+      alignment: Alignment.center,
+      width: 400,
+      child: Card(
+        child: Container(
+          padding: EdgeInsets.all(15),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Text(title,
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5
+                      .copyWith(fontSize: 22),
+                  textAlign: TextAlign.center),
+              minusTrue
+                  ? Text(
+                      '-$vrijednost KM',
+                      style: style,
+                      textAlign: TextAlign.center,
+                    )
+                  : Text(
+                      '$vrijednost KM',
+                      style: style,
+                      textAlign: TextAlign.center,
+                    )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildCard(BuildContext context, int index) {
+    final katData = Provider.of<KategorijaLista>(context, listen: false);
+
+    return Column(children: <Widget>[
+      Padding(
+        padding: const EdgeInsets.only(left: 5.0, top: 10, right: 5),
+        child: Column(children: <Widget>[
+          Container(
+            width: 150,
+            child: Stack(
+              children: <Widget>[
+                CircleAvatar(
+                  backgroundImage: katData.kategorijaLista[index].slikaUrl ==
+                          'assets/images/nema-slike.jpg'
+                      ? AssetImage(katData.kategorijaLista[index].slikaUrl)
+                      : MemoryImage(
+                        katData.kategorijaLista[index].slikaEncoded
+                        
+                        ),
+                  radius: 70,
+                ),
+                Positioned(
+                  bottom: 5,
+                  right: 5,
+                  child: FittedBox(
+                    child: Container(
+                      height: 40,
+                      width: 140,
+                      color: Colors.black87,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 5.0, vertical: 5.0),
+                          child: Text(
+                            katData.kategorijaLista[index].naziv,
+                            style: TextStyle(
+                                fontSize: 28, color: Colors.orange[100]),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+          Container(
+              height: 70,
+              margin: EdgeInsets.only(left: 10, top: 10, right: 10),
+              child: Card(
+                child: Container(
+                  padding: EdgeInsets.only(left: 20, top: 10, bottom: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Container(
+                          width: 80,
+                          child: Row(children: <Widget>[
+                            Icon(Icons.work, color: Colors.orange, size: 30),
+                            SizedBox(width: 8),
+                            Text(
+                              potrosnjeMjesec(trenutnaVrijednostDropdown, index)
+                                  .toString(),
+                              style: TextStyle(
+                                  fontSize: 25, color: Colors.brown[400]),
+                            )
+                          ])),
+                      SizedBox(width: 20),
+                      Container(
+                          alignment: Alignment.center,
+                          width: min(trosakMjesec(trenutnaVrijednostDropdown, index).length * 20.0 + trosakMjesec(trenutnaVrijednostDropdown, index).length + 10 , 250),
+                          child: Row(children: <Widget>[
+                            Icon(Icons.monetization_on,
+                                color: Colors.purple, size: 30),
+                            SizedBox(width: 8),
+                            Text(
+                              '${trosakMjesec(trenutnaVrijednostDropdown, index)}',
+                              style: TextStyle(
+                                  fontSize: 25, color: Colors.brown[400]),
+                            ),
+                          ])),
+                    ],
+                  ),
+                ),
+              ))
+        ]),
+      ),
+      SizedBox(
+        height: 15,
+      ),
+      Divider(thickness: 1)
+    ]);
+  }
+
+  @override
+  void initState() {
+    rashodFuture = Provider.of<SveKategorije>(context, listen: false).fetchAndSetRashod();
+    super.initState();
+  }
+  @override
+  Widget build(BuildContext context) {
+    final katData = Provider.of<KategorijaLista>(context);
+    return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: Colors.blue[700],
+        title: Row(children: <Widget>[
+          Icon(
+            Icons.more,
+            color: Colors.blue[50],
+          ),
+          SizedBox(width: 10),
+          Text(
+            'Detalji',
+            style: TextStyle(color: Colors.blue[50]),
+          )
+        ]),
+      ),
+      body: FutureBuilder(future: rashodFuture, 
+      builder: (ctx, snapshot) {
+        if(snapshot.connectionState == ConnectionState.done) {
+          return SingleChildScrollView(
+          child: Column(children: <Widget>[
+        Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(Icons.check_circle),
+                  SizedBox(width: 6),
+                  Center(
+                      child: Text(
+                    'Sve kategorije',
+                    style: TextStyle(
+                        fontSize: 22, fontFamily: 'Lato', color: Colors.brown),
+                  ))
+                ])),
+        Card(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          color: Colors.blue[700],
+          margin: EdgeInsets.only(left: 15, right: 15, bottom: 20, top: 10),
+          child: ListTile(
+            trailing: DropdownButton<String>(
+              value: formatirajMjesecNaBosanski(trenutnaVrijednostDropdown),
+              icon: Icon(Icons.arrow_downward),
+              iconSize: 24,
+              elevation: 9,
+              iconEnabledColor: Colors.white,
+              dropdownColor: Colors.black54,
+              focusColor: Colors.white,
+              style: TextStyle(color: Colors.yellow, fontSize: 30),
+              underline: Container(
+                height: 2,
+                color: Colors.white,
+              ),
+              onChanged: (String newValue) {
+                setState(() {
+                  trenutnaVrijednostDropdown = newValue;
+                });
+              },
+              items: <String>[
+                'Januar',
+                'Februar',
+                'Mart',
+                'April',
+                'Maj',
+                'Juni',
+                'Juli',
+                'August',
+                'Septembar',
+                'Oktobar',
+                'Novembar',
+                'Decembar'
+              ].map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(
+                    value,
+                    style: TextStyle(
+                      // color: Colors.brown[700],
+                      fontFamily: 'Lato',
+                      fontSize: 18,
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+            leading: Text(
+              'Prikaži po mjesecu',
+              style: TextStyle(
+                  fontSize: 21,
+                  fontFamily: 'Lato',
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: 0,
+                  color: Colors.blue[50]),
+            ),
+          ),
+        ),
+        Container(
+          height: katData.kategorijaLista.length * 150.0 +
+              katData.kategorijaLista.length * 100 +
+              katData.kategorijaLista.length * 10,
+          child: ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            itemCount:
+                Provider.of<KategorijaLista>(context).kategorijaLista.length,
+            itemBuilder: (ctx, index) {
+              return buildCard(context, index);
+            },
+          ),
+        ),
+        Container(
+            margin: EdgeInsets.all(10),
+            child: Column(
+              children: <Widget>[
+                Card(
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          'Planirani rashod za ${trenutnaVrijednostDropdown.toLowerCase()}',
+                          style: TextStyle(fontFamily: 'Lato', fontSize: 18),
+                        ),
+                        Text(
+                          '${dobijVrijednost(trenutnaVrijednostDropdown).toStringAsFixed(2)} KM',
+                          style: TextStyle(
+                              fontFamily: 'Lato',
+                              fontSize: 20,
+                              color: Colors.green),
+                        ),
+                        
+                        
+                      ],
+                    ),
+                  ),
+                ),
+                Card(
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          'Ukuno potrošeno ',
+                          style: TextStyle(fontSize: 18, fontFamily: 'Lato'),
+                        ),
+                        Text(
+                          '${dobijUkupnoPotroseno(trenutnaVrijednostDropdown)} KM',
+                          style: TextStyle(
+                              fontFamily: 'Lato',
+                              fontSize: 20,
+                              color: Colors.red),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Card(
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        razlika() < 0
+                            ? Text(
+                                '${razlika()} KM',
+                                style: TextStyle(
+                                    fontFamily: 'Lato',
+                                    fontSize: 20,
+                                    color: Colors.red),
+                              )
+                            : razlika() == 0
+                                ? Text(
+                                    '${razlika()} KM',
+                                    style: TextStyle(
+                                        fontFamily: 'Lato',
+                                        fontSize: 20,
+                                        color: Colors.grey),
+                                  )
+                                : Text(
+                                    '+${razlika()} KM',
+                                    style: TextStyle(
+                                        fontFamily: 'Lato',
+                                        fontSize: 20,
+                                        color: Colors.green),
+                                  ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ))
+      ]));
+        }
+        else {
+          return Center(child: CircularProgressIndicator(),);
+        }
+      },
+      )
+      
+      
+    );
+  }
+}
