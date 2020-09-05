@@ -239,6 +239,7 @@ class PotrosnjaLista with ChangeNotifier {
         }).toList();
         print(listaPotrosnjiZaDodat);
         if(listaPotrosnjiZaDodat.isNotEmpty) {
+         
           List<PotrosnjaModel> potrosnje = [];
           potrosnje = listaPotrosnjiZaDodat.map((potrosnja)  {
             return PotrosnjaModel(
@@ -262,13 +263,20 @@ class PotrosnjaLista with ChangeNotifier {
           //provjeriti jesu li već dodane!
           
             if(kategorija['jeLiMjesecnoDodano'] == 'da') {
+              print('Već dodano');
               return;
             }
 
-
+          //provjeriti jeLidansutra 
+          if(datumDanasnji.day == kategorija['mjesecnoDodavanje']+1){
+            
+        DatabaseHelper.updateJeLiMjesecnoDodanoKategorije('kategorije', 'ne', kategorija['id']);
+          }
 
           for(int i=0; i<potrosnje.length; i++) {
+           
            listaSvihPotrosnji.add(potrosnje[i]);
+           
            DatabaseHelper.insertPotrosnje('potrosnje', {
       'id': '${potrosnje[i].id}/$i/${datumDanasnji.second}/${datumDanasnji.millisecond}',
       'naziv': potrosnje[i].naziv,
@@ -281,7 +289,7 @@ class PotrosnjaLista with ChangeNotifier {
           
           }
     
-        kategorija['jeLiMjesecnoDodano'] = 'da';
+        
         DatabaseHelper.updateJeLiMjesecnoDodanoKategorije('kategorije', 'da', kategorija['id']);
         notifyListeners();
         print('Planirane potrosnje za kategoriju ${kategorija['naziv']} dodane');

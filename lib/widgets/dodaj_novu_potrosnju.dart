@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../model/data_provider.dart';
+import '../database/kategorija_database.dart';
 
 class DodajNovuPotrosnju extends StatefulWidget {
   final KategorijaModel kategorija;
@@ -43,6 +44,7 @@ class _DodajNovuPotrosnjuState extends State<DodajNovuPotrosnju> {
     }
     else if(widget.jeLiPlaniranaPotrosnja) {
       potrosnjaData.dodajPlaniranuPotrosnju(widget.kategorija.naziv, uneseniNaziv, uneseniTrosak, widget.kategorija.id, 'nemaPotkategorija');
+      
     }
      else if (datum != null && widget.potkategorija == null) {
       potrosnjaData.dodajPotrosnju(widget.kategorija.naziv, uneseniNaziv, uneseniTrosak, datum,
