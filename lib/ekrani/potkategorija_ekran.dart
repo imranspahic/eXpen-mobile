@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../model/data_provider.dart';
 import 'package:intl/intl.dart';
-import 'dart:io';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import '../widgets/dodaj_novu_potrosnju.dart';
 import '../ekrani/dodaj_vise_potrosnji.dart';
+import 'planirane_potrosnje_ekran.dart';
 
 
 class PotKategorijaEkran extends StatefulWidget {
@@ -41,6 +41,12 @@ class _PotKategorijaEkranState extends State<PotKategorijaEkran> {
         potkategorija: widget.potKategorija,
         uPotkategoriji: true,
       );
+    }));
+  }
+
+  void planiranePotrosnje(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
+      return PlaniranePotrosnjeEkran(kategorija: widget.kategorija, potKategorija: widget.potKategorija,);
     }));
   }
 
@@ -96,6 +102,13 @@ class _PotKategorijaEkranState extends State<PotKategorijaEkran> {
               child: Icon(Icons.playlist_add, size: 30),
               onTap: () => otvoriDodavanjeVisePotrosnji(context),
             ),
+            SpeedDialChild(
+            backgroundColor: Colors.yellow[600],
+            label: 'Planirane potrošnje',
+            labelStyle: TextStyle(fontSize: 18),
+            child: Icon(Icons.work, size: 28),
+            onTap: () => planiranePotrosnje(context)
+          ),
             
           ],
         ),
@@ -109,7 +122,10 @@ class _PotKategorijaEkranState extends State<PotKategorijaEkran> {
               child:
                 CircleAvatar(
                   radius: 25,
-                  backgroundImage: widget.kategorija.slikaUrl == 'assets/images/nema-slike.jpg' ? AssetImage(widget.kategorija.slikaUrl) : FileImage(File(widget.kategorija.slikaUrl),),),
+                  backgroundImage: widget.kategorija.slikaUrl == 'assets/images/nema-slike.jpg' ? AssetImage(widget.kategorija.slikaUrl) : MemoryImage(
+                        widget.kategorija.slikaEncoded
+                        
+                        ),),
               ),
             
             // Positioned(

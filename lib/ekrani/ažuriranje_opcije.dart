@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:semir_potrosnja/database/kategorija_database.dart';
+import 'package:semir_potrosnja/database/glavni_podaci_database.dart';
+import '../database/rashod_plata_database.dart' as rpDB;
 
 class AzuriranjeOpcije extends StatelessWidget {
   @override
@@ -104,6 +105,34 @@ class AzuriranjeOpcije extends StatelessWidget {
                     style: TextStyle(fontSize: 22),
                   ),
                   subtitle: Text('Dodaj tabelu obavijesti u bazu!'),
+                  trailing: Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: Container(child: Icon(Icons.perm_data_setting , size: 35)),
+                  ),
+                ),
+            ListTile(
+                  onTap: () async{
+                    DatabaseHelper.dodajColumnMjesecnoDodavanjePotkategorije('potkategorije');
+                  },
+                  title: Text(
+                    'Verzija 1.0.7.',
+                    style: TextStyle(fontSize: 22),
+                  ),
+                  subtitle: Text('Dodaj tabelu mjesečno dodavanje u potkategorije tabelu!'),
+                  trailing: Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: Container(child: Icon(Icons.perm_data_setting , size: 35)),
+                  ),
+                ),
+            ListTile(
+                  onTap: () async{
+                    rpDB.DatabaseHelper.dodajRashodKategorijaTabelu();
+                  },
+                  title: Text(
+                    'Verzija 1.0.8.',
+                    style: TextStyle(fontSize: 22),
+                  ),
+                  subtitle: Text('Dodaj tabelu rashod kategorija'),
                   trailing: Padding(
                     padding: const EdgeInsets.only(right: 8.0),
                     child: Container(child: Icon(Icons.perm_data_setting , size: 35)),

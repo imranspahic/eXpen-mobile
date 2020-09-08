@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:semir_potrosnja/model/plata_provider.dart';
 import '../model/data_provider.dart';
+import '../model/rashod_kategorija_provider.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:intl/intl.dart';
 import 'dart:math';
 
@@ -89,7 +92,9 @@ class _DetaljiKategorijaEkranState extends State<DetaljiKategorijaEkran> {
   double dobijVrijednost(String vrijednostDropdown) {
     final svekatData = Provider.of<SveKategorije>(context, listen: false);
     trosakFirst = svekatData.rashodSveKategorijeMapa[vrijednostDropdown];
-    return svekatData.rashodSveKategorijeMapa[vrijednostDropdown];
+    final plataData = Provider.of<PlataLista>(context, listen: false);
+    return plataData.dobijPlatuPoMjesecu(vrijednostDropdown);
+    // return svekatData.rashodSveKategorijeMapa[vrijednostDropdown];
   }
 
   String formatirajMjesecNaBosanski(trenutaVrijednostDropdown) {
@@ -198,7 +203,7 @@ class _DetaljiKategorijaEkranState extends State<DetaljiKategorijaEkran> {
   }
 
   double razlika() {
-    return trosakFirst - trosakSecond;
+    return Provider.of<RashodKategorijaLista>(context, listen: false).dobijRashodSvihKategorijaPoMjesecu(trenutnaVrijednostDropdown) - trosakSecond;
   }
 
   double trosakSecond;
@@ -527,7 +532,7 @@ class _DetaljiKategorijaEkranState extends State<DetaljiKategorijaEkran> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text(
-                          'Planirani rashod za ${trenutnaVrijednostDropdown.toLowerCase()}',
+                          'Plata za ${trenutnaVrijednostDropdown.toLowerCase()}',
                           style: TextStyle(fontFamily: 'Lato', fontSize: 18),
                         ),
                         Text(
@@ -536,6 +541,29 @@ class _DetaljiKategorijaEkranState extends State<DetaljiKategorijaEkran> {
                               fontFamily: 'Lato',
                               fontSize: 20,
                               color: Colors.green),
+                        ),
+                        
+                        
+                      ],
+                    ),
+                  ),
+                ),
+                Card(
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          'Rashod za ${trenutnaVrijednostDropdown.toLowerCase()}',
+                          style: TextStyle(fontFamily: 'Lato', fontSize: 18),
+                        ),
+                        Text(
+                          '${Provider.of<RashodKategorijaLista>(context, listen: false).dobijRashodSvihKategorijaPoMjesecu(trenutnaVrijednostDropdown).toStringAsFixed(2)} KM',
+                          style: TextStyle(
+                              fontFamily: 'Lato',
+                              fontSize: 20,
+                              color: Colors.orange),
                         ),
                         
                         
@@ -564,6 +592,31 @@ class _DetaljiKategorijaEkranState extends State<DetaljiKategorijaEkran> {
                     ),
                   ),
                 ),
+                if(Provider.of<RashodKategorijaLista>(context, listen: false).dobijRashodSvihKategorijaPoMjesecu(trenutnaVrijednostDropdown) > dobijVrijednost(trenutnaVrijednostDropdown) && dobijVrijednost(trenutnaVrijednostDropdown) != 0 )
+                Card(
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    color: Colors.red,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(Icons.warning, size: 30, color: Colors.white),
+                        SizedBox(width: 5,),
+                        Container(
+                          width: 260,
+                                                  child: AutoSizeText(
+                            'Planirani rashod veći od plate za ${(Provider.of<RashodKategorijaLista>(context, listen: false).dobijRashodSvihKategorijaPoMjesecu(trenutnaVrijednostDropdown) - dobijVrijednost(trenutnaVrijednostDropdown)).toStringAsFixed(2)} KM',
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            minFontSize: 16,
+                            style: TextStyle(fontSize: 18, fontFamily: 'Lato', color: Colors.white, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                       
+                      ],
+                    ),
+                  ),
+                ),
                 Card(
                   child: Container(
                     padding: EdgeInsets.all(10),
@@ -572,25 +625,25 @@ class _DetaljiKategorijaEkranState extends State<DetaljiKategorijaEkran> {
                       children: <Widget>[
                         razlika() < 0
                             ? Text(
-                                '${razlika()} KM',
+                                '${razlika().toStringAsFixed(2)} KM',
                                 style: TextStyle(
                                     fontFamily: 'Lato',
-                                    fontSize: 20,
+                                    fontSize: 25,
                                     color: Colors.red),
                               )
                             : razlika() == 0
                                 ? Text(
-                                    '${razlika()} KM',
+                                    '${razlika().toStringAsFixed(2)} KM',
                                     style: TextStyle(
                                         fontFamily: 'Lato',
-                                        fontSize: 20,
+                                        fontSize: 25,
                                         color: Colors.grey),
                                   )
                                 : Text(
-                                    '+${razlika()} KM',
+                                    '+${razlika().toStringAsFixed(2)} KM',
                                     style: TextStyle(
                                         fontFamily: 'Lato',
-                                        fontSize: 20,
+                                        fontSize: 25,
                                         color: Colors.green),
                                   ),
                       ],

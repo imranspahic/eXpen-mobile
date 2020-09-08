@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../model/data_provider.dart';
-import '../database/kategorija_database.dart';
 
 class DodajNovuPotrosnju extends StatefulWidget {
   final KategorijaModel kategorija;
@@ -43,7 +42,13 @@ class _DodajNovuPotrosnjuState extends State<DodajNovuPotrosnju> {
       return;
     }
     else if(widget.jeLiPlaniranaPotrosnja) {
-      potrosnjaData.dodajPlaniranuPotrosnju(widget.kategorija.naziv, uneseniNaziv, uneseniTrosak, widget.kategorija.id, 'nemaPotkategorija');
+      if(!widget.uPotkategoriji) {
+        potrosnjaData.dodajPlaniranuPotrosnju(widget.kategorija.naziv, uneseniNaziv, uneseniTrosak, widget.kategorija.id, 'nemaPotkategorija');
+      }
+      else {
+        potrosnjaData.dodajPlaniranuPotrosnju(widget.kategorija.naziv, uneseniNaziv, uneseniTrosak, widget.kategorija.id, widget.potkategorija.idPot);
+      }
+      
       
     }
      else if (datum != null && widget.potkategorija == null) {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:semir_potrosnja/database/kategorija_database.dart';
+import 'package:semir_potrosnja/database/glavni_podaci_database.dart';
 import '../model/data_provider.dart';
 import './pocetni_ekran.dart';
 

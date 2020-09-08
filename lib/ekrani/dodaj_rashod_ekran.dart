@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:semir_potrosnja/model/plata_provider.dart';
+import 'package:semir_potrosnja/model/rashod_kategorija_provider.dart';
 import '../model/data_provider.dart';
 //RASHOD ZA POTKATEGORIJU
 
@@ -17,12 +19,17 @@ class _DodajRashodEkranState extends State<DodajRashodEkran> {
   bool rashodPostavljen = false;
   DateTime datum;
   final vrijednostFocus = FocusNode();
-  Future rashodFuture;
+  Future rashodKategorijaFuture;
+  Future plataFuture;
 
   @override
   void initState() {
     vrijednostFocus.addListener(vrijednostListener);
-    rashodFuture = Provider.of<SveKategorije>(context, listen: false).fetchAndSetRashod();
+    rashodKategorijaFuture = Provider.of<RashodKategorijaLista>(context, listen: false).fetchAndSetRashodKategorija();
+    if(!widget.isKategorija) {
+     
+      plataFuture = Provider.of<PlataLista>(context, listen: false).fetchAndSetPlata();
+    }
     super.initState();
   }
 
@@ -51,16 +58,22 @@ class _DodajRashodEkranState extends State<DodajRashodEkran> {
     if (prikazaniMjesec == null) {
       return;
     }
-    final katData = Provider.of<KategorijaLista>(context, listen: false);
-    final svekatData = Provider.of<SveKategorije>(context, listen: false);
+    // final katData = Provider.of<KategorijaLista>(context, listen: false);
+    final plataData = Provider.of<PlataLista>(context, listen: false);
+    final rashodKategorijaData = Provider.of<RashodKategorijaLista>(context, listen: false);
+
     widget.isKategorija ?
-    katData.dodajRashod(
-        prikazaniMjesec, double.parse(unesenaVrijednost), widget.kategorija.id) : svekatData.dodajRashod(prikazaniMjesec, double.parse(unesenaVrijednost));
+    rashodKategorijaData.dodajRashodKategorije(widget.kategorija.id,
+        prikazaniMjesec, double.parse(unesenaVrijednost)) : 
+        plataData.dodajPlatu(prikazaniMjesec, double.parse(unesenaVrijednost));
     setState(() {
       rashodController.text = '';
       prikazaniMjesec = null;
     });
-   _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Rashod dodan '), duration: Duration(seconds: 2),));
+    widget.isKategorija ?
+   _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Rashod dodan '), duration: Duration(seconds: 2),))
+   :  _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Plata dodana '), duration: Duration(seconds: 2),))
+   ;
   }
 
   Widget buildMonths(String short, String long, int s, int datetime) {
@@ -226,8 +239,24 @@ class _DodajRashodEkranState extends State<DodajRashodEkran> {
 
   List<double> convertValuesToList() {
     List<double> vrijednosti = [];
-    final sveKatData = Provider.of<SveKategorije>(context, listen: false);
-    vrijednosti = widget.isKategorija? widget.kategorija.mapaRashoda.values.toList() : sveKatData.rashodSveKategorijeMapa.values.toList();
+    List<double> rashodVrijednosti = [];
+    List<double> plataVrijednosti = [];
+    List<String> mjeseci = ['Januar', 'Februar', 'Mart', 'April', 'Maj', 'Juni', 'Juli', 'August', 'Septembar', 'Oktobar', 'Novembar', 'Decembar'];
+    // final sveKatData = Provider.of<SveKategorije>(context, listen: false);
+    final plataData = Provider.of<PlataLista>(context, listen: false);
+    final rashodKategorijaData = Provider.of<RashodKategorijaLista>(context, listen: false);
+    if(!widget.isKategorija) {
+      for(int i=0; i<=11; i++) {
+         plataVrijednosti.add(plataData.dobijPlatuPoMjesecu(mjeseci[i]));
+      }
+    }
+    else {
+      for(int i=0; i<=11; i++) {
+         rashodVrijednosti.add(rashodKategorijaData.dobijRashodKategorijePoMjesecu(widget.kategorija.id, mjeseci[i]));
+      }
+    }
+    vrijednosti = widget.isKategorija? rashodVrijednosti
+     : plataVrijednosti;
     return vrijednosti;
   }
 
@@ -245,7 +274,19 @@ class _DodajRashodEkranState extends State<DodajRashodEkran> {
       appBar: AppBar(
         iconTheme: !widget.isKategorija ? IconThemeData(color: Colors.white) : Theme.of(context).iconTheme,
         backgroundColor: !widget.isKategorija ? Colors.green[700]: Theme.of(context).primaryColor,
-        title: widget.isKategorija ? Text('Dodaj rashod za ${widget.kategorija.naziv}',) : Text('Rashod za sve kategorije', style: TextStyle(color: Colors.white),),
+        title: widget.isKategorija ? Text('Dodaj rashod za ${widget.kategorija.naziv}',) : Row(children: [
+          Icon(Icons.account_balance_wallet, color: Colors.white),
+          SizedBox(width: 10),
+          Text('Plata', style: TextStyle(color: Colors.white),),
+        ],) ,
+        actions: [
+          if(widget.isKategorija) Padding(
+              padding: const EdgeInsets.only(right: 20.0, top: 5, bottom: 5),
+              child: CircleAvatar(
+                radius: 25,
+                backgroundImage: widget.kategorija.slikaUrl == 'assets/images/nema-slike.jpg' ? AssetImage(widget.kategorija.slikaUrl) : MemoryImage(widget.kategorija.slikaEncoded,),)
+            )
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(children: <Widget>[
@@ -321,14 +362,16 @@ class _DodajRashodEkranState extends State<DodajRashodEkran> {
             margin: EdgeInsets.only(top: 20),
             child: RaisedButton(
               child: Text(
-                'Dodaj rashod',
+               widget.isKategorija ? 'Dodaj rashod' : 'Dodaj platu',
                 style: widget.isKategorija ? Theme.of(context).textTheme.button : Theme.of(context).textTheme.button.copyWith(color: Colors.white),
               ),
               onPressed: ()  {
                 if(prikazaniMjesec == null) {
-                  _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Niste izabrali mjesec!', textAlign: TextAlign.center ,style: TextStyle(color: Colors.red, fontSize: 23),),duration: Duration(seconds: 3),));
+                  _scaffoldKey.currentState.hideCurrentSnackBar();
+                  _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Niste izabrali mjesec!', textAlign: TextAlign.center ,style: TextStyle(color: Colors.red, fontSize: 23),),duration: Duration(seconds: 2),));
                 }
                 else {
+                  // Provider.of<PlataLista>(context, listen: false).izbrisi();
                   submitData(context);
                 }
                 },
@@ -341,12 +384,12 @@ class _DodajRashodEkranState extends State<DodajRashodEkran> {
             child: Container(
               child: Center(
                   child: Text(
-                'Dodani rashodi po mjesecima',
+                widget.isKategorija? 'Dodani rashodi po mjesecima' : 'Plata po mjesecima',
                 style: Theme.of(context).textTheme.subtitle1,
               )),
             ),
           ),
-          FutureBuilder(future: rashodFuture, builder: (ctx, snapshot) =>
+          FutureBuilder(future: widget.isKategorija? rashodKategorijaFuture : plataFuture, builder: (ctx, snapshot) =>
           Padding(
             padding: const EdgeInsets.all(10),
             child: Container(
@@ -375,7 +418,7 @@ class _DodajRashodEkranState extends State<DodajRashodEkran> {
                       trailing: Container(
                         margin: EdgeInsets.only(right:15),
                         child: Text(
-                          convertValuesToList()[index].toStringAsFixed(2),
+                          '${convertValuesToList()[index].toStringAsFixed(2)}',
                           style: TextStyle(
                               color: Colors.green,
                               fontSize: 23,

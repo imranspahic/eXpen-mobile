@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'model/biljeske_provider.dart';
 import 'model/obavijesti_provider.dart';
 import 'model/data_provider.dart';
+import 'model/plata_provider.dart';
+import 'model/rashod_kategorija_provider.dart';
 import './ekrani/sifra_ekran.dart';
 
 void main()  {
@@ -32,6 +34,12 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (ctx) => ObavijestiLista(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => PlataLista(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => RashodKategorijaLista(),
         ),
       ],
       child: MaterialApp(

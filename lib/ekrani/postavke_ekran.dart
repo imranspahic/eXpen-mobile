@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 
 import '../model/data_provider.dart';
-import '../database/kategorija_database.dart';
+import '../database/glavni_podaci_database.dart';
 import '../widgets/pdf_dialog.dart';
 import '../widgets/pdf_builder.dart';
 

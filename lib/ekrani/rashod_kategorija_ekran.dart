@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../model/data_provider.dart';
+import '../model/rashod_kategorija_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -146,7 +147,7 @@ class _RashodKategorijaEkranState extends State<RashodKategorijaEkran> {
   }
 
   double dobijVrijednost(String vrijednostDropdown) {
-    return widget.kategorija.mapaRashoda[vrijednostDropdown];
+    return Provider.of<RashodKategorijaLista>(context, listen: false).dobijRashodKategorijePoMjesecu(widget.kategorija.id, trenutnaVrijednostDropdown);
   }
 
   Widget buildRashod(String title, String vrijednost, TextStyle style, bool minusTrue) {

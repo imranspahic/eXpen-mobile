@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:semir_potrosnja/database/kategorija_database.dart';
+import 'package:semir_potrosnja/database/glavni_podaci_database.dart';
 
 class Biljeska {
   final String id;

@@ -1,7 +1,8 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import '../database/kategorija_database.dart';
+import '../database/glavni_podaci_database.dart';
+import '../database/rashod_plata_database.dart' as rpDB;
 import 'package:intl/intl.dart';
 import 'dart:convert';
 
@@ -194,11 +195,21 @@ class PotrosnjaLista with ChangeNotifier {
     });
   }
 
-  List<PotrosnjaModel> dobijPlaniranePotrosnje(String katId) {
+  List<PotrosnjaModel> dobijPlaniranePotrosnjeKategorije(String katId) {
     List<PotrosnjaModel> tempList;
     tempList = listaPlaniranihPotrosnji.where((item) {
       return item.idKategorije == katId &&
           item.idPotKategorije == 'nemaPotkategorija';
+    }).toList();
+
+    return tempList;
+  }
+
+  List<PotrosnjaModel> dobijPlaniranePotrosnjePotkategorije(
+      String katId, String potId) {
+    List<PotrosnjaModel> tempList;
+    tempList = listaPlaniranihPotrosnji.where((item) {
+      return item.idKategorije == katId && item.idPotKategorije == potId;
     }).toList();
 
     return tempList;
@@ -214,16 +225,21 @@ class PotrosnjaLista with ChangeNotifier {
 
   Future<List<Map<String, dynamic>>>
       provjeriMjesecnoDodavanjeKategorija() async {
+
     //lista kategorija
     final dataListKategorije = await DatabaseHelper.fetchTabele('kategorije');
+
     //lista planiranihPotrosnji
     final dataListPlaniranePotrosnje =
         await DatabaseHelper.fetchTabele('planiranePotrosnje');
+
+    //lista potkategorija
+    final dataListPotkategorije =
+        await DatabaseHelper.fetchTabele('potkategorije');
+    
     await fetchAndSetPotrosnje();
 
     final datumDanasnji = DateTime.now();
-    print(datumDanasnji);
-    print(datumDanasnji.day);
 
     List<Map<String, dynamic>> listaObavijesti = [];
 
@@ -267,7 +283,7 @@ class PotrosnjaLista with ChangeNotifier {
             //provjeriti jeLidansutra
             if (datumDanasnji.day > kategorija['mjesecnoDodavanje'] ||
                 datumDanasnji.day < kategorija['mjesecnoDodavanje']) {
-              DatabaseHelper.updateJeLiMjesecnoDodanoKategorije(
+              DatabaseHelper.updateJeLiMjesecnoDodano(
                   'kategorije', 'ne', kategorija['id']);
             }
 
@@ -286,7 +302,7 @@ class PotrosnjaLista with ChangeNotifier {
               });
             }
 
-            DatabaseHelper.updateJeLiMjesecnoDodanoKategorije(
+            DatabaseHelper.updateJeLiMjesecnoDodano(
                 'kategorije', 'da', kategorija['id']);
             notifyListeners();
             print(
@@ -315,7 +331,102 @@ class PotrosnjaLista with ChangeNotifier {
           print('Kategorija ${kategorija['naziv']}: nije jednako');
         }
       });
+    } //provjera za kategorije
+
+
+    if (dataListPotkategorije.isNotEmpty) {
+      dataListPotkategorije.forEach((potkategorija) {
+        if (potkategorija['mjesecnoDodavanje'] == datumDanasnji.day) {
+          print('Potkategorija ${potkategorija['naziv']}: jednako');
+          List<Map<String, dynamic>> listaPotrosnjiZaDodat = [];
+          listaPotrosnjiZaDodat = dataListPlaniranePotrosnje.where((potrosnja) {
+            return potrosnja['idPotKategorije'] == potkategorija['idPot'];
+          }).toList();
+          print(listaPotrosnjiZaDodat);
+          if (listaPotrosnjiZaDodat.isNotEmpty) {
+            List<PotrosnjaModel> potrosnje = [];
+            potrosnje = listaPotrosnjiZaDodat.map((potrosnja) {
+              return PotrosnjaModel(
+                id: potrosnja['id'],
+                naziv: potrosnja['naziv'],
+                trosak: potrosnja['trosak'],
+                nazivKategorije: potrosnja['nazivKategorije'],
+                idKategorije: potrosnja['idKategorije'],
+                idPotKategorije: potrosnja['idPotKategorije'],
+                datum: datumDanasnji,
+              );
+            }).toList();
+            // if(listaSvihPotrosnji.any((potrosnja)  {
+            //   return potrosnja.id == potrosnje[0].id;
+            // })) {
+            //   print('Već dodano');
+            //   return;
+
+            // }
+
+            //provjeriti jesu li već dodane!
+
+            if (potkategorija['jeLiMjesecnoDodano'] == 'da') {
+              print('Već dodano');
+              return;
+            }
+
+            //provjeriti jeLidansutra
+            if (datumDanasnji.day > potkategorija['mjesecnoDodavanje'] ||
+                datumDanasnji.day < potkategorija['mjesecnoDodavanje']) {
+              DatabaseHelper.updateJeLiMjesecnoDodano(
+                  'potkategorije', 'ne', potkategorija['idPot']);
+            }
+
+            for (int i = 0; i < potrosnje.length; i++) {
+              listaSvihPotrosnji.add(potrosnje[i]);
+
+              DatabaseHelper.insertPotrosnje('potrosnje', {
+                'id':
+                    '${potrosnje[i].id}/$i/${datumDanasnji.second}/${datumDanasnji.millisecond}',
+                'naziv': potrosnje[i].naziv,
+                'trosak': potrosnje[i].trosak,
+                'datum': potrosnje[i].datum.toIso8601String(),
+                'nazivKategorije': potrosnje[i].nazivKategorije,
+                'idKategorije': potrosnje[i].idKategorije,
+                'idPotKategorije': potrosnje[i].idPotKategorije,
+              });
+            }
+
+            DatabaseHelper.updateJeLiMjesecnoDodano(
+                'potkategorije', 'da', potkategorija['idPot']);
+            notifyListeners();
+            print(
+                'Planirane potrosnje za potkategoriju ${potkategorija['naziv']} dodane');
+
+            //OBAVIJEST DODANA
+            Map<String, dynamic> podaciObavijesti = {
+              'imaObavijest': false,
+              'sadrzaj': '',
+              'datum': null,
+              'idKategorije': null,
+              'idPotKategorije': null,
+              'jeLiProcitano': 'ne',
+            };
+            
+            podaciObavijesti['imaObavijest'] = true;
+            podaciObavijesti['sadrzaj'] =
+                'Dodane potrošnje za potkategoriju ${potkategorija['naziv']} na osnovu mjesečnog dodavanja. Broj dodanih potrošnji: ${potrosnje.length}';
+            podaciObavijesti['datum'] = datumDanasnji;
+            podaciObavijesti['idKategorije'] = potkategorija['idKat'];
+            podaciObavijesti['idPotKategorije'] = potkategorija['idPot'];
+
+            listaObavijesti.add(podaciObavijesti);
+          }
+        } else {
+          print('Kategorija ${potkategorija['naziv']}: nije jednako');
+        }
+      });
     }
+
+
+
+    //provjera za potkategorije
     return listaObavijesti;
   }
 
@@ -432,8 +543,14 @@ class KategorijaLista with ChangeNotifier {
   ];
 
   String dobijNazivKategorije(String idKat) {
-    KategorijaModel kat =
-        kategorijaLista.singleWhere((element) => element.id == idKat);
+    KategorijaModel kat = kategorijaLista.singleWhere((element) {
+      return element.id == idKat;
+    }, orElse: () {
+      return null;
+    });
+    if (kat == null) {
+      return 'Kategorija izbrisana';
+    }
     return kat.naziv;
   }
 
@@ -549,6 +666,7 @@ class KategorijaLista with ChangeNotifier {
     DatabaseHelper.izbrisiPotrosnjeuKategoriji('potrosnje', listaPotrosnji);
     DatabaseHelper.izbrisiPotkategorijeuKategoriji(
         'potkategorije', listaPotkategorija);
+    rpDB.DatabaseHelper.izbrisiRashodKategorije('rashodKategorija', id);
   }
 
   void updateSlikuKategorije(String slikaPath, String id) {
@@ -571,8 +689,7 @@ class KategorijaLista with ChangeNotifier {
     kategorijaLista
         .singleWhere((element) => element.id == id)
         .mjesecnoDodavanje = mjesecnoDodavanje;
-    DatabaseHelper.updateMjesecnoDodavanjeKategorije(
-        'kategorije', mjesecnoDodavanje, id);
+    DatabaseHelper.updateMjesecnoDodavanje('kategorije', mjesecnoDodavanje, id);
     notifyListeners();
   }
 
@@ -604,12 +721,19 @@ class PotKategorija {
   String naziv;
   String idKat;
   String idPot;
-
   int icon;
   Color bojaIkone;
+  int mjesecnoDodavanje;
+  String jeLiMjesecnoDodano;
 
   PotKategorija(
-      {this.naziv, this.idKat, this.idPot, this.icon, this.bojaIkone});
+      {this.naziv,
+      this.idKat,
+      this.idPot,
+      this.icon,
+      this.bojaIkone,
+      this.mjesecnoDodavanje,
+      this.jeLiMjesecnoDodano});
 }
 
 class PotKategorijaLista with ChangeNotifier {
@@ -621,6 +745,18 @@ class PotKategorijaLista with ChangeNotifier {
     List<PotKategorija> lista = [];
     lista = potKategorijaLista.where((element) => element.idKat == id).toList();
     return lista.length;
+  }
+
+   String dobijNazivPotKategorije(String idPot) {
+    PotKategorija potKat = potKategorijaLista.singleWhere((element) {
+      return element.idPot == idPot;
+    }, orElse: () {
+      return null;
+    });
+    if (potKat == null) {
+      return 'Potkategorija izbrisana';
+    }
+    return potKat.naziv;
   }
 
   List<PotKategorija> potKategorijePoKategorijilista(String id) {
@@ -643,11 +779,14 @@ class PotKategorijaLista with ChangeNotifier {
     int val = Colors.grey.value;
 
     var novaPotKategorija = PotKategorija(
-        naziv: nazivNovi,
-        idKat: idKat,
-        idPot: DateTime.now().toString(),
-        icon: 58055,
-        bojaIkone: Color(val));
+      naziv: nazivNovi,
+      idKat: idKat,
+      idPot: DateTime.now().toString(),
+      icon: 58055,
+      bojaIkone: Color(val),
+      mjesecnoDodavanje: 1,
+      jeLiMjesecnoDodano: 'ne',
+    );
 
     potKategorijaLista.add(novaPotKategorija);
     notifyListeners();
@@ -659,6 +798,8 @@ class PotKategorijaLista with ChangeNotifier {
           .toString()
           .substring(6, 16), //(35,45 - emulator)
       'icon': novaPotKategorija.icon,
+      'mjesecnoDodavanje': 1,
+      'jeLiMjesecnoDodano': 'ne',
     });
   }
 
@@ -672,6 +813,8 @@ class PotKategorijaLista with ChangeNotifier {
         idPot: pk['idPot'],
         bojaIkone: Color(int.parse(pk['bojaIkone'])),
         icon: int.parse(pk['icon']),
+        mjesecnoDodavanje: pk['mjesecnoDodavanje'],
+        jeLiMjesecnoDodano: pk['jeLiMjesecnoDodano'],
       );
     }).toList();
 
@@ -696,6 +839,16 @@ class PotKategorijaLista with ChangeNotifier {
     } else {
       dostPotKat.add(item);
     }
+  }
+
+  void updateMjesecnoDodavanjePotkategorije(
+      String idPot, int mjesecnoDodavanje) {
+    potKategorijaLista
+        .singleWhere((element) => element.idPot == idPot)
+        .mjesecnoDodavanje = mjesecnoDodavanje;
+    DatabaseHelper.updateMjesecnoDodavanje(
+        'potkategorije', mjesecnoDodavanje, idPot);
+    notifyListeners();
   }
 
   void izbrisiPotkategoriju(String id, List<PotrosnjaModel> listaPotrosnji) {

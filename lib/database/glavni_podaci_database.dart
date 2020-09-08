@@ -15,7 +15,7 @@ class DatabaseHelper {
       dB.execute(
           'CREATE TABLE potrosnje(id TEXT PRIMARY KEY, naziv TEXT, trosak REAL, datum TEXT, nazivKategorije TEXT, idKategorije TEXT, idPotKategorije TEXT)');
       dB.execute(
-          'CREATE TABLE potkategorije(idPot TEXT PRIMARY KEY, naziv TEXT, idKat TEXT, bojaIkone TEXT, icon TEXT)');
+          'CREATE TABLE potkategorije(idPot TEXT PRIMARY KEY, naziv TEXT, idKat TEXT, bojaIkone TEXT, icon TEXT, mjesecnoDodavanje INTEGER, jeLiMjesecnoDodano TEXT)');
       dB.execute(
           'CREATE TABLE rashodGodina(Januar REAL, Februar REAL, Mart REAL, April REAL, Maj REAL, Juni REAL, Juli REAL, August REAL, Septembar REAL, Oktobar REAL, Novembar REAL, Decembar REAL)');
       dB.execute(
@@ -173,18 +173,18 @@ class DatabaseHelper {
     database.update(table, {'redniBroj': redniBroj},
         where: 'id = ?', whereArgs: [id]);
   }
-  static Future<void> updateMjesecnoDodavanjeKategorije(
-      String table, int mjesecnoDodavanje, String id) async {
+  static Future<void> updateMjesecnoDodavanje(
+      String table, int mjesecnoDodavanje, String id,) async {
     final database = await DatabaseHelper.database();
     database.update(table, {'mjesecnoDodavanje': mjesecnoDodavanje},
-        where: 'id = ?', whereArgs: [id]);
+        where: table=='kategorije' ? 'id = ?' : 'idPot = ?', whereArgs: [id]);
   }
 
-   static Future<void> updateJeLiMjesecnoDodanoKategorije(
+   static Future<void> updateJeLiMjesecnoDodano(
       String table, String vrijednost, String id) async {
     final database = await DatabaseHelper.database();
     database.update(table, {'jeLiMjesecnoDodano': vrijednost},
-        where: 'id = ?', whereArgs: [id]);
+        where: table=='kategorije' ? 'id = ?' : 'idPot = ?', whereArgs: [id]);
   }
 
   static Future<void> insertBiljeske(
@@ -268,5 +268,12 @@ class DatabaseHelper {
     await database.execute(
           'CREATE TABLE obavijesti(id TEXT PRIMARY KEY, datum TEXT, sadrzaj TEXT, idKategorije TEXT, idPotKategorije TEXT, jeLiProcitano TEXT)');
     
+  }
+  static Future<void> dodajColumnMjesecnoDodavanjePotkategorije(String table) async{
+    final database = await DatabaseHelper.database();
+    await database.execute('ALTER TABLE $table ADD COLUMN mjesecnoDodavanje INTEGER;');
+    await database.execute('ALTER TABLE $table ADD COLUMN jeLiMjesecnoDodano TEXT;');
+    database.update(table, {'mjesecnoDodavanje': 1});
+    database.update(table, {'jeLiMjesecnoDodano': 'ne'});
   }
 }

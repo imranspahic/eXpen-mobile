@@ -305,6 +305,7 @@ class _GrafoviKategorijaEkranState extends State<GrafoviKategorijaEkran> {
     return WillPopScope(
       onWillPop: () {
         Navigator.pop(context, widget.dostupnePotrosnje);
+        return;
       },
       child: Scaffold(
           appBar: AppBar(

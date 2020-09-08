@@ -9,6 +9,7 @@ import '../ekrani/obavijesti_ekran.dart';
 import '../ekrani/dodaj_rashod_ekran.dart';
 import '../ekrani/postavke_ekran.dart';
 import '../ekrani/ažuriranje_opcije.dart';
+import '../ekrani/rashod_pregled_ekran.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 class MainDrawer extends StatelessWidget {
@@ -16,11 +17,17 @@ class MainDrawer extends StatelessWidget {
   final List<Obavijest> listaObavijesti;
   MainDrawer(this.potrosnjaLista, this.listaObavijesti);
 
-  void dodajRashodKategorija(BuildContext context) {
+  void otvoriPlata(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
       return DodajRashodEkran(
         isKategorija: false,
       );
+    }));
+  }
+
+  void otvoriPregledRashod(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
+      return RashodPregledEkran();
     }));
   }
 
@@ -301,7 +308,7 @@ class MainDrawer extends StatelessWidget {
                   }));
                 }, child: Text('Prikaži još ${listaObavijesti.length-3}...', style: TextStyle(color:Colors.white),), color: Colors.red[600]),),
                 InkWell(
-                    onTap: () => dodajRashodKategorija(context),
+                    onTap: () => otvoriPlata(context),
                     child: Container(
                       margin: EdgeInsets.only(
                           left: 10, right: 10, top: 30, bottom: 7),
@@ -314,15 +321,41 @@ class MainDrawer extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Icon(
-                            Icons.flag,
+                            Icons.account_balance_wallet,
                             color: Colors.green[700],
+                          ),
+                          SizedBox(width: 10),
+                          Text('Plata',
+                              style: TextStyle(
+                                  fontSize: 22,
+                                  fontFamily: 'Raleway',
+                                  color: Colors.green[700],
+                                  fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                    )),
+                InkWell(
+                    onTap: () => otvoriPregledRashod(context),
+                    child: Container(
+                       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey, width: 2),
+                          borderRadius: BorderRadius.circular(15)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Icon(
+                            Icons.flag,
+                            color: Colors.deepOrange[400],
                           ),
                           SizedBox(width: 10),
                           Text('Rashod',
                               style: TextStyle(
                                   fontSize: 22,
                                   fontFamily: 'Raleway',
-                                  color: Colors.green[700],
+                                  color: Colors.deepOrange[400],
                                   fontWeight: FontWeight.bold)),
                         ],
                       ),

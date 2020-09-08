@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:semir_potrosnja/database/kategorija_database.dart';
+import 'package:semir_potrosnja/database/glavni_podaci_database.dart';
 
 class Obavijest {
   final String id;
@@ -22,6 +22,10 @@ class Obavijest {
 class ObavijestiLista extends ChangeNotifier {
   List<Obavijest> listaSvihObavijesti = [];
 
+  List<Obavijest> get listaSvihObavijestiReversed {
+    return listaSvihObavijesti.reversed.toList();
+  }
+
   void dodajObavijest(String sadrzaj, DateTime datum, String idKategorije,
       String idPotkategorije, String jeLiProcitano) {
     final Obavijest novaObavijest = Obavijest(
@@ -33,7 +37,10 @@ class ObavijestiLista extends ChangeNotifier {
       jeLiProcitano: jeLiProcitano,
     );
 
-    listaSvihObavijesti.insert(0, novaObavijest);
+    listaSvihObavijesti.add( novaObavijest);
+    listaSvihObavijesti.sort((a,b) {
+       return a.jeLiProcitano.compareTo(b.jeLiProcitano);
+    });
     notifyListeners();
     DatabaseHelper.insertObavijest('obavijesti', {
       'id': novaObavijest.id,

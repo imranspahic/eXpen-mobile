@@ -170,7 +170,7 @@ class _ObavijestiEkranState extends State<ObavijestiEkran> {
                             itemBuilder: (ctx, index) {
                               return ObavijestWidget(
                                   obavijest: obavijestiData
-                                      .listaSvihObavijesti[index]);
+                                      .listaSvihObavijestiReversed[index]);
                             },
                           ),
                         ),
@@ -188,17 +188,17 @@ class ObavijestWidget extends StatefulWidget {
 }
 
 class _ObavijestWidgetState extends State<ObavijestWidget> {
-  Future kategorijeFuture;
+  
   @override
   void initState() {
-    kategorijeFuture = Provider.of<KategorijaLista>(context, listen: false)
-        .fetchAndSetKategorije();
+  
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final katData = Provider.of<KategorijaLista>(context);
+    final potKatData = Provider.of<PotKategorijaLista>(context);
 
     return Card(
       child: Row(
@@ -212,8 +212,12 @@ class _ObavijestWidgetState extends State<ObavijestWidget> {
               padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               child: Column(
                 children: [
-                  Row(children: [
-                    Container(
+                  Wrap(
+                  
+                    alignment: WrapAlignment.start,
+                    crossAxisAlignment: WrapCrossAlignment.start,
+                    children: [
+                    Container(margin: EdgeInsets.only(bottom: 5),
                         padding: EdgeInsets.all(3),
                         decoration: BoxDecoration(
                             border: Border.all(color: Colors.purple)),
@@ -223,26 +227,35 @@ class _ObavijestWidgetState extends State<ObavijestWidget> {
                     SizedBox(width: 15),
                     if (widget.obavijest.idKategorije != null)
                       Container(
+                        margin: EdgeInsets.only(top: 0),
                           padding: EdgeInsets.all(3),
                           decoration: BoxDecoration(
                               border: Border.all(color: Colors.orange)),
-                          child: FutureBuilder(
-                            future: kategorijeFuture,
-                            builder: (ctx, snapshot) => Text(
+                          child:  Text(
                                 katData.dobijNazivKategorije(
                                     widget.obavijest.idKategorije)),
-                          )),
+                          ),
+                          SizedBox(width: 15),
+                          if (widget.obavijest.idPotKategorije != 'nemaPotkategorija')
+                      Container(
+                        margin: EdgeInsets.only(top: 0),
+                          padding: EdgeInsets.all(3),
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.green)),
+                          child:  Text(
+                                potKatData.dobijNazivPotKategorije(
+                                    widget.obavijest.idPotKategorije)),
+                          ),
                           SizedBox(width: 15),
                           if (widget.obavijest.jeLiProcitano == 'ne')
                       Container(
+                          margin: EdgeInsets.only(bottom: 5),
                           padding: EdgeInsets.all(3),
                           decoration: BoxDecoration(
                               border: Border.all(color: Colors.red), color: Colors.red),
-                          child: FutureBuilder(
-                            future: kategorijeFuture,
-                            builder: (ctx, snapshot) => Text(
+                          child: Text(
                                 'NOVO', style: TextStyle(color:Colors.white),),
-                          )),
+                          ),
                   ]),
                   SizedBox(height: 5),
                   AutoSizeText(
