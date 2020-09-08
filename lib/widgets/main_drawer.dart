@@ -36,6 +36,12 @@ class MainDrawer extends StatelessWidget {
     }));
   }
 
+  void otvoriObavijesti(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
+      return ObavijestiEkran();
+    }));
+  }
+
   void otvoriPostavke(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
       return PostavkeEkran();
@@ -98,7 +104,7 @@ class MainDrawer extends StatelessWidget {
     return InkWell(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-          return ObavijestiEkran();
+          return ObavijestiEkran(otvorenaObavijest: obavijest,);
           //obavijest pass
         }));
       },
@@ -276,11 +282,11 @@ class MainDrawer extends StatelessWidget {
                           listaObavijesti.length * 70.5 +
                               listaObavijesti.length * 5 +
                               (5 - listaObavijesti.length),
-                          225),
+                          220),
                       child: ListView.builder(
                           physics: NeverScrollableScrollPhysics(),
                           padding: EdgeInsets.symmetric(vertical: 5),
-                          itemCount: 3,
+                          itemCount: listaObavijesti.length,
                           itemBuilder: (ctx, index) {
                             return buildObavijest(
                                 context, listaObavijesti[index]);
@@ -290,7 +296,9 @@ class MainDrawer extends StatelessWidget {
                 ),
                 if(listaObavijesti.length>3)
                 Center(child: RaisedButton(onPressed: () {
-
+                  Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
+                    return ObavijestiEkran();
+                  }));
                 }, child: Text('Prikaži još ${listaObavijesti.length-3}...', style: TextStyle(color:Colors.white),), color: Colors.red[600]),),
                 InkWell(
                     onTap: () => dodajRashodKategorija(context),
@@ -368,6 +376,32 @@ class MainDrawer extends StatelessWidget {
                                   fontSize: 22,
                                   fontFamily: 'Raleway',
                                   color: Colors.red[700],
+                                  fontWeight: FontWeight.bold)),
+                        ],
+                      )),
+                ),
+                 InkWell(
+                  onTap: () => otvoriObavijesti(context),
+                  child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey, width: 2),
+                          borderRadius: BorderRadius.circular(15)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Icon(
+                            Icons.notifications,
+                            color: Colors.cyan[700],
+                          ),
+                          SizedBox(width: 15),
+                          Text('Obavijesti',
+                              style: TextStyle(
+                                  fontSize: 22,
+                                  fontFamily: 'Raleway',
+                                  color: Colors.cyan[700],
                                   fontWeight: FontWeight.bold)),
                         ],
                       )),

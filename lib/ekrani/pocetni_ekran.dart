@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:semir_potrosnja/ekrani/obavijesti_ekran.dart';
 
 import '../model/data_provider.dart';
 import '../model/obavijesti_provider.dart';
 import '../widgets/potrosnja_kategorija.dart';
 import '../widgets/dodaj_novu_kategoriju.dart';
 import '../widgets/main_drawer.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
 
 
 
@@ -40,6 +42,7 @@ void initState() {
   Provider.of<PotrosnjaLista>(context, listen: false).provjeriMjesecnoDodavanjeKategorija().then((listaObavijesti)  {
     listaObavijesti.forEach((obavijest) {
       Provider.of<ObavijestiLista>(context, listen: false).dodajObavijest(obavijest['sadrzaj'], obavijest['datum'], obavijest['idKategorije'], obavijest['idPotKategorije'], obavijest['jeLiProcitano']);
+    
     });
   });
   Timer.periodic(Duration(hours: 24), (timer) {
@@ -58,7 +61,7 @@ void initState() {
     
     return Scaffold(
       key: _scaffoldKey,
-      drawer: MainDrawer(katData.kategorijaLista, obavijestiData.listaSvihObavijesti),
+      drawer: MainDrawer(katData.kategorijaLista, obavijestiData.listaNeprocitanihObavijesti()),
       appBar: AppBar(
         title:  Row(
             children: <Widget>[
@@ -71,6 +74,18 @@ void initState() {
             ],
           ),
         actions: <Widget>[
+        
+              IconButton(
+              icon: Provider.of<ObavijestiLista>(context).neprocitaneObavijesti()==0 ? Icon(Icons.notifications_none) : Icon(Icons.notifications_active),
+              onPressed: ()  {
+                Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
+                  return ObavijestiEkran();
+                }));
+              }),
+              
+            
+          
+           
           IconButton(
               icon: Icon(Icons.add),
               onPressed: () => pocniDodavatKategorije(context))

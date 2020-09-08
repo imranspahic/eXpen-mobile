@@ -7,7 +7,7 @@ class Obavijest {
   final DateTime datum;
   final String idKategorije;
   final String idPotKategorije;
-  final String jeLiProcitano;
+  String jeLiProcitano;
 
   Obavijest({
     this.id,
@@ -33,7 +33,7 @@ class ObavijestiLista extends ChangeNotifier {
       jeLiProcitano: jeLiProcitano,
     );
 
-    listaSvihObavijesti.insert(0,novaObavijest);
+    listaSvihObavijesti.insert(0, novaObavijest);
     notifyListeners();
     DatabaseHelper.insertObavijest('obavijesti', {
       'id': novaObavijest.id,
@@ -54,9 +54,68 @@ class ObavijestiLista extends ChangeNotifier {
               datum: DateTime.parse(obavijest['datum']),
               idKategorije: obavijest['idKategorije'],
               idPotKategorije: obavijest['idPotKategorije'],
+              jeLiProcitano: obavijest['jeLiProcitano'],
             ))
         .toList();
 
     notifyListeners();
+  }
+
+  int neprocitaneObavijesti() {
+    List<Obavijest> temp = [];
+
+    listaSvihObavijesti.forEach((obavijest) {
+      if (obavijest.jeLiProcitano == 'ne') {
+        temp.add(obavijest);
+      }
+    });
+
+    return temp.length;
+  }
+
+  void izbrisiObavijest(String id) {
+    listaSvihObavijesti.removeWhere((item) {
+      return item.id == id;
+    });
+    notifyListeners();
+    DatabaseHelper.izbrisiPotrosnju('obavijesti', id);
+  }
+
+  void izbrisiSveObavijesti() {
+    listaSvihObavijesti = [];
+    notifyListeners();
+    DatabaseHelper.izbrisiSveObavijesti('obavijesti');
+  }
+  void procitajSveObavijesti() {
+    listaSvihObavijesti.forEach((obavijest) {
+      obavijest.jeLiProcitano = 'da';
+    });
+    notifyListeners();
+    DatabaseHelper.procitajSveObavijesti('obavijesti');
+  }
+
+  void procitajObavijest(String id, bool auto) {
+    Obavijest obavijest = listaSvihObavijesti.singleWhere((element) => element.id == id);
+    obavijest.jeLiProcitano = 'da';
+     listaSvihObavijesti.sort((a,b) {
+       return a.jeLiProcitano.compareTo(b.jeLiProcitano);
+    });
+    if(!auto) {
+  notifyListeners();
+    }
+   
+    
+    DatabaseHelper.procitajObavijest('obavijesti', id);
+
+  }
+
+  List<Obavijest> listaNeprocitanihObavijesti() {
+    List<Obavijest> temp = [];
+    listaSvihObavijesti.forEach((obavijest) {
+      if (obavijest.jeLiProcitano == 'ne') {
+        temp.add(obavijest);
+      }
+    });
+    return temp;
   }
 }

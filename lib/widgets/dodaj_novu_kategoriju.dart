@@ -27,7 +27,7 @@ class _DodajNovuKategorijuState extends State<DodajNovuKategoriju> {
 
     final katData = Provider.of<KategorijaLista>(context, listen: false);
      int redniBroj;
-     print( 'broj kategorija: ${katData.kategorijaLista.length}');
+  
     redniBroj = katData.kategorijaLista.length +1;
     katData.dodajKategoriju(uneseniNaziv, redniBroj);
     Navigator.of(context).pop();

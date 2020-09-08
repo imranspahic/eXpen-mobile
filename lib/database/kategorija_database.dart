@@ -212,6 +212,22 @@ class DatabaseHelper {
     );
   }
 
+  static Future<void> procitajObavijest(String table, String id) async {
+    final database = await DatabaseHelper.database();
+    database.update(table, {'jeLiProcitano': 'da'}, where: 'id = ?', whereArgs: [id]);
+  }
+
+  static Future<void> izbrisiSveObavijesti(String table) async {
+    final database = await DatabaseHelper.database();
+    database.delete(table);
+  }
+  static Future<void> procitajSveObavijesti(String table) async {
+    final database = await DatabaseHelper.database();
+    database.update(table, {'jeLiProcitano': 'da'});
+  }
+
+
+
   static Future<void> updateSlikePathFix(String table, String path) async {
     final database = await DatabaseHelper.database();
     database.update(table, {'slikaUrl': path});
