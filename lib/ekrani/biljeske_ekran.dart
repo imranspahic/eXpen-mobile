@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../model/biljeske_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import '../widgets/izbrisi_dialog.dart';
 
 class BiljeskeEkran extends StatefulWidget {
   @override
@@ -337,7 +338,8 @@ class _DodajBiljeskuState extends State<DodajBiljesku> {
                           datum == null
                               ? 'Datum: '
                               : 'Datum: ${DateFormat.yMd().format(datum)}',
-                          style: TextStyle(
+                              style:
+                           TextStyle(
                               fontSize: 17,
                               color: Colors.red,
                               fontFamily: 'Raleway',
@@ -435,52 +437,17 @@ class PrikazBiljeske extends StatelessWidget {
                           showDialog(
                               context: context,
                               builder: (ctx) {
-                                return SimpleDialog(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  children: [
-                                    Container(
-                                      width: 50,
-                                      height: 200,
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 10, vertical: 10),
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              'Izbrisati?',
-                                              style: TextStyle(
-                                                  fontSize: 25,
-                                                  color: Colors.red,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            SizedBox(height: 10),
-                                            
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                               InkWell(child: Icon(Icons.check, size: 80, color:Colors.green), onTap: () {
-                                                 Provider.of<BiljeskeLista>(context,listen:false).izbrisiBiljesku(biljeska.id);
-                                                 Navigator.of(context).pop('da');
-                                                
-                                               },),
-                                                SizedBox(width: 30),
-                                                InkWell(child: Icon(Icons.cancel, size:80, color: Colors.red,), onTap: () {Navigator.of(context).pop('ne');},)
-                                            ])
-                                          
-                                            
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  ],
+                                return IzbrisiDialog(
+                                  izbrisi: Provider.of<BiljeskeLista>(context,
+                                          listen: false)
+                                      .izbrisiBiljesku,
+                                  biljeska: biljeska,
                                 );
-                              }).then((value)  {
-                                if(value =='da') {
-                                  Navigator.of(context).pop();
-                                }
-                              });
+                              }).then((value) {
+                            if (value == 'da') {
+                              Navigator.of(context).pop();
+                            }
+                          });
                         },
                         child: Icon(
                           Icons.delete,

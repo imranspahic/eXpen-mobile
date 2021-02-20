@@ -24,7 +24,7 @@ class DatabaseHelper {
           'CREATE TABLE biljeske(id TEXT PRIMARY KEY, naziv TEXT, tekstSadrzaj TEXT, datum TEXT)');
       dB.execute(
           'CREATE TABLE planiranePotrosnje(id TEXT PRIMARY KEY, naziv TEXT, trosak REAL, datum TEXT, nazivKategorije TEXT, idKategorije TEXT, idPotKategorije TEXT)');
-     dB.execute(
+      dB.execute(
           'CREATE TABLE obavijesti(id TEXT PRIMARY KEY, datum TEXT, sadrzaj TEXT, idKategorije TEXT, idPotKategorije TEXT, jeLiProcitano TEXT)');
       dB.execute(
           'INSERT INTO postavke(prikazPotrosnji, brisanjeKategorija, zastitaLozinkom, sifra) VALUES(0, 1, 0, null)');
@@ -46,11 +46,7 @@ class DatabaseHelper {
   static Future<void> insertPotrosnje(
       String table, Map<String, dynamic> data) async {
     final database = await DatabaseHelper.database();
-    database.insert(
-      table,
-      data,
-      conflictAlgorithm: ConflictAlgorithm.replace
-    );
+    database.insert(table, data, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   static Future<void> insertPotkategorije(
@@ -173,18 +169,22 @@ class DatabaseHelper {
     database.update(table, {'redniBroj': redniBroj},
         where: 'id = ?', whereArgs: [id]);
   }
+
   static Future<void> updateMjesecnoDodavanje(
-      String table, int mjesecnoDodavanje, String id,) async {
+    String table,
+    int mjesecnoDodavanje,
+    String id,
+  ) async {
     final database = await DatabaseHelper.database();
     database.update(table, {'mjesecnoDodavanje': mjesecnoDodavanje},
-        where: table=='kategorije' ? 'id = ?' : 'idPot = ?', whereArgs: [id]);
+        where: table == 'kategorije' ? 'id = ?' : 'idPot = ?', whereArgs: [id]);
   }
 
-   static Future<void> updateJeLiMjesecnoDodano(
+  static Future<void> updateJeLiMjesecnoDodano(
       String table, String vrijednost, String id) async {
     final database = await DatabaseHelper.database();
     database.update(table, {'jeLiMjesecnoDodano': vrijednost},
-        where: table=='kategorije' ? 'id = ?' : 'idPot = ?', whereArgs: [id]);
+        where: table == 'kategorije' ? 'id = ?' : 'idPot = ?', whereArgs: [id]);
   }
 
   static Future<void> insertBiljeske(
@@ -214,19 +214,19 @@ class DatabaseHelper {
 
   static Future<void> procitajObavijest(String table, String id) async {
     final database = await DatabaseHelper.database();
-    database.update(table, {'jeLiProcitano': 'da'}, where: 'id = ?', whereArgs: [id]);
+    database.update(table, {'jeLiProcitano': 'da'},
+        where: 'id = ?', whereArgs: [id]);
   }
 
   static Future<void> izbrisiSveObavijesti(String table) async {
     final database = await DatabaseHelper.database();
     database.delete(table);
   }
+
   static Future<void> procitajSveObavijesti(String table) async {
     final database = await DatabaseHelper.database();
     database.update(table, {'jeLiProcitano': 'da'});
   }
-
-
 
   static Future<void> updateSlikePathFix(String table, String path) async {
     final database = await DatabaseHelper.database();
@@ -255,10 +255,12 @@ class DatabaseHelper {
         'CREATE TABLE planiranePotrosnje(id TEXT PRIMARY KEY, naziv TEXT, trosak REAL, datum TEXT, nazivKategorije TEXT, idKategorije TEXT, idPotKategorije TEXT);');
   }
 
-  static Future<void> dodajColumnMjesecnoDodavanje(String table) async{
+  static Future<void> dodajColumnMjesecnoDodavanje(String table) async {
     final database = await DatabaseHelper.database();
-    await database.execute('ALTER TABLE $table ADD COLUMN mjesecnoDodavanje INTEGER;');
-    await database.execute('ALTER TABLE $table ADD COLUMN jeLiMjesecnoDodano TEXT;');
+    await database
+        .execute('ALTER TABLE $table ADD COLUMN mjesecnoDodavanje INTEGER;');
+    await database
+        .execute('ALTER TABLE $table ADD COLUMN jeLiMjesecnoDodano TEXT;');
     database.update(table, {'mjesecnoDodavanje': 1});
     database.update(table, {'jeLiMjesecnoDodano': 'ne'});
   }
@@ -266,14 +268,35 @@ class DatabaseHelper {
   static Future<void> dodajTabeluObavijesti() async {
     final database = await DatabaseHelper.database();
     await database.execute(
-          'CREATE TABLE obavijesti(id TEXT PRIMARY KEY, datum TEXT, sadrzaj TEXT, idKategorije TEXT, idPotKategorije TEXT, jeLiProcitano TEXT)');
-    
+        'CREATE TABLE obavijesti(id TEXT PRIMARY KEY, datum TEXT, sadrzaj TEXT, idKategorije TEXT, idPotKategorije TEXT, jeLiProcitano TEXT)');
   }
-  static Future<void> dodajColumnMjesecnoDodavanjePotkategorije(String table) async{
+
+  static Future<void> dodajColumnMjesecnoDodavanjePotkategorije(
+      String table) async {
     final database = await DatabaseHelper.database();
-    await database.execute('ALTER TABLE $table ADD COLUMN mjesecnoDodavanje INTEGER;');
-    await database.execute('ALTER TABLE $table ADD COLUMN jeLiMjesecnoDodano TEXT;');
+    await database
+        .execute('ALTER TABLE $table ADD COLUMN mjesecnoDodavanje INTEGER;');
+    await database
+        .execute('ALTER TABLE $table ADD COLUMN jeLiMjesecnoDodano TEXT;');
     database.update(table, {'mjesecnoDodavanje': 1});
     database.update(table, {'jeLiMjesecnoDodano': 'ne'});
   }
 }
+
+Future<Database> database() async {
+  final dbPath = await sql.getDatabasesPath();
+  return sql.openDatabase(path.join(dbPath, 'nova.db'),
+      onCreate: (dB, version) {
+    dB.execute(
+        'CREATE TABLE biljeske(id TEXT PRIMARY KEY, naziv TEXT, tekstSadrzaj TEXT, datum TEXT)');
+  }, version: 4);
+}
+ Future<void> insertBiljeske(
+      String table, Map<String, dynamic> data) async {
+    final database = await DatabaseHelper.database();
+    database.insert(
+      table,
+      data,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }

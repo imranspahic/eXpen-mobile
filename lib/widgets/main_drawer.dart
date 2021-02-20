@@ -65,7 +65,7 @@ class MainDrawer extends StatelessWidget {
     return InkWell(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-          return TabKategorijaEkran(kategorija);
+          return TabKategorijaEkran(kategorija, true);
         }));
       },
       child: Container(
@@ -325,7 +325,7 @@ class MainDrawer extends StatelessWidget {
                             color: Colors.green[700],
                           ),
                           SizedBox(width: 10),
-                          Text('Plata',
+                          Text('Prihod',
                               style: TextStyle(
                                   fontSize: 22,
                                   fontFamily: 'Raleway',

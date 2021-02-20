@@ -72,7 +72,7 @@ class _DodajRashodEkranState extends State<DodajRashodEkran> {
     });
     widget.isKategorija ?
    _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Rashod dodan '), duration: Duration(seconds: 2),))
-   :  _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Plata dodana '), duration: Duration(seconds: 2),))
+   :  _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Prihod dodan '), duration: Duration(seconds: 2),))
    ;
   }
 
@@ -277,7 +277,7 @@ class _DodajRashodEkranState extends State<DodajRashodEkran> {
         title: widget.isKategorija ? Text('Dodaj rashod za ${widget.kategorija.naziv}',) : Row(children: [
           Icon(Icons.account_balance_wallet, color: Colors.white),
           SizedBox(width: 10),
-          Text('Plata', style: TextStyle(color: Colors.white),),
+          Text('Prihod', style: TextStyle(color: Colors.white),),
         ],) ,
         actions: [
           if(widget.isKategorija) Padding(
@@ -362,7 +362,7 @@ class _DodajRashodEkranState extends State<DodajRashodEkran> {
             margin: EdgeInsets.only(top: 20),
             child: RaisedButton(
               child: Text(
-               widget.isKategorija ? 'Dodaj rashod' : 'Dodaj platu',
+               widget.isKategorija ? 'Dodaj rashod' : 'Dodaj prihod',
                 style: widget.isKategorija ? Theme.of(context).textTheme.button : Theme.of(context).textTheme.button.copyWith(color: Colors.white),
               ),
               onPressed: ()  {
@@ -384,7 +384,7 @@ class _DodajRashodEkranState extends State<DodajRashodEkran> {
             child: Container(
               child: Center(
                   child: Text(
-                widget.isKategorija? 'Dodani rashodi po mjesecima' : 'Plata po mjesecima',
+                widget.isKategorija? 'Dodani rashodi po mjesecima' : 'Prihod po mjesecima',
                 style: Theme.of(context).textTheme.subtitle1,
               )),
             ),

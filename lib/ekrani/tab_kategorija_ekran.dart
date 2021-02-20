@@ -7,9 +7,10 @@ import './rashod_kategorija_ekran.dart';
 
 class TabKategorijaEkran extends StatefulWidget {
   static const routeName = 'tab-kategorija-ekran';
+  final jeLiDrawer;
 
   final KategorijaModel kategorija;
-  TabKategorijaEkran(this.kategorija);
+  TabKategorijaEkran(this.kategorija, this.jeLiDrawer);
 
   @override
   _TabKategorijaEkranState createState() => _TabKategorijaEkranState();
@@ -57,6 +58,7 @@ class _TabKategorijaEkranState extends State<TabKategorijaEkran> {
         kategorija: widget.kategorija,
         dostupnePotrosnje: potrosnjaData.dobijdostupnePotrosnje(widget.kategorija.id),
         dostupnePotkategorije: potKatData.dobijdostupnePotkategorije(widget.kategorija.id),
+        jeLiDrawer: widget.jeLiDrawer,
       ),
       GrafoviKategorijaEkran(
         kategorijaLista: widget.kategorija,

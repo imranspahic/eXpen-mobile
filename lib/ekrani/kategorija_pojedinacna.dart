@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:semir_potrosnja/model/rashod_kategorija_provider.dart';
 import 'dart:math';
 
 import '../ekrani/dodaj_rashod_ekran.dart';
@@ -11,6 +12,7 @@ import './tab_potkategorija_ekran.dart';
 import '../widgets/dodaj_novu_potkategoriju.dart';
 import '../model/data_provider.dart';
 import '../widgets/dodaj_novu_potrosnju.dart';
+import '../widgets/izbrisi_dialog.dart';
 import './dodaj_vise_potrosnji.dart';
 import '../ekrani/planirane_potrosnje_ekran.dart';
 
@@ -19,9 +21,13 @@ class KategorijaPojedinacna extends StatefulWidget {
   final KategorijaModel kategorija;
   List<PotrosnjaModel> dostupnePotrosnje;
   final List<PotKategorija> dostupnePotkategorije;
+  final bool jeLiDrawer;
 
   KategorijaPojedinacna(
-      {this.kategorija, this.dostupnePotrosnje, this.dostupnePotkategorije});
+      {this.kategorija,
+      this.dostupnePotrosnje,
+      this.dostupnePotkategorije,
+      this.jeLiDrawer});
 
   @override
   _KategorijaPojedinacnaState createState() => _KategorijaPojedinacnaState();
@@ -43,9 +49,10 @@ class _KategorijaPojedinacnaState extends State<KategorijaPojedinacna> {
     potkategorijeFuture =
         Provider.of<PotKategorijaLista>(context, listen: false)
             .fetchAndSetPotkategorije();
+    Provider.of<RashodKategorijaLista>(context, listen: false)
+        .fetchAndSetRashodKategorija();
   }
 
-  
   void pocniDodavatPotrosnje(ctx) {
     showModalBottomSheet(
         isScrollControlled: true,
@@ -76,14 +83,14 @@ class _KategorijaPojedinacnaState extends State<KategorijaPojedinacna> {
   }
 
   void pocniDodavatPotKategoriju(ctx) {
-    showDialog(context: ctx, builder: (ctx) => SimpleDialog(
-      children: <Widget>[
-        Container(
-          height: 230,
-          width: 400,
-          child: DodajNovuPotKategoriju(widget.kategorija)),
-      ] 
-    )).then((value) {
+    showDialog(
+        context: ctx,
+        builder: (ctx) => SimpleDialog(children: <Widget>[
+              Container(
+                  height: 230,
+                  width: 400,
+                  child: DodajNovuPotKategoriju(widget.kategorija)),
+            ])).then((value) {
       if (value != null) {
         Scaffold.of(context).showSnackBar(SnackBar(
           content: Text('Potkategorija dodana'),
@@ -104,7 +111,9 @@ class _KategorijaPojedinacnaState extends State<KategorijaPojedinacna> {
 
   void planiranePotrosnje(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
-      return PlaniranePotrosnjeEkran(kategorija: widget.kategorija,);
+      return PlaniranePotrosnjeEkran(
+        kategorija: widget.kategorija,
+      );
     }));
   }
 
@@ -116,9 +125,9 @@ class _KategorijaPojedinacnaState extends State<KategorijaPojedinacna> {
 
   @override
   Widget build(BuildContext context) {
-
     final potrosnjaData = Provider.of<PotrosnjaLista>(context);
-    final potKategorijaData = Provider.of<PotKategorijaLista>(context, listen: false);
+    final potKategorijaData =
+        Provider.of<PotKategorijaLista>(context, listen: false);
     final postavkeData = Provider.of<SveKategorije>(context);
 
     return Scaffold(
@@ -172,24 +181,41 @@ class _KategorijaPojedinacnaState extends State<KategorijaPojedinacna> {
             onTap: () => dodajRashod(context),
           ),
           SpeedDialChild(
-            backgroundColor: Colors.yellow[600],
-            label: 'Planirane potrošnje',
-            labelStyle: TextStyle(fontSize: 18),
-            child: Icon(Icons.work, size: 28),
-            onTap: () => planiranePotrosnje(context)
-          ),
+              backgroundColor: Colors.yellow[600],
+              label: 'Planirane potrošnje',
+              labelStyle: TextStyle(fontSize: 18),
+              child: Icon(Icons.work, size: 28),
+              onTap: () => planiranePotrosnje(context)),
         ],
       ),
       appBar: AppBar(
         title: Text(widget.kategorija.naziv),
-          actions: <Widget>[
-            Padding(
+        actions: <Widget>[
+          Padding(
               padding: const EdgeInsets.only(right: 20.0, top: 5, bottom: 5),
-              child: CircleAvatar(
-                radius: 25,
-                backgroundImage: widget.kategorija.slikaUrl == 'assets/images/nema-slike.jpg' ? AssetImage(widget.kategorija.slikaUrl) : MemoryImage(widget.kategorija.slikaEncoded,),)
-            )
-          ],
+              child: widget.jeLiDrawer
+                  ? CircleAvatar(
+                      radius: 25,
+                      backgroundImage: widget.kategorija.slikaUrl ==
+                              'assets/images/nema-slike.jpg'
+                          ? AssetImage(widget.kategorija.slikaUrl)
+                          : MemoryImage(
+                              widget.kategorija.slikaEncoded,
+                            ),
+                    )
+                  : Hero(
+                      tag: widget.kategorija.id,
+                      child: CircleAvatar(
+                        radius: 25,
+                        backgroundImage: widget.kategorija.slikaUrl ==
+                                'assets/images/nema-slike.jpg'
+                            ? AssetImage(widget.kategorija.slikaUrl)
+                            : MemoryImage(
+                                widget.kategorija.slikaEncoded,
+                              ),
+                      ),
+                    ))
+        ],
         // actions: <Widget>[
         //   postavkeData.vertikalniPrikaz
         //       ? IconButton(
@@ -213,91 +239,91 @@ class _KategorijaPojedinacnaState extends State<KategorijaPojedinacna> {
               Container(
                 height: min(widget.dostupnePotkategorije.length * 60.0,
                     double.infinity),
-                child:
-                FutureBuilder(
+                child: FutureBuilder(
                   future: potkategorijeFuture,
                   builder: (ctx, snapshot) => ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: widget.dostupnePotkategorije.length,
-                  itemBuilder: (ctx, index) {
-                
-                    return Dismissible(
-                      key: ValueKey(widget.dostupnePotkategorije[index].idPot),
-                      background: Container(
-                        padding: EdgeInsets.only(right: 25),
-                        color: Colors.red,
-                        child: Icon(
-                          Icons.delete,
-                          size: 40,
-                          color: Colors.white,
-                        ),
-                        alignment: Alignment.centerRight,
-                      ),
-                      direction: DismissDirection.endToStart,
-                      onDismissed: (direction) {
-                        final potrosnjaData = Provider.of<PotrosnjaLista>(context, listen: false);
-                        final List<PotrosnjaModel> lista = potrosnjaData.potrosnjePoPotkaategorijilista(widget.dostupnePotkategorije[index].idPot);
-                        //izbriši potkategorije
-                        potKategorijaData.izbrisiPotkategoriju(
-                            widget.dostupnePotkategorije[index].idPot, lista);
-                        //izbriši potrošnje u potkategoriji
-                        potrosnjaData.listaSvihPotrosnji.removeWhere((pot) {
-                          return pot.idPotKategorije ==
-                              widget.dostupnePotkategorije[index].idPot;
-                        });
-                        Scaffold.of(context).hideCurrentSnackBar();
-                        Scaffold.of(context).showSnackBar(SnackBar(
-                          content: Text(
-                            'Potkategorija izbrisana!',
-                            style: TextStyle(fontSize: 16),
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: widget.dostupnePotkategorije.length,
+                    itemBuilder: (ctx, index) {
+                      return Dismissible(
+                        key:
+                            ValueKey(widget.dostupnePotkategorije[index].idPot),
+                        background: Container(
+                          padding: EdgeInsets.only(right: 25),
+                          color: Colors.red,
+                          child: Icon(
+                            Icons.delete,
+                            size: 40,
+                            color: Colors.white,
                           ),
-                          duration: Duration(seconds: 2),
-                        ));
-                      },
-                      child: ListTile(
-                        leading: 
-                           Badge(
-                          child: 
-                          
-                          Icon(
-                            IconData(widget.dostupnePotkategorije[index].icon, fontFamily: 'MaterialIcons'),
-                            size: 60,
-                            color:
-                                widget.dostupnePotkategorije[index].bojaIkone,
-                          ),
-                          value: potrosnjaData
-                              .badge(widget.dostupnePotkategorije[index].idPot),
+                          alignment: Alignment.centerRight,
                         ),
-                            
-                         
-                        trailing: IconButton(
-                          icon: Icon(
-                            Icons.edit,
-                            size: 30,
-                            color: Theme.of(context).accentColor,
+                        direction: DismissDirection.endToStart,
+                        onDismissed: (direction) {
+                          final potrosnjaData = Provider.of<PotrosnjaLista>(
+                              context,
+                              listen: false);
+                          final List<PotrosnjaModel> lista =
+                              potrosnjaData.potrosnjePoPotkaategorijilista(
+                                  widget.dostupnePotkategorije[index].idPot);
+                          //izbriši potkategorije
+                          potKategorijaData.izbrisiPotkategoriju(
+                              widget.dostupnePotkategorije[index].idPot, lista);
+                          //izbriši potrošnje u potkategoriji
+                          potrosnjaData.listaSvihPotrosnji.removeWhere((pot) {
+                            return pot.idPotKategorije ==
+                                widget.dostupnePotkategorije[index].idPot;
+                          });
+                          Scaffold.of(context).hideCurrentSnackBar();
+                          Scaffold.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                              'Potkategorija izbrisana!',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            duration: Duration(seconds: 2),
+                          ));
+                        },
+                        child: ListTile(
+                          leading: Badge(
+                            child: Icon(
+                              IconData(widget.dostupnePotkategorije[index].icon,
+                                  fontFamily: 'MaterialIcons'),
+                              size: 60,
+                              color:
+                                  widget.dostupnePotkategorije[index].bojaIkone,
+                            ),
+                            value: potrosnjaData.badge(
+                                widget.dostupnePotkategorije[index].idPot),
                           ),
-                          onPressed: () {
-                           
-                            Navigator.of(context)
-                                .push(MaterialPageRoute(builder: (ctx) {
-                              return EditPotkategorijaEkran(widget.dostupnePotkategorije[index]);
-                            })).then((value)  async {
-                           await Provider.of<PotKategorijaLista>(context, listen: false).fetchAndSetPotkategorije();
-                           setState(() {
-                             
-                           });
-                            });
-                          },
+                          trailing: IconButton(
+                            icon: Icon(
+                              Icons.edit,
+                              size: 30,
+                              color: Theme.of(context).accentColor,
+                            ),
+                            onPressed: () {
+                              Navigator.of(context)
+                                  .push(MaterialPageRoute(builder: (ctx) {
+                                return EditPotkategorijaEkran(
+                                    widget.dostupnePotkategorije[index]);
+                              })).then((value) async {
+                                await Provider.of<PotKategorijaLista>(context,
+                                        listen: false)
+                                    .fetchAndSetPotkategorije();
+                                setState(() {});
+                              });
+                            },
+                          ),
+                          title:
+                              Text(widget.dostupnePotkategorije[index].naziv),
+                          onTap: () => otvoriPotKategoriju(
+                              context, widget.dostupnePotkategorije[index]),
                         ),
-                        title: Text(widget.dostupnePotkategorije[index].naziv),
-                        onTap: () => otvoriPotKategoriju(
-                            context, widget.dostupnePotkategorije[index]),
-                      ),
-                    );
-                  },
-                ),),
-                 
+                      );
+                    },
+                  ),
+                ),
               ),
               postavkeData.vertikalniPrikaz
                   ? Container(
@@ -316,13 +342,19 @@ class _KategorijaPojedinacnaState extends State<KategorijaPojedinacna> {
                                     child: Card(
                                       elevation: 3,
                                       child: ListTile(
-                                        onTap: () {
-                                          showDialog(context: context, builder: (ctx) {
-                                            return PrikaziPotrosnju(potrosnja: widget.dostupnePotrosnje[index]);
-                                          });
-                                        },
+                                          onTap: () {
+                                            showDialog(
+                                                context: context,
+                                                builder: (ctx) {
+                                                  return PrikaziPotrosnju(
+                                                      potrosnja: widget
+                                                              .dostupnePotrosnje[
+                                                          index]);
+                                                });
+                                          },
                                           leading: Container(
-                                              margin: EdgeInsets.only(right: 10),
+                                              margin:
+                                                  EdgeInsets.only(right: 10),
                                               padding: EdgeInsets.all(5),
                                               decoration: BoxDecoration(
                                                   border: Border.all(
@@ -337,8 +369,11 @@ class _KategorijaPojedinacnaState extends State<KategorijaPojedinacna> {
                                                     color: Theme.of(context)
                                                         .accentColor),
                                               )),
-                                          title: Text(widget
-                                              .dostupnePotrosnje[index].naziv, overflow: TextOverflow.ellipsis,),
+                                          title: Text(
+                                            widget
+                                                .dostupnePotrosnje[index].naziv,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                           subtitle: Text(DateFormat.yMMMd()
                                               .format(widget
                                                   .dostupnePotrosnje[index]
@@ -346,10 +381,21 @@ class _KategorijaPojedinacnaState extends State<KategorijaPojedinacna> {
                                           trailing: IconButton(
                                               icon: Icon(Icons.delete),
                                               onPressed: () {
-                                                potrosnjaData.izbrisiPotrosnju(
-                                                    widget
-                                                        .dostupnePotrosnje[index]
-                                                        .id);
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (ctx) {
+                                                      return IzbrisiDialog(
+                                                        izbrisi: potrosnjaData
+                                                            .izbrisiPotrosnju,
+                                                        potrosnja: widget
+                                                                .dostupnePotrosnje[
+                                                            index],
+                                                      );
+                                                    });
+                                                // potrosnjaData.izbrisiPotrosnju(
+                                                //     widget
+                                                //         .dostupnePotrosnje[index]
+                                                //         .id);
                                               })),
                                     ),
                                   ),
@@ -435,7 +481,6 @@ class _KategorijaPojedinacnaState extends State<KategorijaPojedinacna> {
   }
 }
 
-
 class PrikaziPotrosnju extends StatefulWidget {
   final PotrosnjaModel potrosnja;
   PrikaziPotrosnju({this.potrosnja});
@@ -444,9 +489,6 @@ class PrikaziPotrosnju extends StatefulWidget {
 }
 
 class _PrikaziPotrosnjuState extends State<PrikaziPotrosnju> {
-
-
-
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
@@ -457,69 +499,66 @@ class _PrikaziPotrosnjuState extends State<PrikaziPotrosnju> {
           height: MediaQuery.of(context).size.height * 0.43,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-            child: Column(
-              children: <Widget>[
+            child: Column(children: <Widget>[
               FittedBox(
-                                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Icon(Icons.payment, color: Colors.orange[700], size: 60),
-                      SizedBox(width: 10),
-                     Text(
-                          widget.potrosnja.naziv,
-                          style: Theme.of(context)
-                              .textTheme
-                              .subtitle1
-                              .copyWith(color: Colors.orange[800]),
-                        ),
-                      
-                    ],
-                  ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(Icons.payment, color: Colors.orange[700], size: 60),
+                    SizedBox(width: 10),
+                    Text(
+                      widget.potrosnja.naziv,
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle1
+                          .copyWith(color: Colors.orange[800]),
+                    ),
+                  ],
                 ),
-                Divider(color: Colors.orange, thickness: 2),
-                SizedBox(height: 25),
-                Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(Icons.monetization_on, color: Colors.amber, size:40),
-                        SizedBox(width: 10),
-                        Text('${widget.potrosnja.trosak} KM',style: Theme.of(context).textTheme.headline6,),
-                      ],
+              ),
+              Divider(color: Colors.orange, thickness: 2),
+              SizedBox(height: 25),
+              Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(Icons.monetization_on, color: Colors.amber, size: 40),
+                    SizedBox(width: 10),
+                    Text(
+                      '${widget.potrosnja.trosak} KM',
+                      style: Theme.of(context).textTheme.headline6,
                     ),
-
+                  ],
+                ),
+              ),
+              SizedBox(height: 15),
+              Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(Icons.date_range, color: Colors.purple, size: 40),
+                    SizedBox(width: 10),
+                    Text(
+                      '${DateFormat('dd.MM.yyyy.').format(widget.potrosnja.datum)}',
+                      style: Theme.of(context).textTheme.headline6,
                     ),
-                    SizedBox(height: 15),
-                     Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(Icons.date_range, color: Colors.purple, size:40),
-                        SizedBox(width: 10),
-                        Text('${DateFormat('dd.MM.yyyy.').format(widget.potrosnja.datum) }', style: Theme.of(context).textTheme.headline6,),
-                      ],
+                  ],
+                ),
+              ),
+              Spacer(),
+              Container(
+                  width: 100,
+                  child: RaisedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    color: Colors.orange,
+                    child: Text(
+                      'OK',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
-
-                    ),
-                Spacer(),
-               
-                      Container(
-                          width: 100,
-                          child: RaisedButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            color: Colors.orange,
-                            child: Text(
-                              'OK',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 18),
-                            ),
-                          )),
-                   
-                    ]
-              
-            ),
+                  )),
+            ]),
           ),
         )
       ],

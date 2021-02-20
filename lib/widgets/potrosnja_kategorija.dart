@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:semir_potrosnja/ekrani/postavkeKategorije/page/postavke_kategorija.dart';
 import '../model/data_provider.dart';
-import '../ekrani/postavke_kategorija.dart';
 import '../ekrani/tab_kategorija_ekran.dart';
+
 class PotrosnjaKategorija extends StatefulWidget {
   //statefull zbog ukupno potrosnji varijable koja se mijenja
 
@@ -15,7 +16,7 @@ class PotrosnjaKategorija extends StatefulWidget {
 
 class _PotrosnjaKategorijaState extends State<PotrosnjaKategorija> {
   void postavkeKategorija(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(builder:(ctx) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
       return PostavkeKategorija(kategorija: widget.kategorija);
     }));
   }
@@ -39,7 +40,7 @@ class _PotrosnjaKategorijaState extends State<PotrosnjaKategorija> {
 
   void otvoriKategoriju(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-      return TabKategorijaEkran(widget.kategorija);
+      return TabKategorijaEkran(widget.kategorija, false);
     }));
   }
 
@@ -50,7 +51,6 @@ class _PotrosnjaKategorijaState extends State<PotrosnjaKategorija> {
     final potData = Provider.of<PotrosnjaLista>(context);
     final postavkeData = Provider.of<SveKategorije>(context);
     return InkWell(
-    
       onTap: () => otvoriKategoriju(context),
       child: Card(
         margin: EdgeInsets.all(10),
@@ -62,13 +62,23 @@ class _PotrosnjaKategorijaState extends State<PotrosnjaKategorija> {
           children: <Widget>[
             Stack(children: <Widget>[
               ClipRRect(
-                child:  widget.kategorija.slikaUrl == 'assets/images/nema-slike.jpg' ? Image.asset(
-                  widget.kategorija.slikaUrl,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: 250,
-                ) : Image.memory(widget.kategorija.slikaEncoded, fit: BoxFit.cover, width: double.infinity,
-                  height: 250,),
+                child:
+                    widget.kategorija.slikaUrl == 'assets/images/nema-slike.jpg'
+                        ? Image.asset(
+                            widget.kategorija.slikaUrl,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: 250,
+                          )
+                        : Hero(
+                            tag: widget.kategorija.id,
+                            child: Image.memory(
+                              widget.kategorija.slikaEncoded,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              height: 250,
+                            ),
+                          ),
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20),
                     topRight: Radius.circular(20)),
@@ -163,16 +173,26 @@ class _PotrosnjaKategorijaState extends State<PotrosnjaKategorija> {
                                     color: Colors.red[600],
                                   ),
                                   onPressed: () {
-                                    final potrosnjaData = Provider.of<PotrosnjaLista>(context, listen: false);
-                                    final potKategorijaData = Provider.of<PotKategorijaLista>(context, listen: false);
-                                    List<PotrosnjaModel> listaPotrosnji = potrosnjaData.potrosnjePoKategorijilista(widget.kategorija.id);
-                                    List<PotKategorija> listaPotkategorija = potKategorijaData.potKategorijePoKategorijilista(widget.kategorija.id);
+                                    final potrosnjaData =
+                                        Provider.of<PotrosnjaLista>(context,
+                                            listen: false);
+                                    final potKategorijaData =
+                                        Provider.of<PotKategorijaLista>(context,
+                                            listen: false);
+                                    List<PotrosnjaModel> listaPotrosnji =
+                                        potrosnjaData
+                                            .potrosnjePoKategorijilista(
+                                                widget.kategorija.id);
+                                    List<PotKategorija> listaPotkategorija =
+                                        potKategorijaData
+                                            .potKategorijePoKategorijilista(
+                                                widget.kategorija.id);
 
-                                     katData
-                                      .izbrisiKategoriju(widget.kategorija.id, listaPotrosnji, listaPotkategorija);
-                                  }
-                                  
-                                )
+                                    katData.izbrisiKategoriju(
+                                        widget.kategorija.id,
+                                        listaPotrosnji,
+                                        listaPotkategorija);
+                                  })
                               : Container(),
                           IconButton(
                             icon: Icon(

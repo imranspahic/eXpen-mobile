@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:open_file/open_file.dart';
+import 'package:semir_potrosnja/model/data_provider.dart';
+import 'package:semir_potrosnja/widgets/pdf_builder.dart';
 
 class PreuzmiPDF extends StatefulWidget {
   final String nazivDokumenta;
-  PreuzmiPDF({@required this.nazivDokumenta});
+  final KategorijaModel kategorija;
+  PreuzmiPDF({@required this.nazivDokumenta, this.kategorija});
   @override
   _PreuzmiPDFState createState() => _PreuzmiPDFState();
 }
 
 class _PreuzmiPDFState extends State<PreuzmiPDF> {
-  Future<void> _loadingFuture() {
-    return Future.delayed(Duration(seconds: 2));
+  Future<void> _loadingFuture() async {
+    final pdfBuilder = PdfBuilderFunc();
+    if (widget.kategorija != null) {
+      return pdfBuilder.buildPdf(context, false, widget.kategorija);
+    }
   }
 
   @override
@@ -41,12 +47,13 @@ class _PreuzmiPDFState extends State<PreuzmiPDF> {
                                       fontWeight: FontWeight.bold)),
                           TextSpan(text: 'dokument!'),
                         ])),
-                SizedBox(height: 10),
+                SizedBox(height: 40),
                 Container(
-                    width: 70,
-                    height: 70,
+                    width: 90,
+                    height: 90,
                     child: Image.asset('assets/images/pdf-logo.png')),
                 SizedBox(height: 30),
+                Spacer(),
                 FutureBuilder(
                     future: _loadingFuture(),
                     builder: (ctx, snapshot) {
@@ -64,8 +71,7 @@ class _PreuzmiPDFState extends State<PreuzmiPDF> {
                                   children: [
                                     TextSpan(text: 'Dokument '),
                                     TextSpan(
-                                      text:
-                                          '${widget.nazivDokumenta}.pdf ',
+                                      text: '${widget.nazivDokumenta}.pdf ',
                                       style: Theme.of(context)
                                           .textTheme
                                           .headline5
@@ -96,6 +102,7 @@ class _PreuzmiPDFState extends State<PreuzmiPDF> {
                             SizedBox(
                               height: 25,
                             ),
+                           
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[

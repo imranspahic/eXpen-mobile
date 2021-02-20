@@ -105,6 +105,28 @@ class PotrosnjaLista with ChangeNotifier {
     return lista;
   }
 
+  double trosakPotrosnjiPoMjesecuKategorije(String katId, int mjesec) {
+    List<PotrosnjaModel> temp = [];
+    List<PotrosnjaModel> listaPot = [];
+    double ukupniTrosak = 0.0;
+    listaSvihPotrosnji.forEach((potrosnja) {
+      if(potrosnja.idKategorije == katId) {
+        temp.add(potrosnja);
+      }
+    });
+    temp.forEach((potrosnja) {
+      if(potrosnja.datum.month == mjesec) {
+        listaPot.add(potrosnja);
+      }
+    });
+
+    listaPot.forEach((potrosnja) {
+      ukupniTrosak = ukupniTrosak + potrosnja.trosak;
+     });
+
+     return ukupniTrosak;
+  }
+
   void dodajPotrosnju(String nazivKategorije, String nazivNovi, double trosak,
       DateTime datum, String id, String potkategorijaId) {
     final novaPotrosnja = PotrosnjaModel(
@@ -136,6 +158,7 @@ class PotrosnjaLista with ChangeNotifier {
 
   Future<void> fetchAndSetPotrosnje() async {
     final dataList = await DatabaseHelper.fetchTabele('potrosnje');
+  
     listaSvihPotrosnji = dataList
         .map((p) => PotrosnjaModel(
               id: p['id'],
@@ -147,7 +170,7 @@ class PotrosnjaLista with ChangeNotifier {
               idPotKategorije: p['idPotKategorije'],
             ))
         .toList();
-
+   
     notifyListeners();
   }
 

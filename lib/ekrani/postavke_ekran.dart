@@ -83,6 +83,21 @@ class _PostavkeEkranState extends State<PostavkeEkran> {
                               .brisanjeKategorijaToggle();
                         })),
               ),
+               ListTile(
+                title: Text(
+                  'Brisanje potrošnji',
+                  style: TextStyle(fontSize: 22),
+                ),
+                subtitle: Text('Omogući brisanje potrošnji'),
+                trailing: Container(
+                    child: Switch(
+                        activeColor: Colors.deepPurple,
+                        value: postavkeData.brisanjeKategorija,
+                        onChanged: (val) {
+                          Provider.of<SveKategorije>(context, listen: false)
+                              .brisanjeKategorijaToggle();
+                        })),
+              ),
               KategorijaPostavki('Sigurnost', Icons.lock),
               ListTile(
                 contentPadding: EdgeInsets.all(10),

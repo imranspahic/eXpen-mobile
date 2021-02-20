@@ -532,7 +532,7 @@ class _DetaljiKategorijaEkranState extends State<DetaljiKategorijaEkran> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text(
-                          'Plata za ${trenutnaVrijednostDropdown.toLowerCase()}',
+                          'Prihod za ${trenutnaVrijednostDropdown.toLowerCase()}',
                           style: TextStyle(fontFamily: 'Lato', fontSize: 18),
                         ),
                         Text(
