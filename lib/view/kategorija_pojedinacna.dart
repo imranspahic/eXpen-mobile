@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:semir_potrosnja/model/rashod_kategorija_provider.dart';
+import 'package:semir_potrosnja/view/dodaj_rashod_ekran.dart';
+import 'package:semir_potrosnja/view/planirane_potrosnje_ekran.dart';
 import 'dart:math';
-
-import '../ekrani/dodaj_rashod_ekran.dart';
 import '../widgets/badge.dart';
 import './edit_potkategorija_ekran.dart';
 import './tab_potkategorija_ekran.dart';
@@ -14,7 +14,6 @@ import '../model/data_provider.dart';
 import '../widgets/dodaj_novu_potrosnju.dart';
 import '../widgets/izbrisi_dialog.dart';
 import './dodaj_vise_potrosnji.dart';
-import '../ekrani/planirane_potrosnje_ekran.dart';
 
 class KategorijaPojedinacna extends StatefulWidget {
   static const routeName = 'kategorija-pojedinacna';

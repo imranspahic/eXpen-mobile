@@ -1,15 +1,11 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:semir_potrosnja/ekrani/postavkeKategorije/widgets/gridOpcija.dart';
+import 'package:semir_potrosnja/view/categorySettingsScreen/widgets/gridOpcija.dart';
+import 'package:semir_potrosnja/viewModel/categoryViewModel/pickCategoryImageViewModel.dart';
+import 'package:semir_potrosnja/viewModel/categoryViewModel/showChangeCategoryNameDialog.dart';
 import '../../../model/data_provider.dart';
 import 'package:provider/provider.dart';
-import '../../../widgets/pdf_builder.dart';
 import 'package:permission_handler/permission_handler.dart';
-
 import '../../../widgets/pdf_dialog.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 
 class PostavkeKategorija extends StatefulWidget {
   final KategorijaModel kategorija;
@@ -20,57 +16,7 @@ class PostavkeKategorija extends StatefulWidget {
 }
 
 class _PostavkeKategorijaState extends State<PostavkeKategorija> {
-  final picker = ImagePicker();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  Future _izaberiSliku() async {
-    final slika = await picker.getImage(source: ImageSource.gallery);
-    List<int> slikaBytes = await slika.readAsBytes();
-
-    String slikaEncode = base64Encode(slikaBytes);
-
-    if (slikaEncode.length > 970000) {
-      _scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.warning, color: Colors.red),
-            SizedBox(width: 15),
-            RichText(
-                text: TextSpan(children: [
-              TextSpan(
-                text: 'Slika je veća od ',
-              ),
-              TextSpan(
-                  text: '700KB',
-                  style: TextStyle(
-                      color: Colors.blue[300], fontWeight: FontWeight.bold)),
-              TextSpan(text: ', izaberite drugu!')
-            ])),
-          ],
-        ),
-        duration: Duration(seconds: 4),
-      ));
-      return;
-    } else {
-      final katData = Provider.of<KategorijaLista>(context, listen: false);
-      setState(() {
-        katData.updateSlikuKategorije(slikaEncode, widget.kategorija.id);
-      });
-    }
-  }
-
-  void _promijeniNaziv() {
-    showDialog(
-        context: context,
-        builder: (ctx) {
-          return PromijeniNaziv(kategorijaId: widget.kategorija.id);
-        }).then((value) {
-      if (value == 'promijenjeno') {
-        setState(() {});
-      }
-    });
-  }
 
   Future<void> _preuzmiPodatkePDF() async {
     var status = await Permission.storage.status;
@@ -88,9 +34,7 @@ class _PostavkeKategorijaState extends State<PostavkeKategorija> {
         });
   }
 
-  void _postaviIkonuZaPotrosnje() {
-    
-  }
+  void _postaviIkonuZaPotrosnje() {}
 
   @override
   Widget build(BuildContext context) {
@@ -110,16 +54,20 @@ class _PostavkeKategorijaState extends State<PostavkeKategorija> {
                     height: 250,
                     decoration:
                         BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: widget.kategorija.slikaUrl ==
-                                'assets/images/nema-slike.jpg'
-                            ? Image.asset('assets/images/nema-slike.jpg',
-                                fit: BoxFit.cover)
-                            : Image.memory(
-                                widget.kategorija.slikaEncoded,
-                                fit: BoxFit.cover,
-                              )),
+                    child: Consumer<KategorijaLista>(
+                      builder: (context, providerData, child) {
+                        return ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: widget.kategorija.slikaUrl ==
+                                    'assets/images/nema-slike.jpg'
+                                ? Image.asset('assets/images/nema-slike.jpg',
+                                    fit: BoxFit.cover)
+                                : Image.memory(
+                                    widget.kategorija.slikaEncoded,
+                                    fit: BoxFit.cover,
+                                  ));
+                      },
+                    ),
                   ),
                   Positioned(
                       bottom: 20,
@@ -154,12 +102,14 @@ class _PostavkeKategorijaState extends State<PostavkeKategorija> {
                     GridOpcija(
                       naziv: 'Izaberi/promijeni sliku',
                       ikona: Icons.image,
-                      funkcija: _izaberiSliku,
+                      funkcija: () => pickCategoryImage(
+                          context, _scaffoldKey, widget.kategorija),
                     ),
                     GridOpcija(
                       naziv: 'Promijeni naziv',
                       ikona: Icons.edit,
-                      funkcija: _promijeniNaziv,
+                      funkcija: () => showChangeCategoryNameDialog(
+                          context, widget.kategorija.id),
                     ),
                     GridOpcija(
                       naziv: 'Postavi ikonu za potrošnje',
@@ -290,93 +240,5 @@ class _PostavkeKategorijaState extends State<PostavkeKategorija> {
             ],
           ),
         ));
-  }
-}
-
-class PromijeniNaziv extends StatefulWidget {
-  final String kategorijaId;
-  PromijeniNaziv({this.kategorijaId});
-  @override
-  _PromijeniNazivState createState() => _PromijeniNazivState();
-}
-
-class _PromijeniNazivState extends State<PromijeniNaziv> {
-  TextEditingController _nazivController = TextEditingController();
-
-  void _sacuvaj() {
-    final naziv = _nazivController.text;
-    final katData = Provider.of<KategorijaLista>(context, listen: false);
-    katData.updateNazivKategorije(naziv, widget.kategorijaId);
-    Navigator.of(context).pop('promijenjeno');
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SimpleDialog(
-      children: <Widget>[
-        Container(
-          width: MediaQuery.of(context).size.width * 0.7,
-          height: MediaQuery.of(context).size.height * 0.4,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
-            child: Column(
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(Icons.edit, color: Colors.orange[700], size: 60),
-                    SizedBox(width: 10),
-                    Text(
-                      'Promijeni naziv',
-                      style: Theme.of(context)
-                          .textTheme
-                          .subtitle1
-                          .copyWith(color: Colors.orange[800]),
-                    ),
-                  ],
-                ),
-                Divider(color: Colors.orange, thickness: 2),
-                SizedBox(height: 30),
-                Container(
-                    width: 200,
-                    child: TextField(
-                      controller: _nazivController,
-                      decoration: InputDecoration(hintText: 'Unesi naziv'),
-                    )),
-                Spacer(),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Container(
-                          width: 100,
-                          child: RaisedButton(
-                            onPressed: _sacuvaj,
-                            color: Colors.orange,
-                            child: Text(
-                              'Sačuvaj',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 18),
-                            ),
-                          )),
-                      Container(
-                          width: 120,
-                          child: RaisedButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            color: Colors.grey,
-                            child: Text(
-                              'Odustani',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 18),
-                            ),
-                          )),
-                    ])
-              ],
-            ),
-          ),
-        )
-      ],
-    );
   }
 }

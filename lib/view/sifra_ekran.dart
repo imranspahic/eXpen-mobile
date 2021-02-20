@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:semir_potrosnja/database/glavni_podaci_database.dart';
 import '../model/data_provider.dart';
-import './pocetni_ekran.dart';
+import 'homeScreen/pages/homeScreen.dart';
 
 class SifraEkran extends StatefulWidget {
   @override
@@ -32,7 +32,7 @@ class _SifraEkranState extends State<SifraEkran> {
                 if (Provider.of<SveKategorije>(context).zastitaLozinkom) {
                   return Zastita();
                 } else {
-                  return PocetniEkran();
+                  return HomeScreen();
                 }
               }
             }));
@@ -61,7 +61,7 @@ class _ZastitaState extends State<Zastita> {
       return;
     } else {
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx) {
-        return PocetniEkran();
+        return HomeScreen();
       }));
     }
   }

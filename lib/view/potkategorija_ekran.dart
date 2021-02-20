@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:semir_potrosnja/view/dodaj_vise_potrosnji.dart';
 import '../model/data_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import '../widgets/dodaj_novu_potrosnju.dart';
-import '../ekrani/dodaj_vise_potrosnji.dart';
 import 'planirane_potrosnje_ekran.dart';
 
 

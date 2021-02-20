@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:semir_potrosnja/view/sifra_ekran.dart';
 import 'model/biljeske_provider.dart';
 import 'model/obavijesti_provider.dart';
 import 'model/data_provider.dart';
 import 'model/plata_provider.dart';
 import 'model/rashod_kategorija_provider.dart';
-import './ekrani/sifra_ekran.dart';
 
-void main()  {
+void main() {
   runApp(MyApp());
 }
- 
 
 class MyApp extends StatelessWidget {
   @override
@@ -48,22 +47,20 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
             primarySwatch: Colors.orange,
             accentColor: Colors.brown,
-           
-
             textTheme: ThemeData.light().textTheme.copyWith(
-                headline2: TextStyle( 
+                headline2: TextStyle(
                     fontSize: 45,
                     fontFamily: 'Raleway',
                     color: Colors.brown[700],
                     fontWeight: FontWeight.bold,
                     letterSpacing: 6),
-                headline6: TextStyle(fontSize: 30, fontFamily: 'RobotoCondensed'),
+                headline6:
+                    TextStyle(fontSize: 30, fontFamily: 'RobotoCondensed'),
                 subtitle2: TextStyle(
                   fontSize: 40,
                   fontFamily: 'Raleway',
                   color: Colors.orangeAccent[100],
                 ),
-                
                 caption: TextStyle(
                     fontSize: 22,
                     fontFamily: 'Lato',

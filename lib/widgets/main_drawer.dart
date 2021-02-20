@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:semir_potrosnja/view/a%C5%BEuriranje_opcije.dart';
+import 'package:semir_potrosnja/view/biljeske_ekran.dart';
+import 'package:semir_potrosnja/view/detalji_kategorija_ekran.dart';
+import 'package:semir_potrosnja/view/dodaj_rashod_ekran.dart';
+import 'package:semir_potrosnja/view/obavijesti_ekran.dart';
+import 'package:semir_potrosnja/view/postavke_ekran.dart';
+import 'package:semir_potrosnja/view/rashod_pregled_ekran.dart';
+import 'package:semir_potrosnja/view/tab_kategorija_ekran.dart';
 import 'dart:math';
 import '../model/data_provider.dart';
 import '../model/obavijesti_provider.dart';
-import '../ekrani/tab_kategorija_ekran.dart';
-import '../ekrani/detalji_kategorija_ekran.dart';
-import '../ekrani/biljeske_ekran.dart';
-import '../ekrani/obavijesti_ekran.dart';
-import '../ekrani/dodaj_rashod_ekran.dart';
-import '../ekrani/postavke_ekran.dart';
-import '../ekrani/ažuriranje_opcije.dart';
-import '../ekrani/rashod_pregled_ekran.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 class MainDrawer extends StatelessWidget {

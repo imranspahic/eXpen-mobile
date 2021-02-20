@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:semir_potrosnja/ekrani/postavkeKategorije/page/postavke_kategorija.dart';
+import 'package:semir_potrosnja/view/categorySettingsScreen/pages/postavke_kategorija.dart';
+import 'package:semir_potrosnja/view/tab_kategorija_ekran.dart';
 import '../model/data_provider.dart';
-import '../ekrani/tab_kategorija_ekran.dart';
 
 class PotrosnjaKategorija extends StatefulWidget {
   //statefull zbog ukupno potrosnji varijable koja se mijenja

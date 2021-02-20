@@ -1,41 +1,27 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:semir_potrosnja/ekrani/obavijesti_ekran.dart';
-import '../model/data_provider.dart';
-import '../model/obavijesti_provider.dart';
-import '../widgets/potrosnja_kategorija.dart';
-import '../widgets/dodaj_novu_kategoriju.dart';
-import '../widgets/main_drawer.dart';
+import 'package:semir_potrosnja/view/homeScreen/widgets/homeScreenAppBar.dart';
+import 'package:semir_potrosnja/viewModel/categoryViewModel/showAddCategoryDialogViewModel.dart';
+import '../../../model/data_provider.dart';
+import '../../../model/obavijesti_provider.dart';
+import '../../../widgets/potrosnja_kategorija.dart';
+import '../../../widgets/main_drawer.dart';
 
-class PocetniEkran extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
   @override
-  _PocetniEkranState createState() => _PocetniEkranState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _PocetniEkranState extends State<PocetniEkran> {
+class _HomeScreenState extends State<HomeScreen> {
   Future kategorijeFuture;
   Future postavkeFuture;
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
-  void pocniDodavatKategorije(ctx) {
-    showDialog(
-        context: ctx,
-        builder: (ctx) => SimpleDialog(children: <Widget>[
-              Container(height: 230, width: 400, child: DodajNovuKategoriju()),
-            ])).then((value) {
-      if (value == 'error') {
-        _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text(
-              'Pogrešan unos, naziv ne smije biti prazan ili duži od 25 znakova'),
-        ));
-      }
-    });
-  }
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-  
+
     Provider.of<PotrosnjaLista>(context, listen: false)
         .provjeriMjesecnoDodavanjeKategorija()
         .then((listaObavijesti) {
@@ -84,34 +70,9 @@ class _PocetniEkranState extends State<PocetniEkran> {
       key: _scaffoldKey,
       drawer: MainDrawer(katData.kategorijaLista,
           obavijestiData.listaNeprocitanihObavijesti()),
-      appBar: AppBar(
-        title: Row(
-          children: <Widget>[
-            Image.asset('assets/images/logo_coin_removed.png',
-                width: 30, height: 30),
-            SizedBox(width: 5),
-            Text(
-              'eXpen',
-              style: TextStyle(color: Colors.black),
-            ),
-          ],
-        ),
-        actions: <Widget>[
-          IconButton(
-              icon: Provider.of<ObavijestiLista>(context)
-                          .neprocitaneObavijesti() ==
-                      0
-                  ? Icon(Icons.notifications_none)
-                  : Icon(Icons.notifications_active),
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
-                  return ObavijestiEkran();
-                }));
-              }),
-          IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () => pocniDodavatKategorije(context))
-        ],
+      appBar: homeScreenAppBar(
+        context,
+        _scaffoldKey,
       ),
       body: FutureBuilder(
           future: kategorijeFuture,
@@ -180,7 +141,7 @@ class _PocetniEkranState extends State<PocetniEkran> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () => pocniDodavatKategorije(context),
+        onPressed: () => showAddCategoryDialog(context, _scaffoldKey),
       ),
     );
   }
