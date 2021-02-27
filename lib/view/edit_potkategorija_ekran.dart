@@ -23,9 +23,11 @@ class _EditPotkategorijaEkranState extends State<EditPotkategorijaEkran> {
   int staraIkona;
 
   _pickIcon() async {
-    IconData icon = await FlutterIconPicker.showIconPicker(
-      context,
-    );
+    IconData icon = await FlutterIconPicker.showIconPicker(context,
+        title: Text("Izaberi ikonu"),
+        searchHintText: "Pretraži",
+        closeChild: Text("Zatvori"),
+        showSearchBar: false);
 
     icon != null
         ? _icon = Icon(
@@ -36,7 +38,7 @@ class _EditPotkategorijaEkranState extends State<EditPotkategorijaEkran> {
             IconData(widget.potKategorija.icon, fontFamily: 'MaterialIcons'),
             size: 40,
           );
-   setState(() {
+    setState(() {
       if (icon != null) {
         staraIkona = widget.potKategorija.icon;
         widget.potKategorija.icon = icon.codePoint;
@@ -66,11 +68,9 @@ class _EditPotkategorijaEkranState extends State<EditPotkategorijaEkran> {
                 onPressed: () {
                   Navigator.of(context).pop();
                   setState(() {
-                       staraBoja = mainColor;
+                    staraBoja = mainColor;
                     mainColor = _tempMainColor;
-                  
                   });
-                   
                 },
               ),
             ],
@@ -86,15 +86,10 @@ class _EditPotkategorijaEkranState extends State<EditPotkategorijaEkran> {
       MaterialColorPicker(
         allowShades: false,
         selectedColor: _shadeColor,
-       
-        onMainColorChange: (color) => 
-          _tempMainColor = color,
-       
-      
+        onMainColorChange: (color) => _tempMainColor = color,
       ),
     );
   }
-
 
   @override
   void initState() {
@@ -102,7 +97,7 @@ class _EditPotkategorijaEkranState extends State<EditPotkategorijaEkran> {
     stariNaziv = widget.potKategorija.naziv;
     staraIkona = widget.potKategorija.icon;
     staraBoja = widget.potKategorija.bojaIkone;
-    
+
     super.initState();
   }
 
@@ -111,9 +106,9 @@ class _EditPotkategorijaEkranState extends State<EditPotkategorijaEkran> {
     _nazivController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
-   
     return WillPopScope(
       onWillPop: () {
         return showDialog(
@@ -136,12 +131,10 @@ class _EditPotkategorijaEkranState extends State<EditPotkategorijaEkran> {
                       child: Text('Ne')),
                   FlatButton(
                       onPressed: () {
-                      
                         Navigator.of(ctx).pop();
                         if (mainColor != null) {
                           if (_nazivController.text.length < 25) {
                             widget.potKategorija.naziv = _nazivController.text;
-                          
                           } else {
                             //throw error
                           }
@@ -156,9 +149,7 @@ class _EditPotkategorijaEkranState extends State<EditPotkategorijaEkran> {
                           );
                         } else {
                           if (_nazivController.text.length < 25) {
-                           
                             widget.potKategorija.naziv = _nazivController.text;
-                            
                           } else {
                             //throw error
                           }
@@ -283,8 +274,7 @@ class _EditPotkategorijaEkranState extends State<EditPotkategorijaEkran> {
           ],
         ),
         body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
+          child: Column(children: <Widget>[
             Padding(
               padding: EdgeInsets.all(10),
               child: ListTile(
@@ -325,16 +315,14 @@ class _EditPotkategorijaEkranState extends State<EditPotkategorijaEkran> {
                     onFieldSubmitted: (val) {
                       if (val.isNotEmpty && val.length < 25) {
                         setState(() {
-                              widget.potKategorija.naziv = val;
+                          widget.potKategorija.naziv = val;
                         });
-                      
                       }
                     },
                   ),
                 ],
               )),
             ),
-           
             Container(
               margin: EdgeInsets.only(bottom: 5),
               padding: EdgeInsets.only(top: 5),
@@ -395,7 +383,7 @@ class _EditPotkategorijaEkranState extends State<EditPotkategorijaEkran> {
                     } else {
                       //throw error
                     }
-                     widget.potKategorija.naziv = _nazivController.text;
+                    widget.potKategorija.naziv = _nazivController.text;
                     widget.potKategorija.bojaIkone = mainColor;
                     Provider.of<PotKategorijaLista>(context, listen: false)
                         .snimiPromjene(

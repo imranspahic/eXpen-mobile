@@ -6,7 +6,7 @@ import 'package:semir_potrosnja/viewModel/categoryViewModel/showAddCategoryDialo
 import '../../../model/data_provider.dart';
 import '../../../model/obavijesti_provider.dart';
 import '../../../widgets/potrosnja_kategorija.dart';
-import '../../../widgets/main_drawer.dart';
+import '../../drawerScreen/pages/main_drawer.dart';
 
 class HomeScreen extends StatefulWidget {
   @override

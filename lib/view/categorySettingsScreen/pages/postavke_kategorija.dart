@@ -90,13 +90,14 @@ class _PostavkeKategorijaState extends State<PostavkeKategorija> {
                 ],
               ),
               SizedBox(height: 15),
-              Expanded(
+              Flexible(
+               
                 child: GridView(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
                     crossAxisSpacing: 15,
                     mainAxisSpacing: 15,
-                    childAspectRatio: 3 / 3,
+                    childAspectRatio: 7 / 8,
                   ),
                   children: [
                     GridOpcija(
@@ -123,6 +124,9 @@ class _PostavkeKategorijaState extends State<PostavkeKategorija> {
                   ],
                 ),
               ),
+              Divider()
+
+           
               // GestureDetector(
               //   onTap: _izaberiSliku,
               //   child: Container(

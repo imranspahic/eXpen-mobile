@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:semir_potrosnja/model/data_provider.dart';
+import 'package:semir_potrosnja/model/obavijesti_provider.dart';
 import 'package:semir_potrosnja/view/a%C5%BEuriranje_opcije.dart';
 import 'package:semir_potrosnja/view/biljeske_ekran.dart';
 import 'package:semir_potrosnja/view/detalji_kategorija_ekran.dart';
 import 'package:semir_potrosnja/view/dodaj_rashod_ekran.dart';
 import 'package:semir_potrosnja/view/obavijesti_ekran.dart';
-import 'package:semir_potrosnja/view/postavke_ekran.dart';
+import 'package:semir_potrosnja/view/settingsScreen/pages/settingsScreen.dart';
 import 'package:semir_potrosnja/view/rashod_pregled_ekran.dart';
 import 'package:semir_potrosnja/view/tab_kategorija_ekran.dart';
 import 'dart:math';
-import '../model/data_provider.dart';
-import '../model/obavijesti_provider.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 class MainDrawer extends StatelessWidget {
@@ -51,7 +51,7 @@ class MainDrawer extends StatelessWidget {
 
   void otvoriPostavke(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
-      return PostavkeEkran();
+      return SettingsScreen();
     }));
   }
 
@@ -111,7 +111,9 @@ class MainDrawer extends StatelessWidget {
     return InkWell(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-          return ObavijestiEkran(otvorenaObavijest: obavijest,);
+          return ObavijestiEkran(
+            otvorenaObavijest: obavijest,
+          );
           //obavijest pass
         }));
       },
@@ -121,7 +123,6 @@ class MainDrawer extends StatelessWidget {
           color: Colors.cyan[100],
         ),
         margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-       
         height: 60,
         child: FittedBox(
           child: Padding(
@@ -143,7 +144,11 @@ class MainDrawer extends StatelessWidget {
                   Expanded(
                       child: AutoSizeText(
                     obavijest.sadrzaj,
-                    style: TextStyle(fontSize: 16, fontFamily: 'Raleway', fontWeight: FontWeight.bold, color:Colors.red[700]),
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontFamily: 'Raleway',
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red[700]),
                     softWrap: true,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -301,12 +306,21 @@ class MainDrawer extends StatelessWidget {
                     ),
                   ],
                 ),
-                if(listaObavijesti.length>3)
-                Center(child: RaisedButton(onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
-                    return ObavijestiEkran();
-                  }));
-                }, child: Text('Prikaži još ${listaObavijesti.length-3}...', style: TextStyle(color:Colors.white),), color: Colors.red[600]),),
+                if (listaObavijesti.length > 3)
+                  Center(
+                    child: RaisedButton(
+                        onPressed: () {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (ctx) {
+                            return ObavijestiEkran();
+                          }));
+                        },
+                        child: Text(
+                          'Prikaži još ${listaObavijesti.length - 3}...',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        color: Colors.red[600]),
+                  ),
                 InkWell(
                     onTap: () => otvoriPlata(context),
                     child: Container(
@@ -337,7 +351,7 @@ class MainDrawer extends StatelessWidget {
                 InkWell(
                     onTap: () => otvoriPregledRashod(context),
                     child: Container(
-                       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+                      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
                       padding:
                           EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                       decoration: BoxDecoration(
@@ -413,7 +427,7 @@ class MainDrawer extends StatelessWidget {
                         ],
                       )),
                 ),
-                 InkWell(
+                InkWell(
                   onTap: () => otvoriObavijesti(context),
                   child: Container(
                       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 7),

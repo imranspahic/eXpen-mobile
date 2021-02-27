@@ -281,6 +281,14 @@ class DatabaseHelper {
     database.update(table, {'mjesecnoDodavanje': 1});
     database.update(table, {'jeLiMjesecnoDodano': 'ne'});
   }
+
+  static Future<void> updateCategoryTableIconColor() async {
+    final database = await DatabaseHelper.database();
+    await database
+        .execute('ALTER TABLE kategorije ADD COLUMN ikonaPotrošnji TEXT;');
+    await database.execute(
+        'ALTER TABLE kategorije ADD COLUMN prikažiIkonuPotrošnje TEXT DEFAULT "NE";');
+  }
 }
 
 Future<Database> database() async {
@@ -291,12 +299,12 @@ Future<Database> database() async {
         'CREATE TABLE biljeske(id TEXT PRIMARY KEY, naziv TEXT, tekstSadrzaj TEXT, datum TEXT)');
   }, version: 4);
 }
- Future<void> insertBiljeske(
-      String table, Map<String, dynamic> data) async {
-    final database = await DatabaseHelper.database();
-    database.insert(
-      table,
-      data,
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-  }
+
+Future<void> insertBiljeske(String table, Map<String, dynamic> data) async {
+  final database = await DatabaseHelper.database();
+  database.insert(
+    table,
+    data,
+    conflictAlgorithm: ConflictAlgorithm.replace,
+  );
+}

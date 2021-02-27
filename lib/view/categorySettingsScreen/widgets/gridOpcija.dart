@@ -11,14 +11,11 @@ class GridOpcija extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: funkcija,
-          child: Container(
-        
+      child: Container(
         padding: EdgeInsets.all(5),
         decoration: BoxDecoration(
-          color: Colors.orange[50],
-          borderRadius: BorderRadius.circular(20)
-        ),
-        height: 50,
+            color: Colors.orange[50], borderRadius: BorderRadius.circular(20)),
+    
         width: 50,
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -35,14 +32,15 @@ class GridOpcija extends StatelessWidget {
                       width: 50,
                       height: 50,
                     ),
-              Container(
+              Flexible(
                 child: AutoSizeText(
                   naziv,
                   textAlign: TextAlign.center,
-                  maxLines: 2,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
                   minFontSize: 15,
                   style: TextStyle(
-                      fontSize: 20, color: Theme.of(context).primaryColor),
+                      fontSize: 18, color: Theme.of(context).primaryColor),
                 ),
               )
             ]),
