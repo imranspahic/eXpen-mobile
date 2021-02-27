@@ -1,4 +1,4 @@
-# semir_potrosnja
+# eXpen
 
 A new Flutter project.
 
