@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:semir_potrosnja/widgets/pdf_builder.dart';
-import 'package:semir_potrosnja/widgets/pdf_dialog.dart';
+import 'package:expen/widgets/pdf_builder.dart';
+import 'package:expen/widgets/pdf_dialog.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class SettingsPDFExport extends StatelessWidget {

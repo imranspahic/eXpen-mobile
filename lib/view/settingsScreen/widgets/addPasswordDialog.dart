@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:semir_potrosnja/database/glavni_podaci_database.dart';
-import 'package:semir_potrosnja/model/data_provider.dart';
+import 'package:expen/database/glavni_podaci_database.dart';
+import 'package:expen/providers/settingsNotifier.dart';
 import 'package:provider/provider.dart';
 
 class AddPasswordDialog extends StatefulWidget {
@@ -34,7 +34,7 @@ class _AddPasswordDialogState extends State<AddPasswordDialog> {
         error = false;
       });
       DatabaseHelper.updateSifru('postavke', 'sifra', '$sifra');
-      Provider.of<SveKategorije>(context, listen: false)
+      Provider.of<SettingsNotifier>(context, listen: false)
           .zastitaLozinkomToggle();
       Navigator.of(context).pop(0);
     }

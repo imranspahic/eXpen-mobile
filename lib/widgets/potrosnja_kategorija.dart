@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:semir_potrosnja/view/categorySettingsScreen/pages/postavke_kategorija.dart';
-import 'package:semir_potrosnja/view/tab_kategorija_ekran.dart';
-import '../model/data_provider.dart';
+import 'package:expen/view/categorySettingsScreen/pages/postavke_kategorija.dart';
+import 'package:expen/providers/expenseNotifier.dart';
+import 'package:expen/view/tab_kategorija_ekran.dart';
+import 'package:expen/providers/settingsNotifier.dart';
+import 'package:expen/providers/categoryNotifier.dart';
+import 'package:expen/providers/subcategoryNotifier.dart';
 
 class PotrosnjaKategorija extends StatefulWidget {
   //statefull zbog ukupno potrosnji varijable koja se mijenja
 
-  final KategorijaModel kategorija;
+  final CategoryModel kategorija;
   PotrosnjaKategorija(this.kategorija);
 
   @override
@@ -31,9 +34,9 @@ class _PotrosnjaKategorijaState extends State<PotrosnjaKategorija> {
   @override
   void initState() {
     potKategorijafuture =
-        Provider.of<PotKategorijaLista>(context, listen: false)
+        Provider.of<SubcategoryNotifier>(context, listen: false)
             .fetchAndSetPotkategorije();
-    potrosnjefuture = Provider.of<PotrosnjaLista>(context, listen: false)
+    potrosnjefuture = Provider.of<ExpenseNotifier>(context, listen: false)
         .fetchAndSetPotrosnje();
     super.initState();
   }
@@ -46,10 +49,10 @@ class _PotrosnjaKategorijaState extends State<PotrosnjaKategorija> {
 
   @override
   Widget build(BuildContext context) {
-    final katData = Provider.of<KategorijaLista>(context);
-    final potKatData = Provider.of<PotKategorijaLista>(context);
-    final potData = Provider.of<PotrosnjaLista>(context);
-    final postavkeData = Provider.of<SveKategorije>(context);
+    final katData = Provider.of<CategoryNotifier>(context);
+    final potKatData = Provider.of<SubcategoryNotifier>(context);
+    final potData = Provider.of<ExpenseNotifier>(context);
+    final postavkeData = Provider.of<SettingsNotifier>(context);
     return InkWell(
       onTap: () => otvoriKategoriju(context),
       child: Card(
@@ -174,16 +177,17 @@ class _PotrosnjaKategorijaState extends State<PotrosnjaKategorija> {
                                   ),
                                   onPressed: () {
                                     final potrosnjaData =
-                                        Provider.of<PotrosnjaLista>(context,
+                                        Provider.of<ExpenseNotifier>(context,
                                             listen: false);
                                     final potKategorijaData =
-                                        Provider.of<PotKategorijaLista>(context,
+                                        Provider.of<SubcategoryNotifier>(
+                                            context,
                                             listen: false);
-                                    List<PotrosnjaModel> listaPotrosnji =
+                                    List<ExpenseModel> listaPotrosnji =
                                         potrosnjaData
                                             .potrosnjePoKategorijilista(
                                                 widget.kategorija.id);
-                                    List<PotKategorija> listaPotkategorija =
+                                    List<SubcategoryModel> listaPotkategorija =
                                         potKategorijaData
                                             .potKategorijePoKategorijilista(
                                                 widget.kategorija.id);

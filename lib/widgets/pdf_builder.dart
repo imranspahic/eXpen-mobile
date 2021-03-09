@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:expen/providers/expenseNotifier.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import '../model/data_provider.dart';
+import 'package:expen/providers/categoryNotifier.dart';
 import 'dart:io';
 
 class PdfBuilderFunc {
@@ -14,10 +15,10 @@ class PdfBuilderFunc {
   }
 
   pw.Widget _contentTable(BuildContext buildContext, pw.Context pdfCTX, bool isGeneralno,
-      [KategorijaModel kategorija]) {
+      [CategoryModel kategorija]) {
     final potrosnjaData =
-        Provider.of<PotrosnjaLista>(buildContext, listen: false);
-    List<PotrosnjaModel> data = !isGeneralno ? 
+        Provider.of<ExpenseNotifier>(buildContext, listen: false);
+    List<ExpenseModel> data = !isGeneralno ? 
         potrosnjaData.potrosnjePoKategorijilista(kategorija.id) : potrosnjaData.listaSvihPotrosnji;
     data.sort((a, b) {
       return -a.trosak.compareTo(b.trosak);
@@ -88,9 +89,9 @@ class PdfBuilderFunc {
   }
 
   Future buildPdf(BuildContext buildContext, bool isGeneralno,
-      [KategorijaModel kategorija]) async {
-    final List<KategorijaModel> _listaKategorija =
-        Provider.of<KategorijaLista>(buildContext, listen: false)
+      [CategoryModel kategorija]) async {
+    final List<CategoryModel> _listaKategorija =
+        Provider.of<CategoryNotifier>(buildContext, listen: false)
             .kategorijaLista;
     final int brojKategorija = _listaKategorija.length;
 
@@ -99,7 +100,7 @@ class PdfBuilderFunc {
         datum.minute, datum.second);
 
     final potrosnjaData =
-        Provider.of<PotrosnjaLista>(buildContext, listen: false);
+        Provider.of<ExpenseNotifier>(buildContext, listen: false);
     final pdf = pw.Document();
     PdfImage image = PdfImage.file(
       pdf.document,

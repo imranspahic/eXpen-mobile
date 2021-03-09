@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:expen/providers/expenseNotifier.dart';
 import 'package:provider/provider.dart';
-import '../model/data_provider.dart';
+import 'package:expen/providers/categoryNotifier.dart';
+import 'package:expen/providers/subcategoryNotifier.dart';
 
 class DodajVisePotrosnji extends StatefulWidget {
-  final KategorijaModel kategorija;
-  final PotKategorija potkategorija;
+  final CategoryModel kategorija;
+  final SubcategoryModel potkategorija;
   final bool uPotkategoriji;
 
   DodajVisePotrosnji(
@@ -30,7 +32,7 @@ class _DodajVisePotrosnjiState extends State<DodajVisePotrosnji> {
   }
 
   void submitData() {
-    final potrosnjaData = Provider.of<PotrosnjaLista>(context, listen: false);
+    final potrosnjaData = Provider.of<ExpenseNotifier>(context, listen: false);
     String uneseniNaziv = nazivController.text;
     final uneseniBrojPotrosnji = int.parse(brojPotrosnjiController.text);
     final uneseniTrosak = double.parse(trosakController.text);

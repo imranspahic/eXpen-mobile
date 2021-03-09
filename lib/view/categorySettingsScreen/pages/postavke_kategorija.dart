@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:semir_potrosnja/view/categorySettingsScreen/widgets/gridOpcija.dart';
-import 'package:semir_potrosnja/viewModel/categoryViewModel/pickCategoryImageViewModel.dart';
-import 'package:semir_potrosnja/viewModel/categoryViewModel/showChangeCategoryNameDialog.dart';
-import '../../../model/data_provider.dart';
+import 'package:expen/view/categorySettingsScreen/widgets/gridOpcija.dart';
+import 'package:expen/viewModel/categoryViewModel/pickCategoryImageViewModel.dart';
+import 'package:expen/viewModel/categoryViewModel/showChangeCategoryNameDialog.dart';
+import 'package:expen/providers/categoryNotifier.dart';
 import 'package:provider/provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../../widgets/pdf_dialog.dart';
 
 class PostavkeKategorija extends StatefulWidget {
-  final KategorijaModel kategorija;
+  final CategoryModel kategorija;
   PostavkeKategorija({this.kategorija});
 
   @override
@@ -54,7 +54,7 @@ class _PostavkeKategorijaState extends State<PostavkeKategorija> {
                     height: 250,
                     decoration:
                         BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                    child: Consumer<KategorijaLista>(
+                    child: Consumer<CategoryNotifier>(
                       builder: (context, providerData, child) {
                         return ClipRRect(
                             borderRadius: BorderRadius.circular(20),

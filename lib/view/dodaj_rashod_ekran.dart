@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:semir_potrosnja/model/plata_provider.dart';
-import 'package:semir_potrosnja/model/rashod_kategorija_provider.dart';
-import '../model/data_provider.dart';
+import 'package:expen/providers/salaryNotifier.dart';
+import 'package:expen/providers/expenseCategoryNotifier.dart';
+import 'package:expen/providers/categoryNotifier.dart';
+import 'package:expen/providers/settingsNotifier.dart';
 //RASHOD ZA POTKATEGORIJU
 
 class DodajRashodEkran extends StatefulWidget {
-  final KategorijaModel kategorija;
+  final CategoryModel kategorija;
   final bool isKategorija;
   DodajRashodEkran({this.kategorija, this.isKategorija});
   @override
@@ -25,10 +26,10 @@ class _DodajRashodEkranState extends State<DodajRashodEkran> {
   @override
   void initState() {
     vrijednostFocus.addListener(vrijednostListener);
-    rashodKategorijaFuture = Provider.of<RashodKategorijaLista>(context, listen: false).fetchAndSetRashodKategorija();
+    rashodKategorijaFuture = Provider.of<ExpenseCategoryNotifier>(context, listen: false).fetchAndSetRashodKategorija();
     if(!widget.isKategorija) {
      
-      plataFuture = Provider.of<PlataLista>(context, listen: false).fetchAndSetPlata();
+      plataFuture = Provider.of<SalaryNotifier>(context, listen: false).fetchAndSetPlata();
     }
     super.initState();
   }
@@ -59,8 +60,8 @@ class _DodajRashodEkranState extends State<DodajRashodEkran> {
       return;
     }
     // final katData = Provider.of<KategorijaLista>(context, listen: false);
-    final plataData = Provider.of<PlataLista>(context, listen: false);
-    final rashodKategorijaData = Provider.of<RashodKategorijaLista>(context, listen: false);
+    final plataData = Provider.of<SalaryNotifier>(context, listen: false);
+    final rashodKategorijaData = Provider.of<ExpenseCategoryNotifier>(context, listen: false);
 
     widget.isKategorija ?
     rashodKategorijaData.dodajRashodKategorije(widget.kategorija.id,
@@ -232,7 +233,7 @@ class _DodajRashodEkranState extends State<DodajRashodEkran> {
 
   List<String> convertKeysToList() {
     List<String> nazivi = [];
-    final sveKatData = Provider.of<SveKategorije>(context, listen: false);
+    final sveKatData = Provider.of<SettingsNotifier>(context, listen: false);
     nazivi = widget.isKategorija? widget.kategorija.mapaRashoda.keys.toList() : sveKatData.rashodSveKategorijeMapa.keys.toList();
     return nazivi;
   }
@@ -243,8 +244,8 @@ class _DodajRashodEkranState extends State<DodajRashodEkran> {
     List<double> plataVrijednosti = [];
     List<String> mjeseci = ['Januar', 'Februar', 'Mart', 'April', 'Maj', 'Juni', 'Juli', 'August', 'Septembar', 'Oktobar', 'Novembar', 'Decembar'];
     // final sveKatData = Provider.of<SveKategorije>(context, listen: false);
-    final plataData = Provider.of<PlataLista>(context, listen: false);
-    final rashodKategorijaData = Provider.of<RashodKategorijaLista>(context, listen: false);
+    final plataData = Provider.of<SalaryNotifier>(context, listen: false);
+    final rashodKategorijaData = Provider.of<ExpenseCategoryNotifier>(context, listen: false);
     if(!widget.isKategorija) {
       for(int i=0; i<=11; i++) {
          plataVrijednosti.add(plataData.dobijPlatuPoMjesecu(mjeseci[i]));

@@ -1,6 +1,6 @@
+import 'package:expen/providers/categoryNotifier.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:semir_potrosnja/model/data_provider.dart';
 import 'package:provider/provider.dart';
 
 class AddNewCategoryService {
@@ -13,7 +13,7 @@ class AddNewCategoryService {
       return;
     }
 
-    final katData = Provider.of<KategorijaLista>(context, listen: false);
+    final katData = Provider.of<CategoryNotifier>(context, listen: false);
     int redniBroj;
 
     redniBroj = katData.kategorijaLista.length + 1;

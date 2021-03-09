@@ -1,17 +1,19 @@
 
 import 'package:flutter/material.dart';
-import '../model/data_provider.dart';
+import 'package:expen/providers/subcategoryNotifier.dart';
+import 'package:expen/providers/expenseNotifier.dart';
 import 'package:pie_chart/pie_chart.dart';
+import 'package:expen/providers/categoryNotifier.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class GrafoviKategorijaEkran extends StatefulWidget {
-  final KategorijaModel kategorijaLista;
-  final List<PotrosnjaModel> dostupnePotrosnje;
+  final CategoryModel kategorijaLista;
+  final List<ExpenseModel> dostupnePotrosnje;
   final String title;
   final bool uPotkategoriji;
-  final PotKategorija potKategorija;
-  final List<PotKategorija> dostupnePotkategorije;
+  final SubcategoryModel potKategorija;
+  final List<SubcategoryModel> dostupnePotkategorije;
 
   GrafoviKategorijaEkran(
       {this.kategorijaLista,
@@ -85,7 +87,7 @@ class _GrafoviKategorijaEkranState extends State<GrafoviKategorijaEkran> {
   }
 
   int potrosnjeMjesec(String mjesec) {
-    List<PotrosnjaModel> filterovanaLista;
+    List<ExpenseModel> filterovanaLista;
 
     filterovanaLista = widget.dostupnePotrosnje.where((item) {
       var vrijednostMjesec = item.datum.month;
@@ -137,7 +139,7 @@ class _GrafoviKategorijaEkranState extends State<GrafoviKategorijaEkran> {
   }
 
   String trosakMjesec(String mjesec) {
-    List<PotrosnjaModel> filterovanaLista;
+    List<ExpenseModel> filterovanaLista;
 
     filterovanaLista = widget.dostupnePotrosnje.where((item) {
       var vrijednostMjesec = item.datum.month;
@@ -193,7 +195,7 @@ class _GrafoviKategorijaEkranState extends State<GrafoviKategorijaEkran> {
   }
 
   List<double> postotakMjesec(String mjesec) {
-    List<PotrosnjaModel> filterovanaLista;
+    List<ExpenseModel> filterovanaLista;
 
     filterovanaLista = widget.dostupnePotrosnje.where((item) {
       var vrijednostMjesec = item.datum.month;
@@ -273,10 +275,10 @@ class _GrafoviKategorijaEkranState extends State<GrafoviKategorijaEkran> {
   }
 
   List<double> convert2() {
-    final potKatData = Provider.of<PotKategorijaLista>(context);
+    final potKatData = Provider.of<SubcategoryNotifier>(context);
 
     for (var i = 0; i < widget.dostupnePotkategorije.length; i++) {
-      List<PotrosnjaModel> pocetna = [];
+      List<ExpenseModel> pocetna = [];
       pocetna = potKatData.dostPotKat.where((test) {
         return test.idPotKategorije == widget.dostupnePotkategorije[i].idPot;
       }).toList();

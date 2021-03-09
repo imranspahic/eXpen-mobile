@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:semir_potrosnja/view/dodaj_vise_potrosnji.dart';
-import '../model/data_provider.dart';
+import 'package:expen/providers/expenseNotifier.dart';
+import 'package:expen/view/dodaj_vise_potrosnji.dart';
+import 'package:expen/providers/categoryNotifier.dart';
+import 'package:expen/providers/subcategoryNotifier.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import '../widgets/dodaj_novu_potrosnju.dart';
@@ -9,8 +11,8 @@ import 'planirane_potrosnje_ekran.dart';
 
 
 class PotKategorijaEkran extends StatefulWidget {
-  final PotKategorija potKategorija;
-  final KategorijaModel kategorija;
+  final SubcategoryModel potKategorija;
+  final CategoryModel kategorija;
 
   PotKategorijaEkran(this.potKategorija, this.kategorija);
 
@@ -50,9 +52,9 @@ class _PotKategorijaEkranState extends State<PotKategorijaEkran> {
     }));
   }
 
-  List<PotrosnjaModel> get dostupnePotrosnjePotkategorija {
-    final potrosnjaData = Provider.of<PotrosnjaLista>(context, listen: false);
-    final potKatData = Provider.of<PotKategorijaLista>(context, listen: false);
+  List<ExpenseModel> get dostupnePotrosnjePotkategorija {
+    final potrosnjaData = Provider.of<ExpenseNotifier>(context, listen: false);
+    final potKatData = Provider.of<SubcategoryNotifier>(context, listen: false);
 
     return potrosnjaData.listaSvihPotrosnji.where((item) {
       if (item.idKategorije == widget.kategorija.id &&
@@ -69,7 +71,7 @@ class _PotKategorijaEkranState extends State<PotKategorijaEkran> {
   @override
   Widget build(BuildContext context) {
 
-    final potrosnjaData = Provider.of<PotrosnjaLista>(context);
+    final potrosnjaData = Provider.of<ExpenseNotifier>(context);
     return Scaffold(
         floatingActionButton: SpeedDial(
           curve: Curves.bounceIn,

@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import './potkategorija_ekran.dart';
-import '../model/data_provider.dart';
+import 'package:expen/providers/expenseNotifier.dart';
+import 'package:expen/providers/categoryNotifier.dart';
+import 'package:expen/providers/subcategoryNotifier.dart';
 import './grafovi_kategorija_ekran.dart';
 import 'package:provider/provider.dart';
 
 class TabPotKategorijaEkran extends StatefulWidget {
   static const routeName = 'tab-kategorija-ekran';
 
-  final PotKategorija potkategorija;
-  final KategorijaModel kategorija;
+  final SubcategoryModel potkategorija;
+  final CategoryModel kategorija;
 
   TabPotKategorijaEkran(this.potkategorija, this.kategorija);
 
@@ -19,8 +21,8 @@ class TabPotKategorijaEkran extends StatefulWidget {
 class _TabPotKategorijaEkranState extends State<TabPotKategorijaEkran> {
   int _selectedPageIndex = 0;
 
-  List<PotrosnjaModel> get dostupnePotrosnje {
-    final potrosnjaData = Provider.of<PotrosnjaLista>(context);
+  List<ExpenseModel> get dostupnePotrosnje {
+    final potrosnjaData = Provider.of<ExpenseNotifier>(context);
     return potrosnjaData.listaSvihPotrosnji.where((item) {
       return item.idKategorije == widget.kategorija.id && item.idPotKategorije == widget.potkategorija.idPot;
     }).toList();
@@ -28,7 +30,7 @@ class _TabPotKategorijaEkranState extends State<TabPotKategorijaEkran> {
 
   @override
   Widget build(BuildContext context) {
-    final potrosnjaData = Provider.of<PotrosnjaLista>(context);
+    final potrosnjaData = Provider.of<ExpenseNotifier>(context);
     potrosnjaData.dobijDostupnePotrosnje(dostupnePotrosnje);
 
     final List<Object> _pages = [

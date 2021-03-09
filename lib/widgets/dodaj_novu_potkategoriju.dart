@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../model/data_provider.dart';
+import 'package:expen/providers/categoryNotifier.dart';
+import 'package:expen/providers/subcategoryNotifier.dart';
 
 class DodajNovuPotKategoriju extends StatefulWidget {
-  final KategorijaModel kategorija;
+  final CategoryModel kategorija;
   DodajNovuPotKategoriju(this.kategorija);
 
   @override
@@ -26,7 +27,7 @@ class _DodajNovuPotKategorijuState extends State<DodajNovuPotKategoriju> {
       return;
     }
 
-    final potKatData = Provider.of<PotKategorijaLista>(context, listen: false);
+    final potKatData = Provider.of<SubcategoryNotifier>(context, listen: false);
     potKatData.dodajPotKategoriju(
       uneseniNaziv,
       widget.kategorija.id,

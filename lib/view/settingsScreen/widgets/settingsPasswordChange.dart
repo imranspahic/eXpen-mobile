@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:semir_potrosnja/database/glavni_podaci_database.dart';
-import 'package:semir_potrosnja/view/settingsScreen/widgets/addPasswordDialog.dart';
-import 'package:semir_potrosnja/view/settingsScreen/widgets/changePasswordDialog.dart';
+import 'package:expen/database/glavni_podaci_database.dart';
+import 'package:expen/view/settingsScreen/widgets/addPasswordDialog.dart';
+import 'package:expen/view/settingsScreen/widgets/changePasswordDialog.dart';
 
 class SettingsPasswordChange extends StatelessWidget {
   const SettingsPasswordChange({

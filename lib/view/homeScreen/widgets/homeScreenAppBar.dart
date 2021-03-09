@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:semir_potrosnja/model/obavijesti_provider.dart';
+import 'package:expen/providers/notificationNotifier.dart';
 import 'package:provider/provider.dart';
-import 'package:semir_potrosnja/view/obavijesti_ekran.dart';
-import 'package:semir_potrosnja/viewModel/categoryViewModel/showAddCategoryDialogViewModel.dart';
+import 'package:expen/view/obavijesti_ekran.dart';
+import 'package:expen/viewModel/categoryViewModel/showAddCategoryDialogViewModel.dart';
 
 AppBar homeScreenAppBar(
     BuildContext context, GlobalKey<ScaffoldState> scaffoldKey) {
@@ -21,7 +21,7 @@ AppBar homeScreenAppBar(
     actions: <Widget>[
       IconButton(
           icon:
-              Provider.of<ObavijestiLista>(context).neprocitaneObavijesti() == 0
+              Provider.of<NotificationNotifier>(context).neprocitaneObavijesti() == 0
                   ? Icon(Icons.notifications_none)
                   : Icon(Icons.notifications_active),
           onPressed: () {

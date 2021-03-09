@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:semir_potrosnja/view/homeScreen/widgets/addNewCategoryDialog.dart';
+import 'package:expen/view/homeScreen/widgets/addNewCategoryDialog.dart';
 
 class ShowAddCategoryDialogService {
   showAddCategoryDialog(

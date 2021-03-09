@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:expen/providers/expenseNotifier.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:semir_potrosnja/model/rashod_kategorija_provider.dart';
-import 'package:semir_potrosnja/view/dodaj_rashod_ekran.dart';
-import 'package:semir_potrosnja/view/planirane_potrosnje_ekran.dart';
+import 'package:expen/providers/expenseCategoryNotifier.dart';
+import 'package:expen/view/dodaj_rashod_ekran.dart';
+import 'package:expen/view/planirane_potrosnje_ekran.dart';
+import 'package:expen/providers/categoryNotifier.dart';
 import 'dart:math';
+import 'package:expen/providers/subcategoryNotifier.dart';
 import '../widgets/badge.dart';
 import './edit_potkategorija_ekran.dart';
 import './tab_potkategorija_ekran.dart';
 import '../widgets/dodaj_novu_potkategoriju.dart';
-import '../model/data_provider.dart';
+import 'package:expen/providers/settingsNotifier.dart';
 import '../widgets/dodaj_novu_potrosnju.dart';
 import '../widgets/izbrisi_dialog.dart';
 import './dodaj_vise_potrosnji.dart';
 
 class KategorijaPojedinacna extends StatefulWidget {
   static const routeName = 'kategorija-pojedinacna';
-  final KategorijaModel kategorija;
-  List<PotrosnjaModel> dostupnePotrosnje;
-  final List<PotKategorija> dostupnePotkategorije;
+  final CategoryModel kategorija;
+  List<ExpenseModel> dostupnePotrosnje;
+  final List<SubcategoryModel> dostupnePotkategorije;
   final bool jeLiDrawer;
 
   KategorijaPojedinacna(
@@ -43,12 +46,12 @@ class _KategorijaPojedinacnaState extends State<KategorijaPojedinacna> {
   @override
   void initState() {
     super.initState();
-    potrosnjeFuture = Provider.of<PotrosnjaLista>(context, listen: false)
+    potrosnjeFuture = Provider.of<ExpenseNotifier>(context, listen: false)
         .fetchAndSetPotrosnje();
     potkategorijeFuture =
-        Provider.of<PotKategorijaLista>(context, listen: false)
+        Provider.of<SubcategoryNotifier>(context, listen: false)
             .fetchAndSetPotkategorije();
-    Provider.of<RashodKategorijaLista>(context, listen: false)
+    Provider.of<ExpenseCategoryNotifier>(context, listen: false)
         .fetchAndSetRashodKategorija();
   }
 
@@ -116,7 +119,7 @@ class _KategorijaPojedinacnaState extends State<KategorijaPojedinacna> {
     }));
   }
 
-  void otvoriPotKategoriju(BuildContext context, PotKategorija potkategorija) {
+  void otvoriPotKategoriju(BuildContext context, SubcategoryModel potkategorija) {
     Navigator.of(context).push(MaterialPageRoute(builder: (_) {
       return TabPotKategorijaEkran(potkategorija, widget.kategorija);
     }));
@@ -124,10 +127,10 @@ class _KategorijaPojedinacnaState extends State<KategorijaPojedinacna> {
 
   @override
   Widget build(BuildContext context) {
-    final potrosnjaData = Provider.of<PotrosnjaLista>(context);
+    final potrosnjaData = Provider.of<ExpenseNotifier>(context);
     final potKategorijaData =
-        Provider.of<PotKategorijaLista>(context, listen: false);
-    final postavkeData = Provider.of<SveKategorije>(context);
+        Provider.of<SubcategoryNotifier>(context, listen: false);
+    final postavkeData = Provider.of<SettingsNotifier>(context);
 
     return Scaffold(
       floatingActionButton: SpeedDial(
@@ -260,10 +263,10 @@ class _KategorijaPojedinacnaState extends State<KategorijaPojedinacna> {
                         ),
                         direction: DismissDirection.endToStart,
                         onDismissed: (direction) {
-                          final potrosnjaData = Provider.of<PotrosnjaLista>(
+                          final potrosnjaData = Provider.of<ExpenseNotifier>(
                               context,
                               listen: false);
-                          final List<PotrosnjaModel> lista =
+                          final List<ExpenseModel> lista =
                               potrosnjaData.potrosnjePoPotkaategorijilista(
                                   widget.dostupnePotkategorije[index].idPot);
                           //izbriši potkategorije
@@ -307,7 +310,7 @@ class _KategorijaPojedinacnaState extends State<KategorijaPojedinacna> {
                                 return EditPotkategorijaEkran(
                                     widget.dostupnePotkategorije[index]);
                               })).then((value) async {
-                                await Provider.of<PotKategorijaLista>(context,
+                                await Provider.of<SubcategoryNotifier>(context,
                                         listen: false)
                                     .fetchAndSetPotkategorije();
                                 setState(() {});
@@ -481,7 +484,7 @@ class _KategorijaPojedinacnaState extends State<KategorijaPojedinacna> {
 }
 
 class PrikaziPotrosnju extends StatefulWidget {
-  final PotrosnjaModel potrosnja;
+  final ExpenseModel potrosnja;
   PrikaziPotrosnju({this.potrosnja});
   @override
   _PrikaziPotrosnjuState createState() => _PrikaziPotrosnjuState();

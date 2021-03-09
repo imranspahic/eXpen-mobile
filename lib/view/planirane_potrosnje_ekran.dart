@@ -1,13 +1,15 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import '../model/data_provider.dart';
+import 'package:expen/providers/expenseNotifier.dart';
+import 'package:expen/providers/subcategoryNotifier.dart';
+import 'package:expen/providers/categoryNotifier.dart';
 import 'package:provider/provider.dart';
 import '../widgets/dodaj_novu_potrosnju.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 class PlaniranePotrosnjeEkran extends StatefulWidget {
-  final KategorijaModel kategorija;
-  final PotKategorija potKategorija;
+  final CategoryModel kategorija;
+  final SubcategoryModel potKategorija;
 
   PlaniranePotrosnjeEkran({this.kategorija, this.potKategorija});
 
@@ -88,10 +90,10 @@ class _PlaniranePotrosnjeEkranState extends State<PlaniranePotrosnjeEkran> {
       
       if(s!=null) {
         if(widget.potKategorija==null) {
-          Provider.of<KategorijaLista>(context,listen:false).updateMjesecnoDodavanjeKategorije(widget.kategorija.id, s);
+          Provider.of<CategoryNotifier>(context,listen:false).updateMjesecnoDodavanjeKategorije(widget.kategorija.id, s);
         }
         else {
-          Provider.of<PotKategorijaLista>(context,listen:false).updateMjesecnoDodavanjePotkategorije(widget.potKategorija.idPot, s);
+          Provider.of<SubcategoryNotifier>(context,listen:false).updateMjesecnoDodavanjePotkategorije(widget.potKategorija.idPot, s);
         }
         
       }
@@ -102,7 +104,7 @@ class _PlaniranePotrosnjeEkranState extends State<PlaniranePotrosnjeEkran> {
   @override
   void initState() {
     planiranePotrosnjeFuture =
-        Provider.of<PotrosnjaLista>(context, listen: false)
+        Provider.of<ExpenseNotifier>(context, listen: false)
             .fetchAndSetPlaniranePotrosnje();
     super.initState();
   }
@@ -144,7 +146,7 @@ class _PlaniranePotrosnjeEkranState extends State<PlaniranePotrosnjeEkran> {
 
   @override
   Widget build(BuildContext context) {
-    final planiranePotrosnjeData = Provider.of<PotrosnjaLista>(context);
+    final planiranePotrosnjeData = Provider.of<ExpenseNotifier>(context);
     return Scaffold(
       appBar: AppBar(
         title: Row(

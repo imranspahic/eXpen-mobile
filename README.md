@@ -1,4 +1,4 @@
-# semir_potrosnja
+# expen
 
 A new Flutter project.
 

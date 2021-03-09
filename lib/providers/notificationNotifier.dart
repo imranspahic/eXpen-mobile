@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:semir_potrosnja/database/glavni_podaci_database.dart';
+import 'package:expen/database/glavni_podaci_database.dart';
 
-class Obavijest {
+class NotificationModel {
   final String id;
   final String sadrzaj;
   final DateTime datum;
@@ -9,7 +9,7 @@ class Obavijest {
   final String idPotKategorije;
   String jeLiProcitano;
 
-  Obavijest({
+  NotificationModel({
     this.id,
     this.sadrzaj,
     this.datum,
@@ -19,16 +19,16 @@ class Obavijest {
   });
 }
 
-class ObavijestiLista extends ChangeNotifier {
-  List<Obavijest> listaSvihObavijesti = [];
+class NotificationNotifier extends ChangeNotifier {
+  List<NotificationModel> listaSvihObavijesti = [];
 
-  List<Obavijest> get listaSvihObavijestiReversed {
+  List<NotificationModel> get listaSvihObavijestiReversed {
     return listaSvihObavijesti.reversed.toList();
   }
 
   void dodajObavijest(String sadrzaj, DateTime datum, String idKategorije,
       String idPotkategorije, String jeLiProcitano) {
-    final Obavijest novaObavijest = Obavijest(
+    final NotificationModel novaObavijest = NotificationModel(
       id: DateTime.now().toString(),
       sadrzaj: sadrzaj,
       datum: datum,
@@ -55,7 +55,7 @@ class ObavijestiLista extends ChangeNotifier {
   Future<void> fetchAndSetObavijesti() async {
     final dataList = await DatabaseHelper.fetchTabele('obavijesti');
     listaSvihObavijesti = dataList
-        .map((obavijest) => Obavijest(
+        .map((obavijest) => NotificationModel(
               id: obavijest['id'],
               sadrzaj: obavijest['sadrzaj'],
               datum: DateTime.parse(obavijest['datum']),
@@ -69,7 +69,7 @@ class ObavijestiLista extends ChangeNotifier {
   }
 
   int neprocitaneObavijesti() {
-    List<Obavijest> temp = [];
+    List<NotificationModel> temp = [];
 
     listaSvihObavijesti.forEach((obavijest) {
       if (obavijest.jeLiProcitano == 'ne') {
@@ -102,7 +102,7 @@ class ObavijestiLista extends ChangeNotifier {
   }
 
   void procitajObavijest(String id, bool auto) {
-    Obavijest obavijest = listaSvihObavijesti.singleWhere((element) => element.id == id);
+    NotificationModel obavijest = listaSvihObavijesti.singleWhere((element) => element.id == id);
     obavijest.jeLiProcitano = 'da';
      listaSvihObavijesti.sort((a,b) {
        return a.jeLiProcitano.compareTo(b.jeLiProcitano);
@@ -116,8 +116,8 @@ class ObavijestiLista extends ChangeNotifier {
 
   }
 
-  List<Obavijest> listaNeprocitanihObavijesti() {
-    List<Obavijest> temp = [];
+  List<NotificationModel> listaNeprocitanihObavijesti() {
+    List<NotificationModel> temp = [];
     listaSvihObavijesti.forEach((obavijest) {
       if (obavijest.jeLiProcitano == 'ne') {
         temp.add(obavijest);

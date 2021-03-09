@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:semir_potrosnja/model/rashod_kategorija_provider.dart';
-import '../model/data_provider.dart';
+import 'package:expen/providers/expenseCategoryNotifier.dart';
+import 'package:expen/providers/categoryNotifier.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 class RashodPregledEkran extends StatefulWidget {
@@ -64,15 +64,15 @@ class _RashodPregledEkranState extends State<RashodPregledEkran> {
   @override
   void initState() {
     rashodKategorijaFuture =
-        Provider.of<RashodKategorijaLista>(context, listen: false)
+        Provider.of<ExpenseCategoryNotifier>(context, listen: false)
             .fetchAndSetRashodKategorija();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final katData = Provider.of<KategorijaLista>(context, listen: false);
-    final rashodKatData = Provider.of<RashodKategorijaLista>(context, listen: false);
+    final katData = Provider.of<CategoryNotifier>(context, listen: false);
+    final rashodKatData = Provider.of<ExpenseCategoryNotifier>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.deepOrange[400],
@@ -214,13 +214,13 @@ class _RashodPregledEkranState extends State<RashodPregledEkran> {
 }
 
 class KategorijaWidget extends StatelessWidget {
-  final KategorijaModel kategorija;
+  final CategoryModel kategorija;
   final String mjesec;
   KategorijaWidget({this.kategorija, this.mjesec});
   @override
   Widget build(BuildContext context) {
     final rashodKatData =
-        Provider.of<RashodKategorijaLista>(context, listen: false);
+        Provider.of<ExpenseCategoryNotifier>(context, listen: false);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
       child: Card(

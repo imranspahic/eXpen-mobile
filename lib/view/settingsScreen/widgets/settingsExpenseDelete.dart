@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:semir_potrosnja/model/data_provider.dart';
+import 'package:expen/providers/settingsNotifier.dart';
 import 'package:provider/provider.dart';
 
 class SettingsExpenseDelete extends StatelessWidget {
@@ -8,7 +8,7 @@ class SettingsExpenseDelete extends StatelessWidget {
     @required this.postavkeData,
   }) : super(key: key);
 
-  final SveKategorije postavkeData;
+  final SettingsNotifier postavkeData;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class SettingsExpenseDelete extends StatelessWidget {
               activeColor: Colors.deepPurple,
               value: postavkeData.brisanjeKategorija,
               onChanged: (val) {
-                Provider.of<SveKategorije>(context, listen: false)
+                Provider.of<SettingsNotifier>(context, listen: false)
                     .brisanjeKategorijaToggle();
               })),
     );

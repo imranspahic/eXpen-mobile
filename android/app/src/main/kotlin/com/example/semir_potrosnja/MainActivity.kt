@@ -1,4 +1,4 @@
-package com.example.semir_potrosnja
+package com.example.expen
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

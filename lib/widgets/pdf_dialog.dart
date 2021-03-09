@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:open_file/open_file.dart';
-import 'package:semir_potrosnja/model/data_provider.dart';
-import 'package:semir_potrosnja/widgets/pdf_builder.dart';
+import 'package:expen/providers/categoryNotifier.dart';
+import 'package:expen/widgets/pdf_builder.dart';
 
 class PreuzmiPDF extends StatefulWidget {
   final String nazivDokumenta;
-  final KategorijaModel kategorija;
+  final CategoryModel kategorija;
   PreuzmiPDF({@required this.nazivDokumenta, this.kategorija});
   @override
   _PreuzmiPDFState createState() => _PreuzmiPDFState();

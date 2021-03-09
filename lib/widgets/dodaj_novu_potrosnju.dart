@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:expen/providers/expenseNotifier.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:semir_potrosnja/model/obavijesti_provider.dart';
-import 'package:semir_potrosnja/model/rashod_kategorija_provider.dart';
-import '../model/data_provider.dart';
+import 'package:expen/providers/notificationNotifier.dart';
+import 'package:expen/providers/categoryNotifier.dart';
+import 'package:expen/providers/expenseCategoryNotifier.dart';
+import 'package:expen/providers/subcategoryNotifier.dart';
 
 class DodajNovuPotrosnju extends StatefulWidget {
-  final KategorijaModel kategorija;
-  final PotKategorija potkategorija;
+  final CategoryModel kategorija;
+  final SubcategoryModel potkategorija;
   final bool uPotkategoriji;
   final bool jeLiPlaniranaPotrosnja;
   DodajNovuPotrosnju(
@@ -33,10 +35,10 @@ class _DodajNovuPotrosnjuState extends State<DodajNovuPotrosnju> {
   }
 
   void submitData() {
-    final potrosnjaData = Provider.of<PotrosnjaLista>(context, listen: false);
-    final katData = Provider.of<KategorijaLista>(context, listen: false);
+    final potrosnjaData = Provider.of<ExpenseNotifier>(context, listen: false);
+    final katData = Provider.of<CategoryNotifier>(context, listen: false);
     final rashodKatData =
-        Provider.of<RashodKategorijaLista>(context, listen: false);
+        Provider.of<ExpenseCategoryNotifier>(context, listen: false);
     String uneseniNaziv = nazivController.text;
     final uneseniTrosak = double.parse(trosakController.text);
 
@@ -88,7 +90,7 @@ class _DodajNovuPotrosnjuState extends State<DodajNovuPotrosnju> {
         print('nije preslo jos');
       } else {
         print('preslo, obaavijest ovdje');
-        Provider.of<ObavijestiLista>(context, listen: false).dodajObavijest('Prešli ste planirani rashod za kategoriju ${katData.dobijNazivKategorije(widget.kategorija.id)} u mjesecu ${formatirajMjesecNaBosanski(datum.month)}.', datum, widget.kategorija.id, 'nemaPotkategorija', 'ne');
+        Provider.of<NotificationNotifier>(context, listen: false).dodajObavijest('Prešli ste planirani rashod za kategoriju ${katData.dobijNazivKategorije(widget.kategorija.id)} u mjesecu ${formatirajMjesecNaBosanski(datum.month)}.', datum, widget.kategorija.id, 'nemaPotkategorija', 'ne');
       }
     }
     

@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:semir_potrosnja/model/data_provider.dart';
+import 'package:expen/providers/categoryNotifier.dart';
 import 'package:provider/provider.dart';
 
 class PickCategoryImageService {
-  pickCategoryImage(BuildContext context, GlobalKey<ScaffoldState> _scaffoldKey, KategorijaModel category) async {
+  pickCategoryImage(BuildContext context, GlobalKey<ScaffoldState> _scaffoldKey, CategoryModel category) async {
     final picker = ImagePicker();
     final slika = await picker.getImage(source: ImageSource.gallery);
     List<int> slikaBytes = await slika.readAsBytes();
@@ -35,7 +35,7 @@ class PickCategoryImageService {
       ));
       return;
     } else {
-      final katData = Provider.of<KategorijaLista>(context, listen: false);
+      final katData = Provider.of<CategoryNotifier>(context, listen: false);
     
         katData.updateSlikuKategorije(slikaEncode, category.id);
     

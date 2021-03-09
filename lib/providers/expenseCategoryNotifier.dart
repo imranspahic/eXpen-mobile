@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import '../database/rashod_plata_database.dart';
 
-class RashodKategorija {
+//Preimenovano iz RashodKategorija
+
+class ExpenseCategoryModel {
   final String idRashod;
   final String idKat;
   int godina;
   String mjesec;
   double iznos;
 
-  RashodKategorija({
+  ExpenseCategoryModel({
     this.idRashod,
     this.idKat,
     this.godina,
@@ -17,22 +19,20 @@ class RashodKategorija {
   });
 }
 
-class RashodKategorijaLista extends ChangeNotifier {
-
-  List<RashodKategorija> listaRashoda = [];
+class ExpenseCategoryNotifier extends ChangeNotifier {
+  List<ExpenseCategoryModel> listaRashoda = [];
 
   void dodajRashodKategorije(String idKat, String mjesec, double iznos) {
     final DateTime datumDanasnji = DateTime.now();
-    List<RashodKategorija> listaRashodaPoKategoriji = [];
+    List<ExpenseCategoryModel> listaRashodaPoKategoriji = [];
 
-    if(listaRashoda.isNotEmpty) {
-        listaRashoda.forEach((rashod) { 
-      if(rashod.idKat == idKat) {
-        listaRashodaPoKategoriji.add(rashod);
-      }
-    });
+    if (listaRashoda.isNotEmpty) {
+      listaRashoda.forEach((rashod) {
+        if (rashod.idKat == idKat) {
+          listaRashodaPoKategoriji.add(rashod);
+        }
+      });
     }
-  
 
     if (listaRashodaPoKategoriji.any((rashod) {
       print(rashod.mjesec);
@@ -44,7 +44,8 @@ class RashodKategorijaLista extends ChangeNotifier {
     })) {
       //update
 
-      RashodKategorija rashod = listaRashodaPoKategoriji.singleWhere((rashod) {
+      ExpenseCategoryModel rashod =
+          listaRashodaPoKategoriji.singleWhere((rashod) {
         if (rashod.godina == datumDanasnji.year && rashod.mjesec == mjesec) {
           return true;
         } else {
@@ -54,10 +55,11 @@ class RashodKategorijaLista extends ChangeNotifier {
 
       rashod.iznos = iznos;
       notifyListeners();
-      DatabaseHelper.updateRashodKategorije('rashodKategorija', idKat, datumDanasnji.year, mjesec, iznos);
+      DatabaseHelper.updateRashodKategorije(
+          'rashodKategorija', idKat, datumDanasnji.year, mjesec, iznos);
       return;
     } else {
-      final noviRashod = RashodKategorija(
+      final noviRashod = ExpenseCategoryModel(
         idRashod: DateTime.now().toString(),
         idKat: idKat,
         godina: DateTime.now().year,
@@ -81,7 +83,7 @@ class RashodKategorijaLista extends ChangeNotifier {
     final dataList = await DatabaseHelper.fetchTabele('rashodKategorija');
     print(dataList);
     listaRashoda = dataList.map((rashod) {
-      return RashodKategorija(
+      return ExpenseCategoryModel(
         idRashod: rashod['idRashod'],
         idKat: rashod['idKat'],
         godina: rashod['godina'],
@@ -93,38 +95,32 @@ class RashodKategorijaLista extends ChangeNotifier {
     notifyListeners();
   }
 
-   double dobijRashodKategorijePoMjesecu(String idKat, String mjesec) {
+  double dobijRashodKategorijePoMjesecu(String idKat, String mjesec) {
     DateTime datumDanasnji = DateTime.now();
 
-     List<RashodKategorija> listaRashodaPoKategoriji = [];
+    List<ExpenseCategoryModel> listaRashodaPoKategoriji = [];
 
-    if(listaRashoda.isNotEmpty) {
-        listaRashoda.forEach((rashod) { 
-      if(rashod.idKat == idKat) {
-        listaRashodaPoKategoriji.add(rashod);
-      }
-    });
+    if (listaRashoda.isNotEmpty) {
+      listaRashoda.forEach((rashod) {
+        if (rashod.idKat == idKat) {
+          listaRashodaPoKategoriji.add(rashod);
+        }
+      });
     }
 
-    
-
-    RashodKategorija rashod = listaRashodaPoKategoriji.singleWhere((rashod) {
-      if(rashod.godina == datumDanasnji.year && rashod.mjesec == mjesec) {
-       
+    ExpenseCategoryModel rashod =
+        listaRashodaPoKategoriji.singleWhere((rashod) {
+      if (rashod.godina == datumDanasnji.year && rashod.mjesec == mjesec) {
         return true;
-      }
-      else {
-       
+      } else {
         return false;
       }
     }, orElse: () {
-      
       return null;
     });
-    if(rashod==null) {
+    if (rashod == null) {
       return 0.0;
-    }
-    else {
+    } else {
       return rashod.iznos;
     }
   }
@@ -132,10 +128,10 @@ class RashodKategorijaLista extends ChangeNotifier {
   double dobijRashodSvihKategorijaPoMjesecu(String mjesec) {
     final datumDanasnji = DateTime.now();
 
-    List<RashodKategorija> listaZaDodat = [];
+    List<ExpenseCategoryModel> listaZaDodat = [];
     double iznos = 0.0;
     listaRashoda.forEach((rashod) {
-      if(rashod.godina == datumDanasnji.year && rashod.mjesec == mjesec) {
+      if (rashod.godina == datumDanasnji.year && rashod.mjesec == mjesec) {
         listaZaDodat.add(rashod);
       }
     });
@@ -144,8 +140,5 @@ class RashodKategorijaLista extends ChangeNotifier {
       iznos = iznos + rashod.iznos;
     });
     return iznos;
-
   }
-
-
 }

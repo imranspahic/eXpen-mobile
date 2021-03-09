@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:semir_potrosnja/model/data_provider.dart';
-import 'package:semir_potrosnja/model/obavijesti_provider.dart';
-import 'package:semir_potrosnja/view/a%C5%BEuriranje_opcije.dart';
-import 'package:semir_potrosnja/view/biljeske_ekran.dart';
-import 'package:semir_potrosnja/view/detalji_kategorija_ekran.dart';
-import 'package:semir_potrosnja/view/dodaj_rashod_ekran.dart';
-import 'package:semir_potrosnja/view/obavijesti_ekran.dart';
-import 'package:semir_potrosnja/view/settingsScreen/pages/settingsScreen.dart';
-import 'package:semir_potrosnja/view/rashod_pregled_ekran.dart';
-import 'package:semir_potrosnja/view/tab_kategorija_ekran.dart';
+import 'package:expen/providers/categoryNotifier.dart';
+import 'package:expen/providers/notificationNotifier.dart';
+import 'package:expen/view/a%C5%BEuriranje_opcije.dart';
+import 'package:expen/view/biljeske_ekran.dart';
+import 'package:expen/view/detalji_kategorija_ekran.dart';
+import 'package:expen/view/dodaj_rashod_ekran.dart';
+import 'package:expen/view/obavijesti_ekran.dart';
+import 'package:expen/view/settingsScreen/pages/settingsScreen.dart';
+import 'package:expen/view/rashod_pregled_ekran.dart';
+import 'package:expen/view/tab_kategorija_ekran.dart';
 import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
 
 class MainDrawer extends StatelessWidget {
-  final List<KategorijaModel> potrosnjaLista;
-  final List<Obavijest> listaObavijesti;
+  final List<CategoryModel> potrosnjaLista;
+  final List<NotificationModel> listaObavijesti;
   MainDrawer(this.potrosnjaLista, this.listaObavijesti);
 
   void otvoriPlata(BuildContext context) {
@@ -61,7 +61,7 @@ class MainDrawer extends StatelessWidget {
     }));
   }
 
-  Widget buildDrawerContent(BuildContext context, KategorijaModel kategorija) {
+  Widget buildDrawerContent(BuildContext context, CategoryModel kategorija) {
     return InkWell(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (_) {
@@ -107,7 +107,7 @@ class MainDrawer extends StatelessWidget {
     );
   }
 
-  Widget buildObavijest(BuildContext context, Obavijest obavijest) {
+  Widget buildObavijest(BuildContext context, NotificationModel obavijest) {
     return InkWell(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (_) {

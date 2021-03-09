@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:semir_potrosnja/viewModel/categoryViewModel/addNewCategoryViewModel.dart';
+import 'package:expen/viewModel/categoryViewModel/addNewCategoryViewModel.dart';
 
 class AddNewCategoryDialog extends StatefulWidget {
   @override

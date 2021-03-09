@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:semir_potrosnja/viewModel/categoryViewModel/changeCategoryNameViewModel.dart';
+import 'package:expen/viewModel/categoryViewModel/changeCategoryNameViewModel.dart';
 
 class ChangeCategoryNameDialog extends StatefulWidget {
   final String kategorijaId;

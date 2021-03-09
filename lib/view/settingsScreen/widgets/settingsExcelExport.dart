@@ -1,11 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:semir_potrosnja/model/data_provider.dart';
+import 'package:expen/providers/subcategoryNotifier.dart';
+import 'package:expen/providers/categoryNotifier.dart';
+import 'package:expen/providers/expenseNotifier.dart';
 import 'package:provider/provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:csv/csv.dart';
 import 'package:intl/intl.dart';
-import 'package:semir_potrosnja/view/settingsScreen/widgets/excelExportDialog.dart';
+import 'package:expen/view/settingsScreen/widgets/excelExportDialog.dart';
 
 class SettingsExcelExport extends StatelessWidget {
   const SettingsExcelExport({
@@ -17,13 +19,13 @@ class SettingsExcelExport extends StatelessWidget {
     return ListTile(
       onTap: () async {
         final kategorijaData =
-            Provider.of<KategorijaLista>(context, listen: false);
+            Provider.of<CategoryNotifier>(context, listen: false);
         final providerData =
-            Provider.of<PotrosnjaLista>(context, listen: false);
+            Provider.of<ExpenseNotifier>(context, listen: false);
         final potkategorijaData =
-            Provider.of<PotKategorijaLista>(context, listen: false);
+            Provider.of<SubcategoryNotifier>(context, listen: false);
 
-        List<PotrosnjaModel> data = providerData.listaSvihPotrosnji;
+        List<ExpenseModel> data = providerData.listaSvihPotrosnji;
         data.forEach((potrosnja) {
           if (potrosnja.naziv.contains('š')) {
             potrosnja.naziv = potrosnja.naziv.replaceFirst(RegExp('š'), 's');

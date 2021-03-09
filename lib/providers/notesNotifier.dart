@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:semir_potrosnja/database/glavni_podaci_database.dart';
+import 'package:expen/database/glavni_podaci_database.dart';
 
-class Biljeska {
+class NoteModel {
   final String id;
   final String naziv;
   final String tekstSadrzaj;
   final DateTime datum;
 
-  Biljeska(
+  NoteModel(
       {@required this.id,
       @required this.naziv,
       @required this.tekstSadrzaj,
       this.datum});
 }
 
-class BiljeskeLista extends ChangeNotifier {
-  List<Biljeska> listaBiljeski = [];
+class NoteNotifier extends ChangeNotifier {
+  List<NoteModel> listaBiljeski = [];
 
   void dodajBiljesku(String naziv, String tekstSadrzaj, DateTime datum) {
-    final novaBiljeska = Biljeska(
+    final novaBiljeska = NoteModel(
         id: DateTime.now().toString(),
         naziv: naziv,
         tekstSadrzaj: tekstSadrzaj,
@@ -37,7 +37,7 @@ class BiljeskeLista extends ChangeNotifier {
     final dataList = await DatabaseHelper.fetchTabele('biljeske');
 
     listaBiljeski = dataList
-        .map((b) => Biljeska(
+        .map((b) => NoteModel(
               id: b['id'],
               naziv: b['naziv'],
               tekstSadrzaj: b['tekstSadrzaj'],

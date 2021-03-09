@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../model/biljeske_provider.dart';
+import '../providers/notesNotifier.dart';
 import 'package:intl/intl.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import '../widgets/izbrisi_dialog.dart';
@@ -22,14 +22,14 @@ class _BiljeskeEkranState extends State<BiljeskeEkran> {
 
   @override
   void initState() {
-    biljeskeFuture = Provider.of<BiljeskeLista>(context, listen: false)
+    biljeskeFuture = Provider.of<NoteNotifier>(context, listen: false)
         .fetchAndSetBiljeske();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final biljeskeData = Provider.of<BiljeskeLista>(context);
+    final biljeskeData = Provider.of<NoteNotifier>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.red,
@@ -91,7 +91,7 @@ class _BiljeskeEkranState extends State<BiljeskeEkran> {
 }
 
 class BiljeskaWidget extends StatelessWidget {
-  final Biljeska biljeska;
+  final NoteModel biljeska;
 
   BiljeskaWidget({this.biljeska});
   @override
@@ -219,11 +219,11 @@ class _DodajBiljeskuState extends State<DodajBiljesku> {
       return;
     } else if (datum == null) {
       datum = DateTime.now();
-      Provider.of<BiljeskeLista>(context, listen: false)
+      Provider.of<NoteNotifier>(context, listen: false)
           .dodajBiljesku(uneseniNaziv, uneseniTekst, datum);
       Navigator.of(context).pop();
     } else {
-      Provider.of<BiljeskeLista>(context, listen: false)
+      Provider.of<NoteNotifier>(context, listen: false)
           .dodajBiljesku(uneseniNaziv, uneseniTekst, datum);
       Navigator.of(context).pop();
     }
@@ -372,7 +372,7 @@ class _DodajBiljeskuState extends State<DodajBiljesku> {
 }
 
 class PrikazBiljeske extends StatelessWidget {
-  final Biljeska biljeska;
+  final NoteModel biljeska;
   PrikazBiljeske({@required this.biljeska});
   @override
   Widget build(BuildContext context) {
@@ -438,7 +438,7 @@ class PrikazBiljeske extends StatelessWidget {
                               context: context,
                               builder: (ctx) {
                                 return IzbrisiDialog(
-                                  izbrisi: Provider.of<BiljeskeLista>(context,
+                                  izbrisi: Provider.of<NoteNotifier>(context,
                                           listen: false)
                                       .izbrisiBiljesku,
                                   biljeska: biljeska,

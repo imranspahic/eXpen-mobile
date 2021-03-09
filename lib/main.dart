@@ -1,11 +1,15 @@
+import 'package:expen/providers/profileNotifier.dart';
+import 'package:expen/providers/expenseNotifier.dart';
+import 'package:expen/providers/settingsNotifier.dart';
+import 'package:expen/providers/subcategoryNotifier.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:semir_potrosnja/view/sifra_ekran.dart';
-import 'model/biljeske_provider.dart';
-import 'model/obavijesti_provider.dart';
-import 'model/data_provider.dart';
-import 'model/plata_provider.dart';
-import 'model/rashod_kategorija_provider.dart';
+import 'package:expen/view/sifra_ekran.dart';
+import 'providers/notesNotifier.dart';
+import 'providers/notificationNotifier.dart';
+import 'providers/salaryNotifier.dart';
+import 'providers/expenseCategoryNotifier.dart';
+import 'package:expen/providers/categoryNotifier.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,29 +21,32 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (ctx) => KategorijaLista(),
+          create: (ctx) => CategoryNotifier(),
         ),
         ChangeNotifierProvider(
-          create: (ctx) => PotrosnjaLista(),
+          create: (ctx) => ExpenseNotifier(),
         ),
         ChangeNotifierProvider(
-          create: (ctx) => PotKategorijaLista(),
+          create: (ctx) => SubcategoryNotifier(),
         ),
         ChangeNotifierProvider(
-          create: (ctx) => SveKategorije(),
+          create: (ctx) => SettingsNotifier(),
         ),
         ChangeNotifierProvider(
-          create: (ctx) => BiljeskeLista(),
+          create: (ctx) => NoteNotifier(),
         ),
         ChangeNotifierProvider(
-          create: (ctx) => ObavijestiLista(),
+          create: (ctx) => NotificationNotifier(),
         ),
         ChangeNotifierProvider(
-          create: (ctx) => PlataLista(),
+          create: (ctx) => SalaryNotifier(),
         ),
         ChangeNotifierProvider(
-          create: (ctx) => RashodKategorijaLista(),
+          create: (ctx) => ExpenseCategoryNotifier(),
         ),
+        ChangeNotifierProvider(
+          create: (ctx) => ProfileNotifier(),
+        )
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

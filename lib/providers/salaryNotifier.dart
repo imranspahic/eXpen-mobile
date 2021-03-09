@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import '../database/rashod_plata_database.dart';
 
-class Plata {
+class SalaryModel {
   final String id;
   int godina;
   String mjesec;
   double iznos;
 
-  Plata({
+  SalaryModel({
     this.id,
     this.godina,
     this.mjesec,
@@ -15,9 +15,8 @@ class Plata {
   });
 }
 
-class PlataLista extends ChangeNotifier {
-  List<Plata> listaPlate = [];
-  
+class SalaryNotifier extends ChangeNotifier {
+  List<SalaryModel> listaPlate = [];
 
   void dodajPlatu(String mjesec, double iznos) {
     final DateTime datumDanasnji = DateTime.now();
@@ -31,7 +30,7 @@ class PlataLista extends ChangeNotifier {
     })) {
       //update
 
-      Plata plata = listaPlate.singleWhere((plata) {
+      SalaryModel plata = listaPlate.singleWhere((plata) {
         if (plata.godina == datumDanasnji.year && plata.mjesec == mjesec) {
           return true;
         } else {
@@ -44,7 +43,7 @@ class PlataLista extends ChangeNotifier {
       DatabaseHelper.updatePlatu('plata', datumDanasnji.year, mjesec, iznos);
       return;
     } else {
-      final novaPlata = Plata(
+      final novaPlata = SalaryModel(
         id: DateTime.now().toString(),
         godina: DateTime.now().year,
         mjesec: mjesec,
@@ -69,7 +68,7 @@ class PlataLista extends ChangeNotifier {
   Future<void> fetchAndSetPlata() async {
     final dataList = await DatabaseHelper.fetchTabele('plata');
     listaPlate = dataList.map((plata) {
-      return Plata(
+      return SalaryModel(
         id: plata['id'],
         godina: plata['godina'],
         mjesec: plata['mjesec'],
@@ -83,23 +82,18 @@ class PlataLista extends ChangeNotifier {
   double dobijPlatuPoMjesecu(String mjesec) {
     DateTime datumDanasnji = DateTime.now();
 
-    Plata plata = listaPlate.singleWhere((plata) {
-      if(plata.godina == datumDanasnji.year && plata.mjesec == mjesec) {
-       
+    SalaryModel plata = listaPlate.singleWhere((plata) {
+      if (plata.godina == datumDanasnji.year && plata.mjesec == mjesec) {
         return true;
-      }
-      else {
-       
+      } else {
         return false;
       }
     }, orElse: () {
-      
       return null;
     });
-    if(plata==null) {
+    if (plata == null) {
       return 0.0;
-    }
-    else {
+    } else {
       return plata.iznos;
     }
   }

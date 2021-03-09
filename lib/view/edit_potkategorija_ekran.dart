@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../model/data_provider.dart';
+import 'package:expen/providers/subcategoryNotifier.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 
 class EditPotkategorijaEkran extends StatefulWidget {
-  final PotKategorija potKategorija;
+  final SubcategoryModel potKategorija;
   EditPotkategorijaEkran(this.potKategorija);
 
   @override
@@ -139,7 +139,7 @@ class _EditPotkategorijaEkranState extends State<EditPotkategorijaEkran> {
                             //throw error
                           }
                           widget.potKategorija.bojaIkone = mainColor;
-                          Provider.of<PotKategorijaLista>(context,
+                          Provider.of<SubcategoryNotifier>(context,
                                   listen: false)
                               .snimiPromjene(
                             widget.potKategorija.idPot,
@@ -153,7 +153,7 @@ class _EditPotkategorijaEkranState extends State<EditPotkategorijaEkran> {
                           } else {
                             //throw error
                           }
-                          Provider.of<PotKategorijaLista>(context,
+                          Provider.of<SubcategoryNotifier>(context,
                                   listen: false)
                               .snimiPromjene(
                             widget.potKategorija.idPot,
@@ -205,7 +205,7 @@ class _EditPotkategorijaEkranState extends State<EditPotkategorijaEkran> {
                                   //throw error
                                 }
                                 widget.potKategorija.bojaIkone = mainColor;
-                                Provider.of<PotKategorijaLista>(context,
+                                Provider.of<SubcategoryNotifier>(context,
                                         listen: false)
                                     .snimiPromjene(
                                   widget.potKategorija.idPot,
@@ -220,7 +220,7 @@ class _EditPotkategorijaEkranState extends State<EditPotkategorijaEkran> {
                                 } else {
                                   //throw error
                                 }
-                                Provider.of<PotKategorijaLista>(context,
+                                Provider.of<SubcategoryNotifier>(context,
                                         listen: false)
                                     .snimiPromjene(
                                   widget.potKategorija.idPot,
@@ -247,7 +247,7 @@ class _EditPotkategorijaEkranState extends State<EditPotkategorijaEkran> {
                     //throw error
                   }
                   widget.potKategorija.bojaIkone = mainColor;
-                  Provider.of<PotKategorijaLista>(context, listen: false)
+                  Provider.of<SubcategoryNotifier>(context, listen: false)
                       .snimiPromjene(
                     widget.potKategorija.idPot,
                     widget.potKategorija.naziv,
@@ -260,7 +260,7 @@ class _EditPotkategorijaEkranState extends State<EditPotkategorijaEkran> {
                   } else {
                     //throw error
                   }
-                  Provider.of<PotKategorijaLista>(context, listen: false)
+                  Provider.of<SubcategoryNotifier>(context, listen: false)
                       .snimiPromjene(
                     widget.potKategorija.idPot,
                     widget.potKategorija.naziv,
@@ -385,7 +385,7 @@ class _EditPotkategorijaEkranState extends State<EditPotkategorijaEkran> {
                     }
                     widget.potKategorija.naziv = _nazivController.text;
                     widget.potKategorija.bojaIkone = mainColor;
-                    Provider.of<PotKategorijaLista>(context, listen: false)
+                    Provider.of<SubcategoryNotifier>(context, listen: false)
                         .snimiPromjene(
                       widget.potKategorija.idPot,
                       widget.potKategorija.naziv,
@@ -398,7 +398,7 @@ class _EditPotkategorijaEkranState extends State<EditPotkategorijaEkran> {
                     } else {
                       //throw error
                     }
-                    Provider.of<PotKategorijaLista>(context, listen: false)
+                    Provider.of<SubcategoryNotifier>(context, listen: false)
                         .snimiPromjene(
                       widget.potKategorija.idPot,
                       widget.potKategorija.naziv,

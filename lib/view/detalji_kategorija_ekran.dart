@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:semir_potrosnja/model/plata_provider.dart';
-import '../model/data_provider.dart';
-import '../model/rashod_kategorija_provider.dart';
+import 'package:expen/providers/salaryNotifier.dart';
+import 'package:expen/providers/settingsNotifier.dart';
+import 'package:expen/providers/expenseNotifier.dart';
+import 'package:expen/providers/categoryNotifier.dart';
+import '../providers/expenseCategoryNotifier.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:intl/intl.dart';
 import 'dart:math';
@@ -31,9 +33,9 @@ class _DetaljiKategorijaEkranState extends State<DetaljiKategorijaEkran> {
   // }
  
   String dobijUkupnoPotroseno(String mjesec) {
-    final potkatData = Provider.of<PotrosnjaLista>(context, listen: false);
+    final potkatData = Provider.of<ExpenseNotifier>(context, listen: false);
 
-    List<PotrosnjaModel> filterovanaLista;
+    List<ExpenseModel> filterovanaLista;
 
     filterovanaLista = potkatData.listaSvihPotrosnji.where((item) {
       var vrijednostMjesec = item.datum.month;
@@ -90,9 +92,9 @@ class _DetaljiKategorijaEkranState extends State<DetaljiKategorijaEkran> {
 
   double trosakFirst;
   double dobijVrijednost(String vrijednostDropdown) {
-    final svekatData = Provider.of<SveKategorije>(context, listen: false);
+    final svekatData = Provider.of<SettingsNotifier>(context, listen: false);
     trosakFirst = svekatData.rashodSveKategorijeMapa[vrijednostDropdown];
-    final plataData = Provider.of<PlataLista>(context, listen: false);
+    final plataData = Provider.of<SalaryNotifier>(context, listen: false);
     return plataData.dobijPlatuPoMjesecu(vrijednostDropdown);
     // return svekatData.rashodSveKategorijeMapa[vrijednostDropdown];
   }
@@ -144,14 +146,14 @@ class _DetaljiKategorijaEkranState extends State<DetaljiKategorijaEkran> {
   }
 
   int potrosnjeMjesec(String mjesec, int index) {
-    final potData = Provider.of<PotrosnjaLista>(context, listen: false);
-    final katData = Provider.of<KategorijaLista>(context, listen: false);
-    List<PotrosnjaModel> potrosnjeKategorija = [];
+    final potData = Provider.of<ExpenseNotifier>(context, listen: false);
+    final katData = Provider.of<CategoryNotifier>(context, listen: false);
+    List<ExpenseModel> potrosnjeKategorija = [];
     potrosnjeKategorija = potData.listaSvihPotrosnji
         .where((element) =>
             element.idKategorije == katData.kategorijaLista[index].id)
         .toList();
-    List<PotrosnjaModel> filterovanaLista;
+    List<ExpenseModel> filterovanaLista;
 
     filterovanaLista = potrosnjeKategorija.where((item) {
       var vrijednostMjesec = item.datum.month;
@@ -203,21 +205,21 @@ class _DetaljiKategorijaEkranState extends State<DetaljiKategorijaEkran> {
   }
 
   double razlika() {
-    return Provider.of<RashodKategorijaLista>(context, listen: false).dobijRashodSvihKategorijaPoMjesecu(trenutnaVrijednostDropdown) - trosakSecond;
+    return Provider.of<ExpenseCategoryNotifier>(context, listen: false).dobijRashodSvihKategorijaPoMjesecu(trenutnaVrijednostDropdown) - trosakSecond;
   }
 
   double trosakSecond;
 
   String trosakMjesec(String mjesec, int index) {
-    final potData = Provider.of<PotrosnjaLista>(context, listen: false);
-    final katData = Provider.of<KategorijaLista>(context, listen: false);
-    List<PotrosnjaModel> potrosnjeKategorija = [];
+    final potData = Provider.of<ExpenseNotifier>(context, listen: false);
+    final katData = Provider.of<CategoryNotifier>(context, listen: false);
+    List<ExpenseModel> potrosnjeKategorija = [];
     potrosnjeKategorija = potData.listaSvihPotrosnji
         .where((element) =>
             element.idKategorije == katData.kategorijaLista[index].id)
         .toList();
 
-    List<PotrosnjaModel> filterovanaLista;
+    List<ExpenseModel> filterovanaLista;
 
     filterovanaLista = potrosnjeKategorija.where((item) {
       var vrijednostMjesec = item.datum.month;
@@ -309,7 +311,7 @@ class _DetaljiKategorijaEkranState extends State<DetaljiKategorijaEkran> {
   }
 
   Widget buildCard(BuildContext context, int index) {
-    final katData = Provider.of<KategorijaLista>(context, listen: false);
+    final katData = Provider.of<CategoryNotifier>(context, listen: false);
 
     return Column(children: <Widget>[
       Padding(
@@ -405,12 +407,12 @@ class _DetaljiKategorijaEkranState extends State<DetaljiKategorijaEkran> {
 
   @override
   void initState() {
-    rashodFuture = Provider.of<SveKategorije>(context, listen: false).fetchAndSetRashod();
+    rashodFuture = Provider.of<SettingsNotifier>(context, listen: false).fetchAndSetRashod();
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
-    final katData = Provider.of<KategorijaLista>(context);
+    final katData = Provider.of<CategoryNotifier>(context);
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
@@ -515,7 +517,7 @@ class _DetaljiKategorijaEkranState extends State<DetaljiKategorijaEkran> {
           child: ListView.builder(
             physics: NeverScrollableScrollPhysics(),
             itemCount:
-                Provider.of<KategorijaLista>(context).kategorijaLista.length,
+                Provider.of<CategoryNotifier>(context).kategorijaLista.length,
             itemBuilder: (ctx, index) {
               return buildCard(context, index);
             },
@@ -559,7 +561,7 @@ class _DetaljiKategorijaEkranState extends State<DetaljiKategorijaEkran> {
                           style: TextStyle(fontFamily: 'Lato', fontSize: 18),
                         ),
                         Text(
-                          '${Provider.of<RashodKategorijaLista>(context, listen: false).dobijRashodSvihKategorijaPoMjesecu(trenutnaVrijednostDropdown).toStringAsFixed(2)} KM',
+                          '${Provider.of<ExpenseCategoryNotifier>(context, listen: false).dobijRashodSvihKategorijaPoMjesecu(trenutnaVrijednostDropdown).toStringAsFixed(2)} KM',
                           style: TextStyle(
                               fontFamily: 'Lato',
                               fontSize: 20,
@@ -592,7 +594,7 @@ class _DetaljiKategorijaEkranState extends State<DetaljiKategorijaEkran> {
                     ),
                   ),
                 ),
-                if(Provider.of<RashodKategorijaLista>(context, listen: false).dobijRashodSvihKategorijaPoMjesecu(trenutnaVrijednostDropdown) > dobijVrijednost(trenutnaVrijednostDropdown) && dobijVrijednost(trenutnaVrijednostDropdown) != 0 )
+                if(Provider.of<ExpenseCategoryNotifier>(context, listen: false).dobijRashodSvihKategorijaPoMjesecu(trenutnaVrijednostDropdown) > dobijVrijednost(trenutnaVrijednostDropdown) && dobijVrijednost(trenutnaVrijednostDropdown) != 0 )
                 Card(
                   child: Container(
                     padding: EdgeInsets.all(10),
@@ -605,7 +607,7 @@ class _DetaljiKategorijaEkranState extends State<DetaljiKategorijaEkran> {
                         Container(
                           width: 260,
                                                   child: AutoSizeText(
-                            'Planirani rashod veći od plate za ${(Provider.of<RashodKategorijaLista>(context, listen: false).dobijRashodSvihKategorijaPoMjesecu(trenutnaVrijednostDropdown) - dobijVrijednost(trenutnaVrijednostDropdown)).toStringAsFixed(2)} KM',
+                            'Planirani rashod veći od plate za ${(Provider.of<ExpenseCategoryNotifier>(context, listen: false).dobijRashodSvihKategorijaPoMjesecu(trenutnaVrijednostDropdown) - dobijVrijednost(trenutnaVrijednostDropdown)).toStringAsFixed(2)} KM',
                             textAlign: TextAlign.center,
                             maxLines: 2,
                             minFontSize: 16,

@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:semir_potrosnja/view/homeScreen/widgets/homeScreenAppBar.dart';
-import 'package:semir_potrosnja/viewModel/categoryViewModel/showAddCategoryDialogViewModel.dart';
-import '../../../model/data_provider.dart';
-import '../../../model/obavijesti_provider.dart';
+import 'package:expen/view/homeScreen/widgets/homeScreenAppBar.dart';
+import 'package:expen/viewModel/categoryViewModel/showAddCategoryDialogViewModel.dart';
+import 'package:expen/providers/expenseNotifier.dart';
+import 'package:expen/providers/categoryNotifier.dart';
+import 'package:expen/providers/settingsNotifier.dart';
+import '../../../providers/notificationNotifier.dart';
 import '../../../widgets/potrosnja_kategorija.dart';
 import '../../drawerScreen/pages/main_drawer.dart';
 
@@ -22,49 +24,51 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-    Provider.of<PotrosnjaLista>(context, listen: false)
+    Provider.of<ExpenseNotifier>(context, listen: false)
         .provjeriMjesecnoDodavanjeKategorija()
         .then((listaObavijesti) {
       if (listaObavijesti.isNotEmpty) {
         listaObavijesti.forEach((obavijest) {
-          Provider.of<ObavijestiLista>(context, listen: false).dodajObavijest(
-              obavijest['sadrzaj'],
-              obavijest['datum'],
-              obavijest['idKategorije'],
-              obavijest['idPotKategorije'],
-              obavijest['jeLiProcitano']);
+          Provider.of<NotificationNotifier>(context, listen: false)
+              .dodajObavijest(
+                  obavijest['sadrzaj'],
+                  obavijest['datum'],
+                  obavijest['idKategorije'],
+                  obavijest['idPotKategorije'],
+                  obavijest['jeLiProcitano']);
         });
       }
     });
     Timer.periodic(Duration(hours: 24), (timer) {
-      Provider.of<PotrosnjaLista>(context, listen: false)
+      Provider.of<ExpenseNotifier>(context, listen: false)
           .provjeriMjesecnoDodavanjeKategorija()
           .then((listaObavijesti) {
         if (listaObavijesti.isNotEmpty) {
           listaObavijesti.forEach((obavijest) {
-            Provider.of<ObavijestiLista>(context, listen: false).dodajObavijest(
-                obavijest['sadrzaj'],
-                obavijest['datum'],
-                obavijest['idKategorije'],
-                obavijest['idPotKategorije'],
-                obavijest['jeLiProcitano']);
+            Provider.of<NotificationNotifier>(context, listen: false)
+                .dodajObavijest(
+                    obavijest['sadrzaj'],
+                    obavijest['datum'],
+                    obavijest['idKategorije'],
+                    obavijest['idPotKategorije'],
+                    obavijest['jeLiProcitano']);
           });
         }
       });
     });
     // assign this variable your Future
-    kategorijeFuture = Provider.of<KategorijaLista>(context, listen: false)
+    kategorijeFuture = Provider.of<CategoryNotifier>(context, listen: false)
         .fetchAndSetKategorije();
-    Provider.of<ObavijestiLista>(context, listen: false)
+    Provider.of<NotificationNotifier>(context, listen: false)
         .fetchAndSetObavijesti();
-    postavkeFuture = Provider.of<SveKategorije>(context, listen: false)
+    postavkeFuture = Provider.of<SettingsNotifier>(context, listen: false)
         .fetchAndSetPostavke();
   }
 
   @override
   Widget build(BuildContext context) {
-    final katData = Provider.of<KategorijaLista>(context);
-    final obavijestiData = Provider.of<ObavijestiLista>(context);
+    final katData = Provider.of<CategoryNotifier>(context);
+    final obavijestiData = Provider.of<NotificationNotifier>(context);
 
     return Scaffold(
       key: _scaffoldKey,
@@ -87,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: PotrosnjaKategorija(item)))
                       .toList(),
                   onReorder: (start, current) {
-                    List<KategorijaModel> _list = katData.kategorijaLista;
+                    List<CategoryModel> _list = katData.kategorijaLista;
                     if (current >= _list.length) {
                       current = _list.length - 1;
                     }
@@ -100,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       print('start index: $start');
                       print('current index $current');
                       int end = current;
-                      KategorijaModel startItem = _list[start];
+                      CategoryModel startItem = _list[start];
                       int i = 0;
                       int local = start;
                       do {
@@ -118,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           current + 1, katData.kategorijaLista[start].id);
                       print('start index: $start');
                       print('current index: $current');
-                      KategorijaModel startItem = _list[start];
+                      CategoryModel startItem = _list[start];
                       for (int i = start; i > current; i--) {
                         _list[i] = _list[i - 1];
                       }

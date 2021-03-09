@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../model/obavijesti_provider.dart';
+import '../providers/notificationNotifier.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:expen/providers/categoryNotifier.dart';
 import 'package:intl/intl.dart';
-import '../model/data_provider.dart';
+import 'package:expen/providers/subcategoryNotifier.dart';
 
 class ObavijestiEkran extends StatefulWidget {
 
-  final Obavijest otvorenaObavijest;
+  final NotificationModel otvorenaObavijest;
   ObavijestiEkran({this.otvorenaObavijest});
   @override
   _ObavijestiEkranState createState() => _ObavijestiEkranState();
@@ -19,16 +20,16 @@ class _ObavijestiEkranState extends State<ObavijestiEkran> {
   @override
   void initState() {
     if(widget.otvorenaObavijest !=null) {
-      Provider.of<ObavijestiLista>(context, listen:false).procitajObavijest(widget.otvorenaObavijest.id, true);
+      Provider.of<NotificationNotifier>(context, listen:false).procitajObavijest(widget.otvorenaObavijest.id, true);
     }
-    obavijestiFuture = Provider.of<ObavijestiLista>(context, listen: false)
+    obavijestiFuture = Provider.of<NotificationNotifier>(context, listen: false)
         .fetchAndSetObavijesti();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final obavijestiData = Provider.of<ObavijestiLista>(context);
+    final obavijestiData = Provider.of<NotificationNotifier>(context);
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.cyan,
@@ -135,7 +136,7 @@ class _ObavijestiEkranState extends State<ObavijestiEkran> {
                                   child: Icon(Icons.remove_red_eye,
                                       color: Colors.cyan, size: 30),
                                   onTap: () {
-                                    Provider.of<ObavijestiLista>(context,
+                                    Provider.of<NotificationNotifier>(context,
                                             listen: false)
                                         .procitajSveObavijesti();
                                   },
@@ -148,7 +149,7 @@ class _ObavijestiEkranState extends State<ObavijestiEkran> {
                                     size: 30,
                                   ),
                                   onTap: () {
-                                    Provider.of<ObavijestiLista>(context,
+                                    Provider.of<NotificationNotifier>(context,
                                             listen: false)
                                         .izbrisiSveObavijesti();
                                   },
@@ -180,7 +181,7 @@ class _ObavijestiEkranState extends State<ObavijestiEkran> {
 }
 
 class ObavijestWidget extends StatefulWidget {
-  final Obavijest obavijest;
+  final NotificationModel obavijest;
   ObavijestWidget({this.obavijest});
 
   @override
@@ -197,8 +198,8 @@ class _ObavijestWidgetState extends State<ObavijestWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final katData = Provider.of<KategorijaLista>(context);
-    final potKatData = Provider.of<PotKategorijaLista>(context);
+    final katData = Provider.of<CategoryNotifier>(context);
+    final potKatData = Provider.of<SubcategoryNotifier>(context);
 
     return Card(
       child: Row(
@@ -281,7 +282,7 @@ class _ObavijestWidgetState extends State<ObavijestWidget> {
                         size: 30,
                       ),
                       onTap: widget.obavijest.jeLiProcitano == 'ne' ? () {
-                        Provider.of<ObavijestiLista>(context, listen: false)
+                        Provider.of<NotificationNotifier>(context, listen: false)
                             .procitajObavijest(widget.obavijest.id, false);
                       } : null,
                     ),
@@ -294,7 +295,7 @@ class _ObavijestWidgetState extends State<ObavijestWidget> {
                         size: 30,
                       ),
                       onTap: () {
-                        Provider.of<ObavijestiLista>(context, listen: false)
+                        Provider.of<NotificationNotifier>(context, listen: false)
                             .izbrisiObavijest(widget.obavijest.id);
                       },
                     ),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:semir_potrosnja/database/glavni_podaci_database.dart';
-import 'package:semir_potrosnja/model/data_provider.dart';
+import 'package:expen/database/glavni_podaci_database.dart';
+import 'package:expen/providers/settingsNotifier.dart';
 import 'package:provider/provider.dart';
-import 'package:semir_potrosnja/view/settingsScreen/widgets/addPasswordDialog.dart';
-import 'package:semir_potrosnja/view/settingsScreen/widgets/confirmOldPasswordDialog.dart';
+import 'package:expen/view/settingsScreen/widgets/addPasswordDialog.dart';
+import 'package:expen/view/settingsScreen/widgets/confirmOldPasswordDialog.dart';
 
 class SettingsPasswordProtection extends StatelessWidget {
   const SettingsPasswordProtection({
@@ -11,7 +11,7 @@ class SettingsPasswordProtection extends StatelessWidget {
     @required this.postavkeData,
   }) : super(key: key);
 
-  final SveKategorije postavkeData;
+  final SettingsNotifier postavkeData;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,7 @@ class SettingsPasswordProtection extends StatelessWidget {
                         return ConfirmOldPasswordDialog();
                       }).then((value) {
                     if (value == 'tačno') {
-                      Provider.of<SveKategorije>(context, listen: false)
+                      Provider.of<SettingsNotifier>(context, listen: false)
                           .zastitaLozinkomToggle();
                     }
                   });

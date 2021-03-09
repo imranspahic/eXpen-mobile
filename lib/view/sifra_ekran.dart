@@ -1,7 +1,8 @@
+import 'package:expen/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:semir_potrosnja/database/glavni_podaci_database.dart';
-import '../model/data_provider.dart';
+import 'package:expen/database/glavni_podaci_database.dart';
+import 'package:expen/providers/settingsNotifier.dart';
 import 'homeScreen/pages/homeScreen.dart';
 
 class SifraEkran extends StatefulWidget {
@@ -14,14 +15,14 @@ class _SifraEkranState extends State<SifraEkran> {
 
   @override
   void initState() {
-    
-    sifraFuture = Provider.of<SveKategorije>(context, listen: false)
+    sifraFuture = Provider.of<SettingsNotifier>(context, listen: false)
         .fetchAndSetPostavke();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Scaffold(
         body: FutureBuilder(
             future: sifraFuture,
@@ -29,7 +30,7 @@ class _SifraEkranState extends State<SifraEkran> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
               } else {
-                if (Provider.of<SveKategorije>(context).zastitaLozinkom) {
+                if (Provider.of<SettingsNotifier>(context).zastitaLozinkom) {
                   return Zastita();
                 } else {
                   return HomeScreen();
