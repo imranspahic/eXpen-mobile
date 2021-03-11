@@ -33,7 +33,12 @@ class DatabaseHelper {
     }, version: 4);
   }
 
-  static Future<void> insertKategorije(
+  static Future<List<Map<String, dynamic>>> fetchTable(String table) async {
+    final database = await DatabaseHelper.database();
+    return database.query(table);
+  }
+
+  static Future<void> insertRowIntoTable(
       String table, Map<String, dynamic> data) async {
     final database = await DatabaseHelper.database();
     database.insert(
@@ -43,19 +48,18 @@ class DatabaseHelper {
     );
   }
 
-  static Future<void> insertPotrosnje(
-      String table, Map<String, dynamic> data) async {
+  static Future<void> updateRowInTable(
+      String table, String key, dynamic value) async {
     final database = await DatabaseHelper.database();
-    database.insert(table, data, conflictAlgorithm: ConflictAlgorithm.replace);
+    database.update(table, {key: value});
   }
 
-  static Future<void> insertPotkategorije(
-      String table, Map<String, dynamic> data) async {
+  static Future<void> delereRowFromTable(String table, String id) async {
     final database = await DatabaseHelper.database();
-    database.insert(table, data);
+    database.delete(table, where: 'id = ?', whereArgs: [id]);
   }
 
-  static Future<void> insertVisePotrosnji(
+  static Future<void> insertMultipleExpenses(
       String table,
       String nazivKategorije,
       String nazivNovi,
@@ -78,20 +82,7 @@ class DatabaseHelper {
     }
   }
 
-  static Future<List<Map<String, dynamic>>> fetchTabele(String table) async {
-    final database = await DatabaseHelper.database();
-    return database.query(table);
-  }
-
-  static Future<void> izbrisiKategoriju(String table, String id) async {
-    final database = await DatabaseHelper.database();
-    database.delete(table, where: 'id = ?', whereArgs: [id]);
-    //alternative better
-    // database.rawDelete('DELETE FROM kategorije WHERE id = $id');
-    //raw queries nauceno..
-  }
-
-  static Future<void> izbrisiPotrosnjeuKategoriji(
+  static Future<void> deleteExpensesFromTable(
       String table, List<ExpenseModel> lista) async {
     final database = await DatabaseHelper.database();
     lista.forEach((element) {
@@ -105,19 +96,6 @@ class DatabaseHelper {
     lista.forEach((element) {
       database.delete(table, where: 'idPot= ?', whereArgs: [element.idPot]);
     });
-  }
-
-  static Future<void> izbrisiPotrosnjeuPotkategoriji(
-      String table, List<ExpenseModel> lista) async {
-    final database = await DatabaseHelper.database();
-    lista.forEach((element) {
-      database.delete(table, where: 'id= ?', whereArgs: [element.id]);
-    });
-  }
-
-  static Future<void> izbrisiPotrosnju(String table, String id) async {
-    final database = await DatabaseHelper.database();
-    database.delete(table, where: 'id = ?', whereArgs: [id]);
   }
 
   static Future<void> izbrisiPotkategoriju(String table, String idPot) async {
@@ -137,24 +115,6 @@ class DatabaseHelper {
     final database = await DatabaseHelper.database();
     database.update(table, {'bojaIkone': s, 'icon': i, 'naziv': naziv},
         where: 'idPot = ?', whereArgs: [idPot]);
-  }
-
-  static Future<void> updateRashodUkupnoGodina(
-      String table, String key, double value) async {
-    final database = await DatabaseHelper.database();
-    database.update(table, {key: value});
-  }
-
-  static Future<void> updatePostavke(
-      String table, String key, int value) async {
-    final database = await DatabaseHelper.database();
-    database.update(table, {key: value});
-  }
-
-  static Future<void> updateSifru(
-      String table, String key, String value) async {
-    final database = await DatabaseHelper.database();
-    database.update(table, {key: value});
   }
 
   static Future<void> updateKategoriju(
@@ -187,31 +147,6 @@ class DatabaseHelper {
         where: table == 'kategorije' ? 'id = ?' : 'idPot = ?', whereArgs: [id]);
   }
 
-  static Future<void> insertBiljeske(
-      String table, Map<String, dynamic> data) async {
-    final database = await DatabaseHelper.database();
-    database.insert(
-      table,
-      data,
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-  }
-
-  static Future<void> izbrisiBiljesku(String table, String id) async {
-    final database = await DatabaseHelper.database();
-    database.delete(table, where: 'id = ?', whereArgs: [id]);
-  }
-
-  static Future<void> insertObavijest(
-      String table, Map<String, dynamic> data) async {
-    final database = await DatabaseHelper.database();
-    database.insert(
-      table,
-      data,
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-  }
-
   static Future<void> procitajObavijest(String table, String id) async {
     final database = await DatabaseHelper.database();
     database.update(table, {'jeLiProcitano': 'da'},
@@ -236,7 +171,7 @@ class DatabaseHelper {
   static Future<void> addDBColumnFix(String table) async {
     final database = await DatabaseHelper.database();
     await database.execute('ALTER TABLE $table ADD COLUMN redniBroj INTEGER;');
-    final dataList = await fetchTabele(table);
+    final dataList = await fetchTable(table);
     for (int i = 1; i <= dataList.length; i++) {
       database.update(table, {'redniBroj': i},
           where: 'id = ?', whereArgs: [dataList[i - 1]['id']]);
@@ -284,10 +219,8 @@ class DatabaseHelper {
 
   static Future<void> updateCategoryTableIconColor() async {
     final database = await DatabaseHelper.database();
-    await database
-        .execute('ALTER TABLE kategorije ADD COLUMN ikonaPotrošnji TEXT;');
     await database.execute(
-        'ALTER TABLE kategorije ADD COLUMN prikažiIkonuPotrošnje TEXT DEFAULT "NE";');
+        'ALTER TABLE postavke ADD COLUMN kreiranProfil INTEGER DEFAULT 0;');
   }
 }
 

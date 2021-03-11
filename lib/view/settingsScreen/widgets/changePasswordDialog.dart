@@ -17,7 +17,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
     final _sifraStara = _sifraStaraController.text;
     final _sifraNova = _sifraNovaController.text;
     final _sifraPonovo = _sifraPonovoController.text;
-    final dbData = await DatabaseHelper.fetchTabele('postavke');
+    final dbData = await DatabaseHelper.fetchTable('postavke');
     final sifra = dbData[0]['sifra'];
 
     if (_sifraStara != sifra) {
@@ -40,7 +40,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
       });
       return;
     } else {
-      DatabaseHelper.updateSifru('postavke', 'sifra', _sifraNova);
+      DatabaseHelper.updateRowInTable('postavke', 'sifra', _sifraNova);
       Navigator.of(context).pop('promijenjeno');
     }
   }

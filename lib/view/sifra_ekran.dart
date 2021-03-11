@@ -52,7 +52,7 @@ class _ZastitaState extends State<Zastita> {
 
   void otkljucaj() async {
     final _sifra = _sifraController.text;
-    final dbData = await DatabaseHelper.fetchTabele('postavke');
+    final dbData = await DatabaseHelper.fetchTable('postavke');
     final sifra = dbData[0]['sifra'];
 
     if (_sifra != sifra) {

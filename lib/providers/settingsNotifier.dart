@@ -27,11 +27,11 @@ class SettingsNotifier extends ChangeNotifier {
   void dodajRashod(String key, double value) {
     rashodSveKategorijeMapa[key] = value;
     notifyListeners();
-    DatabaseHelper.updateRashodUkupnoGodina('rashodGodina', key, value);
+    DatabaseHelper.updateRowInTable('rashodGodina', key, value);
   }
 
   Future<void> fetchAndSetRashod() async {
-    final dataList = await DatabaseHelper.fetchTabele('rashodGodina');
+    final dataList = await DatabaseHelper.fetchTable('rashodGodina');
 
     rashodSveKategorijeMapa['Januar'] = dataList[0]['Januar'];
     rashodSveKategorijeMapa['Februar'] = dataList[0]['Februar'];
@@ -52,9 +52,9 @@ class SettingsNotifier extends ChangeNotifier {
   void vertikalniPrikazToggle() {
     vertikalniPrikaz = !vertikalniPrikaz;
     if (vertikalniPrikaz) {
-      DatabaseHelper.updatePostavke('postavke', 'prikazPotrosnji', 1);
+      DatabaseHelper.updateRowInTable('postavke', 'prikazPotrosnji', 1);
     } else {
-      DatabaseHelper.updatePostavke('postavke', 'prikazPotrosnji', 0);
+      DatabaseHelper.updateRowInTable('postavke', 'prikazPotrosnji', 0);
     }
     notifyListeners();
   }
@@ -62,9 +62,9 @@ class SettingsNotifier extends ChangeNotifier {
   void brisanjeKategorijaToggle() {
     brisanjeKategorija = !brisanjeKategorija;
     if (brisanjeKategorija) {
-      DatabaseHelper.updatePostavke('postavke', 'brisanjeKategorija', 1);
+      DatabaseHelper.updateRowInTable('postavke', 'brisanjeKategorija', 1);
     } else {
-      DatabaseHelper.updatePostavke('postavke', 'brisanjeKategorija', 0);
+      DatabaseHelper.updateRowInTable('postavke', 'brisanjeKategorija', 0);
     }
 
     notifyListeners();
@@ -73,16 +73,16 @@ class SettingsNotifier extends ChangeNotifier {
   void zastitaLozinkomToggle() {
     zastitaLozinkom = !zastitaLozinkom;
     if (zastitaLozinkom) {
-      DatabaseHelper.updatePostavke('postavke', 'zastitaLozinkom', 1);
+      DatabaseHelper.updateRowInTable('postavke', 'zastitaLozinkom', 1);
     } else {
-      DatabaseHelper.updatePostavke('postavke', 'zastitaLozinkom', 0);
+      DatabaseHelper.updateRowInTable('postavke', 'zastitaLozinkom', 0);
     }
 
     notifyListeners();
   }
 
   Future<void> fetchAndSetPostavke() async {
-    final dataList = await DatabaseHelper.fetchTabele('postavke');
+    final dataList = await DatabaseHelper.fetchTable('postavke');
 
     if (dataList[0]['prikazPotrosnji'] == 0) {
       vertikalniPrikaz = false;

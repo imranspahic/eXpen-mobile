@@ -42,7 +42,7 @@ class NotificationNotifier extends ChangeNotifier {
        return a.jeLiProcitano.compareTo(b.jeLiProcitano);
     });
     notifyListeners();
-    DatabaseHelper.insertObavijest('obavijesti', {
+    DatabaseHelper.insertRowIntoTable('obavijesti', {
       'id': novaObavijest.id,
       'sadrzaj': novaObavijest.sadrzaj,
       'datum': novaObavijest.datum.toIso8601String(),
@@ -53,7 +53,7 @@ class NotificationNotifier extends ChangeNotifier {
   }
 
   Future<void> fetchAndSetObavijesti() async {
-    final dataList = await DatabaseHelper.fetchTabele('obavijesti');
+    final dataList = await DatabaseHelper.fetchTable('obavijesti');
     listaSvihObavijesti = dataList
         .map((obavijest) => NotificationModel(
               id: obavijest['id'],
@@ -85,7 +85,7 @@ class NotificationNotifier extends ChangeNotifier {
       return item.id == id;
     });
     notifyListeners();
-    DatabaseHelper.izbrisiPotrosnju('obavijesti', id);
+    DatabaseHelper.delereRowFromTable('obavijesti', id);
   }
 
   void izbrisiSveObavijesti() {

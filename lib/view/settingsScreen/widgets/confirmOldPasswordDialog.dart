@@ -15,7 +15,7 @@ class _ConfirmOldPasswordDialogState extends State<ConfirmOldPasswordDialog> {
 
   void sacuvaj() async {
     final sifraUkucana = _sifraController.text;
-    final dbData = await DatabaseHelper.fetchTabele('postavke');
+    final dbData = await DatabaseHelper.fetchTable('postavke');
     final sifra = dbData[0]['sifra'];
 
     if (sifraUkucana != sifra) {

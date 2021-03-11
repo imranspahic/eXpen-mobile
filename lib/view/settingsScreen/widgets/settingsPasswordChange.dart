@@ -16,7 +16,7 @@ class SettingsPasswordChange extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () async {
-        final dbData = await DatabaseHelper.fetchTabele('postavke');
+        final dbData = await DatabaseHelper.fetchTable('postavke');
         final sifra = dbData[0]['sifra'];
         showDialog(
             context: context,

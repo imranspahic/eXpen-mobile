@@ -25,7 +25,7 @@ class NoteNotifier extends ChangeNotifier {
         datum: datum);
     listaBiljeski.add(novaBiljeska);
     notifyListeners();
-    DatabaseHelper.insertBiljeske('biljeske', {
+    DatabaseHelper.insertRowIntoTable('biljeske', {
       'id': novaBiljeska.id,
       'naziv': novaBiljeska.naziv,
       'tekstSadrzaj': novaBiljeska.tekstSadrzaj,
@@ -34,7 +34,7 @@ class NoteNotifier extends ChangeNotifier {
   }
 
   Future<void> fetchAndSetBiljeske() async {
-    final dataList = await DatabaseHelper.fetchTabele('biljeske');
+    final dataList = await DatabaseHelper.fetchTable('biljeske');
 
     listaBiljeski = dataList
         .map((b) => NoteModel(
@@ -51,6 +51,6 @@ class NoteNotifier extends ChangeNotifier {
   void izbrisiBiljesku(String id) {
     listaBiljeski.removeWhere((element) => element.id == id);
     notifyListeners();
-    DatabaseHelper.izbrisiBiljesku('biljeske', id);
+    DatabaseHelper.delereRowFromTable('biljeske', id);
   }
 }

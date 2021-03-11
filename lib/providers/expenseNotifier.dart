@@ -53,7 +53,7 @@ class ExpenseNotifier with ChangeNotifier {
       return item.id == id;
     });
     notifyListeners();
-    DatabaseHelper.izbrisiPotrosnju('potrosnje', id);
+    DatabaseHelper.delereRowFromTable('potrosnje', id);
   }
 
   int potrosnjePoKategoriji(String katId) {
@@ -140,7 +140,7 @@ class ExpenseNotifier with ChangeNotifier {
     listaSvihPotrosnji.sort((a, b) => -a.datum.compareTo(b.datum));
 
     notifyListeners();
-    DatabaseHelper.insertPotrosnje('potrosnje', {
+    DatabaseHelper.insertRowIntoTable('potrosnje', {
       'id': novaPotrosnja.id,
       'naziv': novaPotrosnja.naziv,
       'trosak': novaPotrosnja.trosak,
@@ -152,7 +152,7 @@ class ExpenseNotifier with ChangeNotifier {
   }
 
   Future<void> fetchAndSetPotrosnje() async {
-    final dataList = await DatabaseHelper.fetchTabele('potrosnje');
+    final dataList = await DatabaseHelper.fetchTable('potrosnje');
 
     listaSvihPotrosnji = dataList
         .map((p) => ExpenseModel(
@@ -170,7 +170,7 @@ class ExpenseNotifier with ChangeNotifier {
   }
 
   Future<void> fetchAndSetPlaniranePotrosnje() async {
-    final dataList = await DatabaseHelper.fetchTabele('planiranePotrosnje');
+    final dataList = await DatabaseHelper.fetchTable('planiranePotrosnje');
     listaPlaniranihPotrosnji = dataList
         .map((p) => ExpenseModel(
               id: p['id'],
@@ -202,7 +202,7 @@ class ExpenseNotifier with ChangeNotifier {
     // listaPlaniranihPotrosnji.sort((a, b) => -a.datum.compareTo(b.datum));
 
     notifyListeners();
-    DatabaseHelper.insertPotrosnje('planiranePotrosnje', {
+    DatabaseHelper.insertRowIntoTable('planiranePotrosnje', {
       'id': novaPlaniranaPotrosnja.id,
       'naziv': novaPlaniranaPotrosnja.naziv,
       'trosak': novaPlaniranaPotrosnja.trosak,
@@ -238,21 +238,21 @@ class ExpenseNotifier with ChangeNotifier {
       return item.id == id;
     });
     notifyListeners();
-    DatabaseHelper.izbrisiPotrosnju('planiranePotrosnje', id);
+    DatabaseHelper.delereRowFromTable('planiranePotrosnje', id);
   }
 
   Future<List<Map<String, dynamic>>>
       provjeriMjesecnoDodavanjeKategorija() async {
     //lista kategorija
-    final dataListKategorije = await DatabaseHelper.fetchTabele('kategorije');
+    final dataListKategorije = await DatabaseHelper.fetchTable('kategorije');
 
     //lista planiranihPotrosnji
     final dataListPlaniranePotrosnje =
-        await DatabaseHelper.fetchTabele('planiranePotrosnje');
+        await DatabaseHelper.fetchTable('planiranePotrosnje');
 
     //lista potkategorija
     final dataListPotkategorije =
-        await DatabaseHelper.fetchTabele('potkategorije');
+        await DatabaseHelper.fetchTable('potkategorije');
 
     await fetchAndSetPotrosnje();
 
@@ -307,7 +307,7 @@ class ExpenseNotifier with ChangeNotifier {
             for (int i = 0; i < potrosnje.length; i++) {
               listaSvihPotrosnji.add(potrosnje[i]);
 
-              DatabaseHelper.insertPotrosnje('potrosnje', {
+              DatabaseHelper.insertRowIntoTable('potrosnje', {
                 'id':
                     '${potrosnje[i].id}/$i/${datumDanasnji.second}/${datumDanasnji.millisecond}',
                 'naziv': potrosnje[i].naziv,
@@ -397,7 +397,7 @@ class ExpenseNotifier with ChangeNotifier {
             for (int i = 0; i < potrosnje.length; i++) {
               listaSvihPotrosnji.add(potrosnje[i]);
 
-              DatabaseHelper.insertPotrosnje('potrosnje', {
+              DatabaseHelper.insertRowIntoTable('potrosnje', {
                 'id':
                     '${potrosnje[i].id}/$i/${datumDanasnji.second}/${datumDanasnji.millisecond}',
                 'naziv': potrosnje[i].naziv,
@@ -473,7 +473,7 @@ class ExpenseNotifier with ChangeNotifier {
       listaSvihPotrosnji.sort((a, b) => -a.datum.compareTo(b.datum));
       notifyListeners();
     }
-    DatabaseHelper.insertVisePotrosnji('potrosnje', nazivKategorije, nazivNovi,
+    DatabaseHelper.insertMultipleExpenses('potrosnje', nazivKategorije, nazivNovi,
         brojPotrosnji, trosak, datum, id, potkategorijaId);
   }
 

@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
     // assign this variable your Future
     kategorijeFuture = Provider.of<CategoryNotifier>(context, listen: false)
-        .fetchAndSetKategorije();
+        .fetchAndSetKategorije(context);
     Provider.of<NotificationNotifier>(context, listen: false)
         .fetchAndSetObavijesti();
     postavkeFuture = Provider.of<SettingsNotifier>(context, listen: false)

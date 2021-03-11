@@ -33,7 +33,7 @@ class _AddPasswordDialogState extends State<AddPasswordDialog> {
       setState(() {
         error = false;
       });
-      DatabaseHelper.updateSifru('postavke', 'sifra', '$sifra');
+      DatabaseHelper.updateRowInTable('postavke', 'sifra', '$sifra');
       Provider.of<SettingsNotifier>(context, listen: false)
           .zastitaLozinkomToggle();
       Navigator.of(context).pop(0);

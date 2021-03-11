@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 
 class ProfileNotifier extends ChangeNotifier {
-  bool hasProfile = true;
+  bool hasProfile = false;
 
-  void checkForProfile() {
-
+  void checkForProfile(bool status) {
+    hasProfile = status;
     notifyListeners();
   }
 }

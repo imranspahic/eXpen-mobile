@@ -75,7 +75,7 @@ class SubcategoryNotifier with ChangeNotifier {
 
     potKategorijaLista.add(novaPotKategorija);
     notifyListeners();
-    DatabaseHelper.insertPotkategorije('potkategorije', {
+    DatabaseHelper.insertRowIntoTable('potkategorije', {
       'idPot': novaPotKategorija.idPot,
       'naziv': novaPotKategorija.naziv,
       'idKat': novaPotKategorija.idKat,
@@ -89,7 +89,7 @@ class SubcategoryNotifier with ChangeNotifier {
   }
 
   Future<void> fetchAndSetPotkategorije() async {
-    final dataList = await DatabaseHelper.fetchTabele('potkategorije');
+    final dataList = await DatabaseHelper.fetchTable('potkategorije');
 
     potKategorijaLista = dataList.map((pk) {
       return SubcategoryModel(
@@ -143,7 +143,7 @@ class SubcategoryNotifier with ChangeNotifier {
     notifyListeners();
 
     DatabaseHelper.izbrisiPotkategoriju('potkategorije', id);
-    DatabaseHelper.izbrisiPotrosnjeuPotkategoriji('potrosnje', listaPotrosnji);
+    DatabaseHelper.deleteExpensesFromTable('potrosnje', listaPotrosnji);
   }
 
   List<SubcategoryModel> get ukupnoPotkategorija {

@@ -31,7 +31,7 @@ class SettingsPasswordProtection extends StatelessWidget {
               activeColor: Colors.deepPurple,
               value: postavkeData.zastitaLozinkom,
               onChanged: (val) async {
-                final dbData = await DatabaseHelper.fetchTabele('postavke');
+                final dbData = await DatabaseHelper.fetchTable('postavke');
                 final sifra = dbData[0]['sifra'];
 
                 if (sifra == null) {
