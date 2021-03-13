@@ -26,7 +26,8 @@ class ProfileServices {
     final response = await http.post(url, body: {
       "applicationToken": applicationToken,
       "email": "imranspahic300@gmail.com",
-      "username": "imranspahic"
+      "username": "imranspahic",
+      "password": "nodeexample"
     });
     print("response arrived = ${response.body}");
     print("responsestatuscode = ${response.statusCode}");
