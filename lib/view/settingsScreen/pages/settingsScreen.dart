@@ -1,4 +1,5 @@
 import 'package:expen/providers/profileNotifier.dart';
+import 'package:expen/utils/loader.dart';
 import 'package:expen/view/settingsScreen/widgets/settingsProfileInformation.dart';
 import 'package:expen/view/settingsScreen/widgets/settingsSyncCreateProfile.dart';
 import 'package:flutter/material.dart';
@@ -57,39 +58,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       : SettingsSyncCreateProfile();
                 },
               ),
-              // ListTile(
-              //   title: Text('Lista proizvoda'),
-              //   subtitle: Text('Dobij listu proizvoda sa servera'),
-              //   onTap: () async {
-              //     try {
-              //       const url = "http://192.168.1.7:3000/api/products";
-              //       final http.Response body = await http.get(url);
-              //       print(body.body);
-              //     } catch (e) {
-              //       print("Error - $e");
-              //     }
-              //   },
-              // ),
-              // ListTile(
-              //   title: Text('Kreiraj korisnika'),
-              //   subtitle: Text('Kreiraj korisnika na serveru'),
-              //   onTap: () async {
-              //     try {
-              //       const url = "http://192.168.1.7:3000/api/add-user";
-              //       final http.Response body = await http.post(url, body:  {
-              //         "username": "imranspa",
-              //         "userID" : "3isdafna48asncmajfas"
-              //       });
-
-              //       if(body.statusCode>=300) {
-              //         print("ERROR => ${body.body}");
-              //       }
-              //       print(body.body);
-              //     } catch (e) {
-              //       print("Error - $e");
-              //     }
-              //   },
-              // )
+              ListTile(
+                title: Text('Prikaži loader'),
+                subtitle: Text('Prikaži loader'),
+                onTap: () async {
+                  showExpenLoader(context);
+                  await Future.delayed(Duration(seconds: 4));
+                  popExpenLoader();
+                },
+              ),
             ],
           ),
         ),
