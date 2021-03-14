@@ -94,6 +94,8 @@ void showExpenLoader(BuildContext context) {
 }
 
 void popExpenLoader() {
-  Navigator.of(expenLoaderContext).pop();
-  expenLoaderContext = null;
+  if (expenLoaderContext != null) {
+    Navigator.of(expenLoaderContext).pop();
+    expenLoaderContext = null;
+  }
 }

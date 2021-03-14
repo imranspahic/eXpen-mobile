@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:expen/database/glavni_podaci_database.dart';
 import 'package:expen/providers/profileNotifier.dart';
+import 'package:expen/utils/error_dialog.dart';
 import 'package:expen/utils/global_variables.dart';
 import 'package:expen/utils/loader.dart';
 import 'package:flutter/cupertino.dart';
@@ -48,10 +49,18 @@ class ProfileServices {
       if (response.statusCode == 200) {
         profileNotifier.checkForProfile(true);
         DatabaseHelper.updateRowInTable('postavke', 'kreiranProfil', 1);
+      } else {
+        showErrorDialog(
+          context,
+          "Nepoznata greška (Kod greške: ${response.statusCode}",
+        );
       }
     } catch (e) {
       if (CancelToken.isCancel(e)) {
-        print("Cancelled request  = $e");
+        print("error $e");
+        popExpenLoader();
+        showErrorDialog(context, "Server ne odgovara",
+            "Zahtjev za kreiranjem profila je istekao");
       }
     }
 

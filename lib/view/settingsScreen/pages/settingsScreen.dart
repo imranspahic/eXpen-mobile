@@ -1,4 +1,5 @@
 import 'package:expen/providers/profileNotifier.dart';
+import 'package:expen/utils/error_dialog.dart';
 import 'package:expen/utils/loader.dart';
 import 'package:expen/view/settingsScreen/widgets/settingsProfileInformation.dart';
 import 'package:expen/view/settingsScreen/widgets/settingsSyncCreateProfile.dart';
@@ -59,12 +60,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 },
               ),
               ListTile(
-                title: Text('Prikaži loader'),
-                subtitle: Text('Prikaži loader'),
+                title: Text('Prikaži error'),
+                subtitle: Text('Prikaži error dialog'),
                 onTap: () async {
-                  showExpenLoader(context);
-                  await Future.delayed(Duration(seconds: 4));
-                  popExpenLoader();
+                  showErrorDialog(context, "Zahtjev je istekao");
                 },
               ),
             ],
