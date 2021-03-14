@@ -6,21 +6,21 @@ import 'package:expen/providers/categoryNotifier.dart';
 import 'package:expen/providers/subcategoryNotifier.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import '../widgets/dodaj_novu_potrosnju.dart';
-import 'planirane_potrosnje_ekran.dart';
+import '../../../widgets/dodaj_novu_potrosnju.dart';
+import '../../planirane_potrosnje_ekran.dart';
 
 
-class PotKategorijaEkran extends StatefulWidget {
+class SubcategoryScreen extends StatefulWidget {
   final SubcategoryModel potKategorija;
   final CategoryModel kategorija;
 
-  PotKategorijaEkran(this.potKategorija, this.kategorija);
+  SubcategoryScreen(this.potKategorija, this.kategorija);
 
   @override
-  _PotKategorijaEkranState createState() => _PotKategorijaEkranState();
+  _SubcategoryScreenState createState() => _SubcategoryScreenState();
 }
 
-class _PotKategorijaEkranState extends State<PotKategorijaEkran> {
+class _SubcategoryScreenState extends State<SubcategoryScreen> {
   void pocniDodavatPotrosnje(ctx) {
     showModalBottomSheet(
         isScrollControlled: true,

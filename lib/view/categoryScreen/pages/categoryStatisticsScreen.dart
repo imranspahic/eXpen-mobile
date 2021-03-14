@@ -7,7 +7,7 @@ import 'package:expen/providers/categoryNotifier.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class GrafoviKategorijaEkran extends StatefulWidget {
+class CategoryStatisticsScreen extends StatefulWidget {
   final CategoryModel kategorijaLista;
   final List<ExpenseModel> dostupnePotrosnje;
   final String title;
@@ -15,7 +15,7 @@ class GrafoviKategorijaEkran extends StatefulWidget {
   final SubcategoryModel potKategorija;
   final List<SubcategoryModel> dostupnePotkategorije;
 
-  GrafoviKategorijaEkran(
+  CategoryStatisticsScreen(
       {this.kategorijaLista,
       this.dostupnePotrosnje,
       this.title,
@@ -24,10 +24,10 @@ class GrafoviKategorijaEkran extends StatefulWidget {
       this.dostupnePotkategorije});
 
   @override
-  _GrafoviKategorijaEkranState createState() => _GrafoviKategorijaEkranState();
+  _CategoryStatisticsScreenState createState() => _CategoryStatisticsScreenState();
 }
 
-class _GrafoviKategorijaEkranState extends State<GrafoviKategorijaEkran> {
+class _CategoryStatisticsScreenState extends State<CategoryStatisticsScreen> {
   String trenutnaVrijednostDropdown =
       DateFormat.MMMM().format(DateTime.now()).toString();
 

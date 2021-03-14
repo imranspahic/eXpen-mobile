@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expen/view/categorySettingsScreen/pages/postavke_kategorija.dart';
 import 'package:expen/providers/expenseNotifier.dart';
-import 'package:expen/view/tab_kategorija_ekran.dart';
+import 'package:expen/view/bottomNavigationScreen/pages/categoryBottomNavigationScreen.dart';
 import 'package:expen/providers/settingsNotifier.dart';
 import 'package:expen/providers/categoryNotifier.dart';
 import 'package:expen/providers/subcategoryNotifier.dart';
@@ -43,7 +43,7 @@ class _PotrosnjaKategorijaState extends State<PotrosnjaKategorija> {
 
   void otvoriKategoriju(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-      return TabKategorijaEkran(widget.kategorija, false);
+      return CategoryBottomNavigationScreen(widget.kategorija, false);
     }));
   }
 

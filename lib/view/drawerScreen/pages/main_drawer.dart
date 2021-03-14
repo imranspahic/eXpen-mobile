@@ -8,7 +8,7 @@ import 'package:expen/view/dodaj_rashod_ekran.dart';
 import 'package:expen/view/obavijesti_ekran.dart';
 import 'package:expen/view/settingsScreen/pages/settingsScreen.dart';
 import 'package:expen/view/rashod_pregled_ekran.dart';
-import 'package:expen/view/tab_kategorija_ekran.dart';
+import 'package:expen/view/bottomNavigationScreen/pages/categoryBottomNavigationScreen.dart';
 import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
 
@@ -65,7 +65,7 @@ class MainDrawer extends StatelessWidget {
     return InkWell(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-          return TabKategorijaEkran(kategorija, true);
+          return CategoryBottomNavigationScreen(kategorija, true);
         }));
       },
       child: Container(

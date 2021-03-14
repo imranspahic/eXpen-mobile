@@ -3,39 +3,37 @@ import 'package:provider/provider.dart';
 import 'package:expen/providers/expenseNotifier.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:expen/providers/expenseCategoryNotifier.dart';
 import 'package:expen/view/dodaj_rashod_ekran.dart';
 import 'package:expen/view/planirane_potrosnje_ekran.dart';
 import 'package:expen/providers/categoryNotifier.dart';
 import 'dart:math';
 import 'package:expen/providers/subcategoryNotifier.dart';
-import '../widgets/badge.dart';
-import './edit_potkategorija_ekran.dart';
-import './tab_potkategorija_ekran.dart';
-import '../widgets/dodaj_novu_potkategoriju.dart';
+import '../../../widgets/badge.dart';
+import '../../edit_potkategorija_ekran.dart';
+import '../../bottomNavigationScreen/pages/subcategoryBottomNavigationScreen.dart';
+import '../../../widgets/dodaj_novu_potkategoriju.dart';
 import 'package:expen/providers/settingsNotifier.dart';
-import '../widgets/dodaj_novu_potrosnju.dart';
-import '../widgets/izbrisi_dialog.dart';
-import './dodaj_vise_potrosnji.dart';
+import '../../../widgets/dodaj_novu_potrosnju.dart';
+import '../../../widgets/izbrisi_dialog.dart';
+import '../../dodaj_vise_potrosnji.dart';
 
-class KategorijaPojedinacna extends StatefulWidget {
-  static const routeName = 'kategorija-pojedinacna';
-  final CategoryModel kategorija;
+class CategoryScreen extends StatefulWidget {
+  final CategoryModel category;
   List<ExpenseModel> dostupnePotrosnje;
   final List<SubcategoryModel> dostupnePotkategorije;
   final bool jeLiDrawer;
 
-  KategorijaPojedinacna(
-      {this.kategorija,
+  CategoryScreen(
+      {this.category,
       this.dostupnePotrosnje,
       this.dostupnePotkategorije,
       this.jeLiDrawer});
 
   @override
-  _KategorijaPojedinacnaState createState() => _KategorijaPojedinacnaState();
+  _CategoryScreenState createState() => _CategoryScreenState();
 }
 
-class _KategorijaPojedinacnaState extends State<KategorijaPojedinacna> {
+class _CategoryScreenState extends State<CategoryScreen> {
   Future potrosnjeFuture;
   Future potkategorijeFuture;
 
@@ -46,13 +44,13 @@ class _KategorijaPojedinacnaState extends State<KategorijaPojedinacna> {
   @override
   void initState() {
     super.initState();
-    potrosnjeFuture = Provider.of<ExpenseNotifier>(context, listen: false)
-        .fetchAndSetPotrosnje();
-    potkategorijeFuture =
-        Provider.of<SubcategoryNotifier>(context, listen: false)
-            .fetchAndSetPotkategorije();
-    Provider.of<ExpenseCategoryNotifier>(context, listen: false)
-        .fetchAndSetRashodKategorija();
+    // potrosnjeFuture = Provider.of<ExpenseNotifier>(context, listen: false)
+    //     .fetchAndSetPotrosnje();
+    // potkategorijeFuture =
+    //     Provider.of<SubcategoryNotifier>(context, listen: false)
+    //         .fetchAndSetPotkategorije();
+    // Provider.of<ExpenseCategoryNotifier>(context, listen: false)
+    //     .fetchAndSetRashodKategorija();
   }
 
   void pocniDodavatPotrosnje(ctx) {
@@ -61,7 +59,7 @@ class _KategorijaPojedinacnaState extends State<KategorijaPojedinacna> {
         context: ctx,
         builder: (ctx) {
           return DodajNovuPotrosnju(
-            kategorija: widget.kategorija,
+            kategorija: widget.category,
             uPotkategoriji: false,
             jeLiPlaniranaPotrosnja: false,
           );
@@ -78,7 +76,7 @@ class _KategorijaPojedinacnaState extends State<KategorijaPojedinacna> {
   void otvoriDodavanjeVisePotrosnji(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(builder: (_) {
       return DodajVisePotrosnji(
-        kategorija: widget.kategorija,
+        kategorija: widget.category,
         uPotkategoriji: false,
       );
     }));
@@ -91,7 +89,7 @@ class _KategorijaPojedinacnaState extends State<KategorijaPojedinacna> {
               Container(
                   height: 230,
                   width: 400,
-                  child: DodajNovuPotKategoriju(widget.kategorija)),
+                  child: DodajNovuPotKategoriju(widget.category)),
             ])).then((value) {
       if (value != null) {
         Scaffold.of(context).showSnackBar(SnackBar(
@@ -105,7 +103,7 @@ class _KategorijaPojedinacnaState extends State<KategorijaPojedinacna> {
   void dodajRashod(ctx) {
     Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
       return DodajRashodEkran(
-        kategorija: widget.kategorija,
+        kategorija: widget.category,
         isKategorija: true,
       );
     }));
@@ -114,14 +112,14 @@ class _KategorijaPojedinacnaState extends State<KategorijaPojedinacna> {
   void planiranePotrosnje(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
       return PlaniranePotrosnjeEkran(
-        kategorija: widget.kategorija,
+        kategorija: widget.category,
       );
     }));
   }
 
   void otvoriPotKategoriju(BuildContext context, SubcategoryModel potkategorija) {
     Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-      return TabPotKategorijaEkran(potkategorija, widget.kategorija);
+      return SubcategoryBottomNavigationScreen(potkategorija, widget.category);
     }));
   }
 
@@ -191,29 +189,29 @@ class _KategorijaPojedinacnaState extends State<KategorijaPojedinacna> {
         ],
       ),
       appBar: AppBar(
-        title: Text(widget.kategorija.naziv),
+        title: Text(widget.category.naziv),
         actions: <Widget>[
           Padding(
               padding: const EdgeInsets.only(right: 20.0, top: 5, bottom: 5),
               child: widget.jeLiDrawer
                   ? CircleAvatar(
                       radius: 25,
-                      backgroundImage: widget.kategorija.slikaUrl ==
+                      backgroundImage: widget.category.slikaUrl ==
                               'assets/images/nema-slike.jpg'
-                          ? AssetImage(widget.kategorija.slikaUrl)
+                          ? AssetImage(widget.category.slikaUrl)
                           : MemoryImage(
-                              widget.kategorija.slikaEncoded,
+                              widget.category.slikaEncoded,
                             ),
                     )
                   : Hero(
-                      tag: widget.kategorija.id,
+                      tag: widget.category.id,
                       child: CircleAvatar(
                         radius: 25,
-                        backgroundImage: widget.kategorija.slikaUrl ==
+                        backgroundImage: widget.category.slikaUrl ==
                                 'assets/images/nema-slike.jpg'
-                            ? AssetImage(widget.kategorija.slikaUrl)
+                            ? AssetImage(widget.category.slikaUrl)
                             : MemoryImage(
-                                widget.kategorija.slikaEncoded,
+                                widget.category.slikaEncoded,
                               ),
                       ),
                     ))

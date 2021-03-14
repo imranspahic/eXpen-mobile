@@ -1,3 +1,4 @@
+import 'package:expen/providers/bottomNavigationNotifier.dart';
 import 'package:expen/providers/profileNotifier.dart';
 import 'package:expen/providers/expenseNotifier.dart';
 import 'package:expen/providers/settingsNotifier.dart';
@@ -46,6 +47,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (ctx) => ProfileNotifier(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => BottomNavigationNotifier(),
         )
       ],
       child: MaterialApp(

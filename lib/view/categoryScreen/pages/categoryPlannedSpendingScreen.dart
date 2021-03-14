@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:expen/providers/categoryNotifier.dart';
 import 'package:expen/providers/expenseNotifier.dart';
-import '../providers/expenseCategoryNotifier.dart';
+import '../../../providers/expenseCategoryNotifier.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class RashodKategorijaEkran extends StatefulWidget {
+class CategoryPlannedSpendingScreen extends StatefulWidget {
   final CategoryModel kategorija;
   final List<ExpenseModel> dostupnePotrosnje;
-  RashodKategorijaEkran(this.kategorija, this.dostupnePotrosnje);
+  CategoryPlannedSpendingScreen(this.kategorija, this.dostupnePotrosnje);
   @override
-  _RashodKategorijaEkranState createState() => _RashodKategorijaEkranState();
+  _CategoryPlannedSpendingScreenState createState() => _CategoryPlannedSpendingScreenState();
 }
 
-class _RashodKategorijaEkranState extends State<RashodKategorijaEkran> {
+class _CategoryPlannedSpendingScreenState extends State<CategoryPlannedSpendingScreen> {
   String trenutnaVrijednostDropdown =
       DateFormat.MMMM().format(DateTime.now()).toString();
 
