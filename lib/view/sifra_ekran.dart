@@ -16,7 +16,7 @@ class _SifraEkranState extends State<SifraEkran> {
   @override
   void initState() {
     sifraFuture = Provider.of<SettingsNotifier>(context, listen: false)
-        .fetchAndSetPostavke();
+        .fetchAndSetPostavke(context, true);
     super.initState();
   }
 

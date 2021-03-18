@@ -26,7 +26,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   void initState() {
     final postData = Provider.of<SettingsNotifier>(context, listen: false);
-    postData.fetchAndSetPostavke();
+    postData.fetchAndSetPostavke(context, false);
     super.initState();
   }
 

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:expen/providers/profileNotifier.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expen/view/homeScreen/widgets/homeScreenAppBar.dart';
@@ -62,13 +63,16 @@ class _HomeScreenState extends State<HomeScreen> {
     Provider.of<NotificationNotifier>(context, listen: false)
         .fetchAndSetObavijesti();
     postavkeFuture = Provider.of<SettingsNotifier>(context, listen: false)
-        .fetchAndSetPostavke();
+        .fetchAndSetPostavke(context, false);
   }
 
   @override
   Widget build(BuildContext context) {
     final katData = Provider.of<CategoryNotifier>(context);
     final obavijestiData = Provider.of<NotificationNotifier>(context);
+    final profileNotifier = Provider.of<ProfileNotifier>(context);
+
+    print("ACCES TOKEN = ${profileNotifier.userData["accessToken"]}");
 
     return Scaffold(
       key: _scaffoldKey,

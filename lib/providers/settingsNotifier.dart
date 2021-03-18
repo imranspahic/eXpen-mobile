@@ -1,3 +1,4 @@
+import 'package:expen/viewModel/userViewModel/getUserDataSharedPrefsVM.dart';
 import 'package:flutter/material.dart';
 import 'package:expen/database/glavni_podaci_database.dart';
 
@@ -81,7 +82,12 @@ class SettingsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchAndSetPostavke() async {
+  Future<void> fetchAndSetPostavke(BuildContext context, bool isStart) async {
+    print("INITTTTT");
+    if (isStart) {
+      print("SDASFASFA");
+      await getUserDataSharedPrefs(context);
+    }
     final dataList = await DatabaseHelper.fetchTable('postavke');
 
     if (dataList[0]['prikazPotrosnji'] == 0) {

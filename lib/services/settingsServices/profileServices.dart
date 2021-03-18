@@ -9,14 +9,13 @@ import 'package:expen/utils/loader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:dio/dio.dart';
 import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
 
 class ProfileServices {
   static Future<void> getProfileState(BuildContext context) async {
     final data = await DatabaseHelper.fetchTable('postavke');
     final profileNotifier =
         Provider.of<ProfileNotifier>(context, listen: false);
-    bool profileStatus = false;
+    bool profileStatus = true;
     if (data[0]["kreiranProfil"] == 0) {
       profileStatus = false;
     }
@@ -48,6 +47,7 @@ class ProfileServices {
       print("responsestatuscode = ${response.statusCode}");
       if (response.statusCode == 200) {
         profileNotifier.checkForProfile(true);
+        profileNotifier.setUserData(response.data, true);
         DatabaseHelper.updateRowInTable('postavke', 'kreiranProfil', 1);
       } else {
         showErrorDialog(
