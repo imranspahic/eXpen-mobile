@@ -1,4 +1,4 @@
-import 'package:expen/services/categoryServices/showAddCategoryDialogService.dart';
+import 'package:expen/services/dialogServices/showDialogService.dart';
 import 'package:flutter/material.dart';
 import 'package:expen/providers/notificationNotifier.dart';
 import 'package:provider/provider.dart';
@@ -20,10 +20,11 @@ AppBar homeScreenAppBar(
     ),
     actions: <Widget>[
       IconButton(
-          icon:
-              Provider.of<NotificationNotifier>(context).neprocitaneObavijesti() == 0
-                  ? Icon(Icons.notifications_none)
-                  : Icon(Icons.notifications_active),
+          icon: Provider.of<NotificationNotifier>(context)
+                      .neprocitaneObavijesti() ==
+                  0
+              ? Icon(Icons.notifications_none)
+              : Icon(Icons.notifications_active),
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
               return ObavijestiEkran();
@@ -31,7 +32,8 @@ AppBar homeScreenAppBar(
           }),
       IconButton(
           icon: Icon(Icons.add),
-          onPressed: () => ShowAddCategoryDialogService().showAddCategoryDialog(context, scaffoldKey))
+          onPressed: () =>
+              ShowDialogService.addCategoryDialog(context, scaffoldKey))
     ],
   );
 }

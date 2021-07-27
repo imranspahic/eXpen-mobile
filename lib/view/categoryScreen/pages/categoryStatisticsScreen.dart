@@ -275,11 +275,11 @@ class _CategoryStatisticsScreenState extends State<CategoryStatisticsScreen> {
   }
 
   List<double> convert2() {
-    final potKatData = Provider.of<SubcategoryNotifier>(context);
+    final SubcategoryNotifier subcategoryNotifier = Provider.of<SubcategoryNotifier>(context);
 
     for (var i = 0; i < widget.dostupnePotkategorije.length; i++) {
       List<ExpenseModel> pocetna = [];
-      pocetna = potKatData.dostPotKat.where((test) {
+      pocetna = subcategoryNotifier.dostPotKat.where((test) {
         return test.idPotKategorije == widget.dostupnePotkategorije[i].idPot;
       }).toList();
 

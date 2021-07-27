@@ -22,22 +22,23 @@ class _DetaljiKategorijaEkranState extends State<DetaljiKategorijaEkran> {
       DateFormat.MMMM().format(DateTime.now()).toString();
 
   // double ostalo(int index) {
-  //   final katData = Provider.of<KategorijaLista>(context, listen: false);
-  //   final potkatData = Provider.of<PotrosnjaLista>(context, listen: false);
+  //   final CategoryNotifier categoryNotifier = Provider.of<KategorijaLista>(context, listen: false);
+  //   final SubcategoryNotifier subcategoryNotifier subcategoryNotifier = Provider.of<PotrosnjaLista>(context, listen: false);
 
-  //   double first = katData.kategorijaLista[index].rashodGodina;
+  //   double first = categoryNotifier.kategorijaLista[index].rashodGodina;
   //   double second =
-  //       potkatData.trosakPoKategoriji(katData.kategorijaLista[index].id);
+  //       subcategoryNotifier.trosakPoKategoriji(categoryNotifier.kategorijaLista[index].id);
 
   //   return first - second;
   // }
- 
+
   String dobijUkupnoPotroseno(String mjesec) {
-    final potkatData = Provider.of<ExpenseNotifier>(context, listen: false);
+    final ExpenseNotifier expenseNotifier =
+        Provider.of<ExpenseNotifier>(context, listen: false);
 
     List<ExpenseModel> filterovanaLista;
 
-    filterovanaLista = potkatData.listaSvihPotrosnji.where((item) {
+    filterovanaLista = expenseNotifier.listaSvihPotrosnji.where((item) {
       var vrijednostMjesec = item.datum.month;
       String vrijednostString;
       switch (vrijednostMjesec) {
@@ -146,12 +147,12 @@ class _DetaljiKategorijaEkranState extends State<DetaljiKategorijaEkran> {
   }
 
   int potrosnjeMjesec(String mjesec, int index) {
-    final potData = Provider.of<ExpenseNotifier>(context, listen: false);
-    final katData = Provider.of<CategoryNotifier>(context, listen: false);
+    final expenseNotifier = Provider.of<ExpenseNotifier>(context, listen: false);
+    final CategoryNotifier categoryNotifier = Provider.of<CategoryNotifier>(context, listen: false);
     List<ExpenseModel> potrosnjeKategorija = [];
-    potrosnjeKategorija = potData.listaSvihPotrosnji
+    potrosnjeKategorija = expenseNotifier.listaSvihPotrosnji
         .where((element) =>
-            element.idKategorije == katData.kategorijaLista[index].id)
+            element.idKategorije == categoryNotifier.kategorijaLista[index].id)
         .toList();
     List<ExpenseModel> filterovanaLista;
 
@@ -205,18 +206,20 @@ class _DetaljiKategorijaEkranState extends State<DetaljiKategorijaEkran> {
   }
 
   double razlika() {
-    return Provider.of<ExpenseCategoryNotifier>(context, listen: false).dobijRashodSvihKategorijaPoMjesecu(trenutnaVrijednostDropdown) - trosakSecond;
+    return Provider.of<ExpenseCategoryNotifier>(context, listen: false)
+            .dobijRashodSvihKategorijaPoMjesecu(trenutnaVrijednostDropdown) -
+        trosakSecond;
   }
 
   double trosakSecond;
 
   String trosakMjesec(String mjesec, int index) {
-    final potData = Provider.of<ExpenseNotifier>(context, listen: false);
-    final katData = Provider.of<CategoryNotifier>(context, listen: false);
+    final expenseNotifier = Provider.of<ExpenseNotifier>(context, listen: false);
+    final CategoryNotifier categoryNotifier = Provider.of<CategoryNotifier>(context, listen: false);
     List<ExpenseModel> potrosnjeKategorija = [];
-    potrosnjeKategorija = potData.listaSvihPotrosnji
+    potrosnjeKategorija = expenseNotifier.listaSvihPotrosnji
         .where((element) =>
-            element.idKategorije == katData.kategorijaLista[index].id)
+            element.idKategorije == categoryNotifier.kategorijaLista[index].id)
         .toList();
 
     List<ExpenseModel> filterovanaLista;
@@ -311,7 +314,7 @@ class _DetaljiKategorijaEkranState extends State<DetaljiKategorijaEkran> {
   }
 
   Widget buildCard(BuildContext context, int index) {
-    final katData = Provider.of<CategoryNotifier>(context, listen: false);
+    final CategoryNotifier categoryNotifier = Provider.of<CategoryNotifier>(context, listen: false);
 
     return Column(children: <Widget>[
       Padding(
@@ -322,13 +325,11 @@ class _DetaljiKategorijaEkranState extends State<DetaljiKategorijaEkran> {
             child: Stack(
               children: <Widget>[
                 CircleAvatar(
-                  backgroundImage: katData.kategorijaLista[index].slikaUrl ==
+                  backgroundImage: categoryNotifier.kategorijaLista[index].slikaUrl ==
                           'assets/images/nema-slike.jpg'
-                      ? AssetImage(katData.kategorijaLista[index].slikaUrl)
+                      ? AssetImage(categoryNotifier.kategorijaLista[index].slikaUrl)
                       : MemoryImage(
-                        katData.kategorijaLista[index].slikaEncoded
-                        
-                        ),
+                          categoryNotifier.kategorijaLista[index].slikaEncoded),
                   radius: 70,
                 ),
                 Positioned(
@@ -345,7 +346,7 @@ class _DetaljiKategorijaEkranState extends State<DetaljiKategorijaEkran> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 5.0, vertical: 5.0),
                           child: Text(
-                            katData.kategorijaLista[index].naziv,
+                            categoryNotifier.kategorijaLista[index].naziv,
                             style: TextStyle(
                                 fontSize: 28, color: Colors.orange[100]),
                           ),
@@ -381,7 +382,15 @@ class _DetaljiKategorijaEkranState extends State<DetaljiKategorijaEkran> {
                       SizedBox(width: 20),
                       Container(
                           alignment: Alignment.center,
-                          width: min(trosakMjesec(trenutnaVrijednostDropdown, index).length * 20.0 + trosakMjesec(trenutnaVrijednostDropdown, index).length + 10 , 250),
+                          width: min(
+                              trosakMjesec(trenutnaVrijednostDropdown, index)
+                                          .length *
+                                      20.0 +
+                                  trosakMjesec(
+                                          trenutnaVrijednostDropdown, index)
+                                      .length +
+                                  10,
+                              250),
                           child: Row(children: <Widget>[
                             Icon(Icons.monetization_on,
                                 color: Colors.purple, size: 30),
@@ -407,262 +416,278 @@ class _DetaljiKategorijaEkranState extends State<DetaljiKategorijaEkran> {
 
   @override
   void initState() {
-    rashodFuture = Provider.of<SettingsNotifier>(context, listen: false).fetchAndSetRashod();
+    rashodFuture = Provider.of<SettingsNotifier>(context, listen: false)
+        .fetchAndSetRashod();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-    final katData = Provider.of<CategoryNotifier>(context);
+    final CategoryNotifier categoryNotifier = Provider.of<CategoryNotifier>(context);
     return Scaffold(
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
-        backgroundColor: Colors.blue[700],
-        title: Row(children: <Widget>[
-          Icon(
-            Icons.more,
-            color: Colors.blue[50],
-          ),
-          SizedBox(width: 10),
-          Text(
-            'Detalji',
-            style: TextStyle(color: Colors.blue[50]),
-          )
-        ]),
-      ),
-      body: FutureBuilder(future: rashodFuture, 
-      builder: (ctx, snapshot) {
-        if(snapshot.connectionState == ConnectionState.done) {
-          return SingleChildScrollView(
-          child: Column(children: <Widget>[
-        Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Icon(Icons.check_circle),
-                  SizedBox(width: 6),
-                  Center(
-                      child: Text(
-                    'Sve kategorije',
-                    style: TextStyle(
-                        fontSize: 22, fontFamily: 'Lato', color: Colors.brown),
-                  ))
-                ])),
-        Card(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          color: Colors.blue[700],
-          margin: EdgeInsets.only(left: 15, right: 15, bottom: 20, top: 10),
-          child: ListTile(
-            trailing: DropdownButton<String>(
-              value: formatirajMjesecNaBosanski(trenutnaVrijednostDropdown),
-              icon: Icon(Icons.arrow_downward),
-              iconSize: 24,
-              elevation: 9,
-              iconEnabledColor: Colors.white,
-              dropdownColor: Colors.black54,
-              focusColor: Colors.white,
-              style: TextStyle(color: Colors.yellow, fontSize: 30),
-              underline: Container(
-                height: 2,
-                color: Colors.white,
-              ),
-              onChanged: (String newValue) {
-                setState(() {
-                  trenutnaVrijednostDropdown = newValue;
-                });
-              },
-              items: <String>[
-                'Januar',
-                'Februar',
-                'Mart',
-                'April',
-                'Maj',
-                'Juni',
-                'Juli',
-                'August',
-                'Septembar',
-                'Oktobar',
-                'Novembar',
-                'Decembar'
-              ].map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                    style: TextStyle(
-                      // color: Colors.brown[700],
-                      fontFamily: 'Lato',
-                      fontSize: 18,
-                    ),
-                  ),
-                );
-              }).toList(),
+        appBar: AppBar(
+          iconTheme: IconThemeData(color: Colors.white),
+          backgroundColor: Colors.blue[700],
+          title: Row(children: <Widget>[
+            Icon(
+              Icons.more,
+              color: Colors.blue[50],
             ),
-            leading: Text(
-              'Prikaži po mjesecu',
-              style: TextStyle(
-                  fontSize: 21,
-                  fontFamily: 'Lato',
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: 0,
-                  color: Colors.blue[50]),
-            ),
-          ),
+            SizedBox(width: 10),
+            Text(
+              'Detalji',
+              style: TextStyle(color: Colors.blue[50]),
+            )
+          ]),
         ),
-        Container(
-          height: katData.kategorijaLista.length * 150.0 +
-              katData.kategorijaLista.length * 100 +
-              katData.kategorijaLista.length * 10,
-          child: ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            itemCount:
-                Provider.of<CategoryNotifier>(context).kategorijaLista.length,
-            itemBuilder: (ctx, index) {
-              return buildCard(context, index);
-            },
-          ),
-        ),
-        Container(
-            margin: EdgeInsets.all(10),
-            child: Column(
-              children: <Widget>[
-                Card(
-                  child: Container(
-                    padding: EdgeInsets.all(10),
+        body: FutureBuilder(
+          future: rashodFuture,
+          builder: (ctx, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return SingleChildScrollView(
+                  child: Column(children: <Widget>[
+                Padding(
+                    padding: const EdgeInsets.all(15.0),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          'Prihod za ${trenutnaVrijednostDropdown.toLowerCase()}',
-                          style: TextStyle(fontFamily: 'Lato', fontSize: 18),
-                        ),
-                        Text(
-                          '${dobijVrijednost(trenutnaVrijednostDropdown).toStringAsFixed(2)} KM',
-                          style: TextStyle(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(Icons.check_circle),
+                          SizedBox(width: 6),
+                          Center(
+                              child: Text(
+                            'Sve kategorije',
+                            style: TextStyle(
+                                fontSize: 22,
+                                fontFamily: 'Lato',
+                                color: Colors.brown),
+                          ))
+                        ])),
+                Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  color: Colors.blue[700],
+                  margin:
+                      EdgeInsets.only(left: 15, right: 15, bottom: 20, top: 10),
+                  child: ListTile(
+                    trailing: DropdownButton<String>(
+                      value: formatirajMjesecNaBosanski(
+                          trenutnaVrijednostDropdown),
+                      icon: Icon(Icons.arrow_downward),
+                      iconSize: 24,
+                      elevation: 9,
+                      iconEnabledColor: Colors.white,
+                      dropdownColor: Colors.black54,
+                      focusColor: Colors.white,
+                      style: TextStyle(color: Colors.yellow, fontSize: 30),
+                      underline: Container(
+                        height: 2,
+                        color: Colors.white,
+                      ),
+                      onChanged: (String newValue) {
+                        setState(() {
+                          trenutnaVrijednostDropdown = newValue;
+                        });
+                      },
+                      items: <String>[
+                        'Januar',
+                        'Februar',
+                        'Mart',
+                        'April',
+                        'Maj',
+                        'Juni',
+                        'Juli',
+                        'August',
+                        'Septembar',
+                        'Oktobar',
+                        'Novembar',
+                        'Decembar'
+                      ].map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(
+                            value,
+                            style: TextStyle(
+                              // color: Colors.brown[700],
                               fontFamily: 'Lato',
-                              fontSize: 20,
-                              color: Colors.green),
-                        ),
-                        
-                        
-                      ],
+                              fontSize: 18,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                    leading: Text(
+                      'Prikaži po mjesecu',
+                      style: TextStyle(
+                          fontSize: 21,
+                          fontFamily: 'Lato',
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 0,
+                          color: Colors.blue[50]),
                     ),
                   ),
                 ),
-                Card(
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          'Rashod za ${trenutnaVrijednostDropdown.toLowerCase()}',
-                          style: TextStyle(fontFamily: 'Lato', fontSize: 18),
-                        ),
-                        Text(
-                          '${Provider.of<ExpenseCategoryNotifier>(context, listen: false).dobijRashodSvihKategorijaPoMjesecu(trenutnaVrijednostDropdown).toStringAsFixed(2)} KM',
-                          style: TextStyle(
-                              fontFamily: 'Lato',
-                              fontSize: 20,
-                              color: Colors.orange),
-                        ),
-                        
-                        
-                      ],
-                    ),
+                Container(
+                  height: categoryNotifier.kategorijaLista.length * 150.0 +
+                      categoryNotifier.kategorijaLista.length * 100 +
+                      categoryNotifier.kategorijaLista.length * 10,
+                  child: ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: Provider.of<CategoryNotifier>(context)
+                        .kategorijaLista
+                        .length,
+                    itemBuilder: (ctx, index) {
+                      return buildCard(context, index);
+                    },
                   ),
                 ),
-                Card(
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Container(
+                    margin: EdgeInsets.all(10),
+                    child: Column(
                       children: <Widget>[
-                        Text(
-                          'Ukuno potrošeno ',
-                          style: TextStyle(fontSize: 18, fontFamily: 'Lato'),
-                        ),
-                        Text(
-                          '${dobijUkupnoPotroseno(trenutnaVrijednostDropdown)} KM',
-                          style: TextStyle(
-                              fontFamily: 'Lato',
-                              fontSize: 20,
-                              color: Colors.red),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                if(Provider.of<ExpenseCategoryNotifier>(context, listen: false).dobijRashodSvihKategorijaPoMjesecu(trenutnaVrijednostDropdown) > dobijVrijednost(trenutnaVrijednostDropdown) && dobijVrijednost(trenutnaVrijednostDropdown) != 0 )
-                Card(
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    color: Colors.red,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(Icons.warning, size: 30, color: Colors.white),
-                        SizedBox(width: 5,),
-                        Container(
-                          width: 260,
-                                                  child: AutoSizeText(
-                            'Planirani rashod veći od plate za ${(Provider.of<ExpenseCategoryNotifier>(context, listen: false).dobijRashodSvihKategorijaPoMjesecu(trenutnaVrijednostDropdown) - dobijVrijednost(trenutnaVrijednostDropdown)).toStringAsFixed(2)} KM',
-                            textAlign: TextAlign.center,
-                            maxLines: 2,
-                            minFontSize: 16,
-                            style: TextStyle(fontSize: 18, fontFamily: 'Lato', color: Colors.white, fontWeight: FontWeight.bold),
+                        Card(
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(
+                                  'Prihod za ${trenutnaVrijednostDropdown.toLowerCase()}',
+                                  style: TextStyle(
+                                      fontFamily: 'Lato', fontSize: 18),
+                                ),
+                                Text(
+                                  '${dobijVrijednost(trenutnaVrijednostDropdown).toStringAsFixed(2)} KM',
+                                  style: TextStyle(
+                                      fontFamily: 'Lato',
+                                      fontSize: 20,
+                                      color: Colors.green),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                       
-                      ],
-                    ),
-                  ),
-                ),
-                Card(
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        razlika() < 0
-                            ? Text(
-                                '${razlika().toStringAsFixed(2)} KM',
-                                style: TextStyle(
-                                    fontFamily: 'Lato',
-                                    fontSize: 25,
-                                    color: Colors.red),
-                              )
-                            : razlika() == 0
-                                ? Text(
-                                    '${razlika().toStringAsFixed(2)} KM',
-                                    style: TextStyle(
-                                        fontFamily: 'Lato',
-                                        fontSize: 25,
-                                        color: Colors.grey),
-                                  )
-                                : Text(
-                                    '+${razlika().toStringAsFixed(2)} KM',
-                                    style: TextStyle(
-                                        fontFamily: 'Lato',
-                                        fontSize: 25,
-                                        color: Colors.green),
+                        Card(
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(
+                                  'Rashod za ${trenutnaVrijednostDropdown.toLowerCase()}',
+                                  style: TextStyle(
+                                      fontFamily: 'Lato', fontSize: 18),
+                                ),
+                                Text(
+                                  '${Provider.of<ExpenseCategoryNotifier>(context, listen: false).dobijRashodSvihKategorijaPoMjesecu(trenutnaVrijednostDropdown).toStringAsFixed(2)} KM',
+                                  style: TextStyle(
+                                      fontFamily: 'Lato',
+                                      fontSize: 20,
+                                      color: Colors.orange),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Card(
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(
+                                  'Ukuno potrošeno ',
+                                  style: TextStyle(
+                                      fontSize: 18, fontFamily: 'Lato'),
+                                ),
+                                Text(
+                                  '${dobijUkupnoPotroseno(trenutnaVrijednostDropdown)} KM',
+                                  style: TextStyle(
+                                      fontFamily: 'Lato',
+                                      fontSize: 20,
+                                      color: Colors.red),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        if (Provider.of<ExpenseCategoryNotifier>(context,
+                                        listen: false)
+                                    .dobijRashodSvihKategorijaPoMjesecu(
+                                        trenutnaVrijednostDropdown) >
+                                dobijVrijednost(trenutnaVrijednostDropdown) &&
+                            dobijVrijednost(trenutnaVrijednostDropdown) != 0)
+                          Card(
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              color: Colors.red,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Icon(Icons.warning,
+                                      size: 30, color: Colors.white),
+                                  SizedBox(
+                                    width: 5,
                                   ),
+                                  Container(
+                                    width: 260,
+                                    child: AutoSizeText(
+                                      'Planirani rashod veći od plate za ${(Provider.of<ExpenseCategoryNotifier>(context, listen: false).dobijRashodSvihKategorijaPoMjesecu(trenutnaVrijednostDropdown) - dobijVrijednost(trenutnaVrijednostDropdown)).toStringAsFixed(2)} KM',
+                                      textAlign: TextAlign.center,
+                                      maxLines: 2,
+                                      minFontSize: 16,
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontFamily: 'Lato',
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        Card(
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                razlika() < 0
+                                    ? Text(
+                                        '${razlika().toStringAsFixed(2)} KM',
+                                        style: TextStyle(
+                                            fontFamily: 'Lato',
+                                            fontSize: 25,
+                                            color: Colors.red),
+                                      )
+                                    : razlika() == 0
+                                        ? Text(
+                                            '${razlika().toStringAsFixed(2)} KM',
+                                            style: TextStyle(
+                                                fontFamily: 'Lato',
+                                                fontSize: 25,
+                                                color: Colors.grey),
+                                          )
+                                        : Text(
+                                            '+${razlika().toStringAsFixed(2)} KM',
+                                            style: TextStyle(
+                                                fontFamily: 'Lato',
+                                                fontSize: 25,
+                                                color: Colors.green),
+                                          ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ],
-                    ),
-                  ),
-                ),
-              ],
-            ))
-      ]));
-        }
-        else {
-          return Center(child: CircularProgressIndicator(),);
-        }
-      },
-      )
-      
-      
-    );
+                    ))
+              ]));
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
+        ));
   }
 }

@@ -49,9 +49,9 @@ class _PotrosnjaKategorijaState extends State<PotrosnjaKategorija> {
 
   @override
   Widget build(BuildContext context) {
-    final katData = Provider.of<CategoryNotifier>(context);
-    final potKatData = Provider.of<SubcategoryNotifier>(context);
-    final potData = Provider.of<ExpenseNotifier>(context);
+    final CategoryNotifier categoryNotifier = Provider.of<CategoryNotifier>(context);
+    final SubcategoryNotifier subcategoryNotifier = Provider.of<SubcategoryNotifier>(context);
+    final expenseNotifier = Provider.of<ExpenseNotifier>(context);
     final postavkeData = Provider.of<SettingsNotifier>(context);
     return InkWell(
       onTap: () => otvoriKategoriju(context),
@@ -126,7 +126,7 @@ class _PotrosnjaKategorijaState extends State<PotrosnjaKategorija> {
                             future: potKategorijafuture,
                             builder: (ctx, snapshot) => Text(
                               //ukupno potkategorija prikaz
-                              potKatData
+                              subcategoryNotifier
                                   .potKategorijePoKategoriji(
                                       widget.kategorija.id)
                                   .toString(),
@@ -151,7 +151,7 @@ class _PotrosnjaKategorijaState extends State<PotrosnjaKategorija> {
                             future: potrosnjefuture,
                             builder: (ctx, snapshot) => Text(
                               //ukupno potrosnji prikaz
-                              potData
+                              expenseNotifier
                                   .potrosnjePoKategoriji(widget.kategorija.id)
                                   .toString(),
                               style: TextStyle(
@@ -176,23 +176,23 @@ class _PotrosnjaKategorijaState extends State<PotrosnjaKategorija> {
                                     color: Colors.red[600],
                                   ),
                                   onPressed: () {
-                                    final potrosnjaData =
+                                    final ExpenseNotifier expenseNotifier =
                                         Provider.of<ExpenseNotifier>(context,
                                             listen: false);
-                                    final potKategorijaData =
+                                    final SubcategoryNotifier subcategoryNotifier =
                                         Provider.of<SubcategoryNotifier>(
                                             context,
                                             listen: false);
                                     List<ExpenseModel> listaPotrosnji =
-                                        potrosnjaData
+                                        expenseNotifier
                                             .potrosnjePoKategorijilista(
                                                 widget.kategorija.id);
                                     List<SubcategoryModel> listaPotkategorija =
-                                        potKategorijaData
+                                        subcategoryNotifier
                                             .potKategorijePoKategorijilista(
                                                 widget.kategorija.id);
 
-                                    katData.izbrisiKategoriju(
+                                    categoryNotifier.izbrisiKategoriju(
                                         widget.kategorija.id,
                                         listaPotrosnji,
                                         listaPotkategorija);

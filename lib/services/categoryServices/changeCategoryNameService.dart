@@ -16,8 +16,8 @@ class ChangeCategoryNameService {
   changeCategoryName(TextEditingController fieldController,
       BuildContext context, String categoryID) {
     final naziv = fieldController.text;
-    final katData = Provider.of<CategoryNotifier>(context, listen: false);
-    katData.updateNazivKategorije(naziv, categoryID);
+    final CategoryNotifier categoryNotifier = Provider.of<CategoryNotifier>(context, listen: false);
+    categoryNotifier.updateNazivKategorije(naziv, categoryID);
     Navigator.of(context).pop('promijenjeno');
   }
 }

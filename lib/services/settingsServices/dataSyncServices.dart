@@ -14,7 +14,7 @@ class DataSyncService {
     showExpenLoader(context);
     final profileNotifier =
         Provider.of<ProfileNotifier>(context, listen: false);
-    final categoryNotifier =
+    final CategoryNotifier categoryNotifier =
         Provider.of<CategoryNotifier>(context, listen: false);
     List<Map<String, dynamic>> categoryData = [];
     categoryData = categoryNotifier.kategorijaLista.map((category) {

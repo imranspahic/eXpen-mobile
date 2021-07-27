@@ -35,9 +35,9 @@ class PickCategoryImageService {
       ));
       return;
     } else {
-      final katData = Provider.of<CategoryNotifier>(context, listen: false);
+      final CategoryNotifier categoryNotifier = Provider.of<CategoryNotifier>(context, listen: false);
     
-        katData.updateSlikuKategorije(slikaEncode, category.id);
+        categoryNotifier.updateSlikuKategorije(slikaEncode, category.id);
     
     }
   }

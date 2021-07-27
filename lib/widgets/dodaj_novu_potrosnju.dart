@@ -35,8 +35,8 @@ class _DodajNovuPotrosnjuState extends State<DodajNovuPotrosnju> {
   }
 
   void submitData() {
-    final potrosnjaData = Provider.of<ExpenseNotifier>(context, listen: false);
-    final katData = Provider.of<CategoryNotifier>(context, listen: false);
+    final ExpenseNotifier expenseNotifier = Provider.of<ExpenseNotifier>(context, listen: false);
+    final CategoryNotifier categoryNotifier = Provider.of<CategoryNotifier>(context, listen: false);
     final rashodKatData =
         Provider.of<ExpenseCategoryNotifier>(context, listen: false);
     String uneseniNaziv = nazivController.text;
@@ -53,14 +53,14 @@ class _DodajNovuPotrosnjuState extends State<DodajNovuPotrosnju> {
       return;
     } else if (widget.jeLiPlaniranaPotrosnja) {
       if (!widget.uPotkategoriji) {
-        potrosnjaData.dodajPlaniranuPotrosnju(
+        expenseNotifier.dodajPlaniranuPotrosnju(
             widget.kategorija.naziv,
             uneseniNaziv,
             uneseniTrosak,
             widget.kategorija.id,
             'nemaPotkategorija');
       } else {
-        potrosnjaData.dodajPlaniranuPotrosnju(
+        expenseNotifier.dodajPlaniranuPotrosnju(
             widget.kategorija.naziv,
             uneseniNaziv,
             uneseniTrosak,
@@ -84,26 +84,26 @@ class _DodajNovuPotrosnjuState extends State<DodajNovuPotrosnju> {
       double rashodKategorije = rashodKatData.dobijRashodKategorijePoMjesecu(
           widget.kategorija.id, formatirajMjesecNaBosanski(datum.month));
       if (rashodKategorije >
-          (potrosnjaData.trosakPotrosnjiPoMjesecuKategorije(
+          (expenseNotifier.trosakPotrosnjiPoMjesecuKategorije(
                   widget.kategorija.id, datum.month) +
               uneseniTrosak)) {
         print('nije preslo jos');
       } else {
         print('preslo, obaavijest ovdje');
-        Provider.of<NotificationNotifier>(context, listen: false).dodajObavijest('Prešli ste planirani rashod za kategoriju ${katData.dobijNazivKategorije(widget.kategorija.id)} u mjesecu ${formatirajMjesecNaBosanski(datum.month)}.', datum, widget.kategorija.id, 'nemaPotkategorija', 'ne');
+        Provider.of<NotificationNotifier>(context, listen: false).dodajObavijest('Prešli ste planirani rashod za kategoriju ${categoryNotifier.dobijNazivKategorije(widget.kategorija.id)} u mjesecu ${formatirajMjesecNaBosanski(datum.month)}.', datum, widget.kategorija.id, 'nemaPotkategorija', 'ne');
       }
     }
     
     
      if (datum != null && widget.potkategorija == null) {
-      potrosnjaData.dodajPotrosnju(widget.kategorija.naziv, uneseniNaziv,
+      expenseNotifier.dodajPotrosnju(widget.kategorija.naziv, uneseniNaziv,
           uneseniTrosak, datum, widget.kategorija.id, 'nemaPotkategorija');
     } else if (datum == null && widget.potkategorija == null) {
       datum = DateTime.now();
-      potrosnjaData.dodajPotrosnju(widget.kategorija.naziv, uneseniNaziv,
+      expenseNotifier.dodajPotrosnju(widget.kategorija.naziv, uneseniNaziv,
           uneseniTrosak, datum, widget.kategorija.id, 'nemaPotkategorija');
     } else if (datum != null && widget.potkategorija != null) {
-      potrosnjaData.dodajPotrosnju(
+      expenseNotifier.dodajPotrosnju(
           widget.kategorija.naziv,
           uneseniNaziv,
           uneseniTrosak,
@@ -112,7 +112,7 @@ class _DodajNovuPotrosnjuState extends State<DodajNovuPotrosnju> {
           widget.potkategorija.idPot);
     } else if (datum == null && widget.potkategorija != null) {
       datum = DateTime.now();
-      potrosnjaData.dodajPotrosnju(
+      expenseNotifier.dodajPotrosnju(
           widget.kategorija.naziv,
           uneseniNaziv,
           uneseniTrosak,

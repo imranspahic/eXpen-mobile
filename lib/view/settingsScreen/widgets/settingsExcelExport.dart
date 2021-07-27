@@ -22,7 +22,7 @@ class SettingsExcelExport extends StatelessWidget {
             Provider.of<CategoryNotifier>(context, listen: false);
         final providerData =
             Provider.of<ExpenseNotifier>(context, listen: false);
-        final potkategorijaData =
+        final SubcategoryNotifier subcategoryNotifier =
             Provider.of<SubcategoryNotifier>(context, listen: false);
 
         List<ExpenseModel> data = providerData.listaSvihPotrosnji;
@@ -47,7 +47,7 @@ class SettingsExcelExport extends StatelessWidget {
                 '  ${item.trosak.toStringAsFixed(2)} KM',
                 '  ${DateFormat.yMMMMd().format(item.datum)}',
                 '${kategorijaData.dobijKategorijuPoId(item.idKategorije).naziv}',
-                '${potkategorijaData.potKategorijaPoId(item.idPotKategorije)}',
+                '${subcategoryNotifier.potKategorijaPoId(item.idPotKategorije)}',
               ])
         ];
         String csv = const ListToCsvConverter().convert(csvData);

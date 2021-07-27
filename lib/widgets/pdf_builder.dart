@@ -16,10 +16,10 @@ class PdfBuilderFunc {
 
   pw.Widget _contentTable(BuildContext buildContext, pw.Context pdfCTX, bool isGeneralno,
       [CategoryModel kategorija]) {
-    final potrosnjaData =
+    final ExpenseNotifier expenseNotifier =
         Provider.of<ExpenseNotifier>(buildContext, listen: false);
     List<ExpenseModel> data = !isGeneralno ? 
-        potrosnjaData.potrosnjePoKategorijilista(kategorija.id) : potrosnjaData.listaSvihPotrosnji;
+        expenseNotifier.potrosnjePoKategorijilista(kategorija.id) : expenseNotifier.listaSvihPotrosnji;
     data.sort((a, b) {
       return -a.trosak.compareTo(b.trosak);
     });
@@ -99,7 +99,7 @@ class PdfBuilderFunc {
     var timeStamp = DateTime(datum.year, datum.month, datum.day, datum.hour,
         datum.minute, datum.second);
 
-    final potrosnjaData =
+    final ExpenseNotifier expenseNotifier =
         Provider.of<ExpenseNotifier>(buildContext, listen: false);
     final pdf = pw.Document();
     PdfImage image = PdfImage.file(
@@ -216,8 +216,8 @@ class PdfBuilderFunc {
                       padding: pw.EdgeInsets.only(right: 30),
                       child: pw.Text(
                           !isGeneralno
-                              ? '${potrosnjaData.potrosnjePoKategorijilista(kategorija.id).length}'
-                              : '${potrosnjaData.listaSvihPotrosnji.length}',
+                              ? '${expenseNotifier.potrosnjePoKategorijilista(kategorija.id).length}'
+                              : '${expenseNotifier.listaSvihPotrosnji.length}',
                           style: pw.TextStyle(
                               fontSize: 30,
                               fontWeight: pw.FontWeight.bold,
@@ -243,8 +243,8 @@ class PdfBuilderFunc {
                       padding: pw.EdgeInsets.only(right: 30),
                       child: pw.Text(
                           !isGeneralno
-                              ? '${potrosnjaData.trosakPoKategoriji(kategorija.id)} KM'
-                              : '${potrosnjaData.ukupniTrosakSvihPotrosnji()} KM',
+                              ? '${expenseNotifier.trosakPoKategoriji(kategorija.id)} KM'
+                              : '${expenseNotifier.ukupniTrosakSvihPotrosnji()} KM',
                           style: pw.TextStyle(
                               fontSize: 30,
                               fontWeight: pw.FontWeight.bold,

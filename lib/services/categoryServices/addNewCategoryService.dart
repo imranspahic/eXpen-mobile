@@ -13,11 +13,11 @@ class AddNewCategoryService {
       return;
     }
 
-    final katData = Provider.of<CategoryNotifier>(context, listen: false);
+    final CategoryNotifier categoryNotifier = Provider.of<CategoryNotifier>(context, listen: false);
     int redniBroj;
 
-    redniBroj = katData.kategorijaLista.length + 1;
-    katData.dodajKategoriju(uneseniNaziv, redniBroj);
+    redniBroj = categoryNotifier.kategorijaLista.length + 1;
+    categoryNotifier.dodajKategoriju(uneseniNaziv, redniBroj);
     Navigator.of(context).pop();
   }
 }

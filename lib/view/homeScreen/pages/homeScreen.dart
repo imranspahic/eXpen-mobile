@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:expen/providers/profileNotifier.dart';
-import 'package:expen/services/categoryServices/showAddCategoryDialogService.dart';
+import 'package:expen/services/dialogServices/showDialogService.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expen/view/homeScreen/widgets/homeScreenAppBar.dart';
@@ -68,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final katData = Provider.of<CategoryNotifier>(context);
+    final CategoryNotifier categoryNotifier = Provider.of<CategoryNotifier>(context);
     final obavijestiData = Provider.of<NotificationNotifier>(context);
     final profileNotifier = Provider.of<ProfileNotifier>(context);
 
@@ -76,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       key: _scaffoldKey,
-      drawer: MainDrawer(katData.kategorijaLista,
+      drawer: MainDrawer(categoryNotifier.kategorijaLista,
           obavijestiData.listaNeprocitanihObavijesti()),
       appBar: homeScreenAppBar(
         context,
@@ -88,23 +88,23 @@ class _HomeScreenState extends State<HomeScreen> {
               future: postavkeFuture,
               builder: (ctx, snapshot) {
                 return ReorderableListView(
-                  children: katData.kategorijaLista
+                  children: categoryNotifier.kategorijaLista
                       .map((item) => Container(
                           height: 320,
                           key: Key(item.id),
                           child: PotrosnjaKategorija(item)))
                       .toList(),
                   onReorder: (start, current) {
-                    List<CategoryModel> _list = katData.kategorijaLista;
+                    List<CategoryModel> _list = categoryNotifier.kategorijaLista;
                     if (current >= _list.length) {
                       current = _list.length - 1;
                     }
                     if (start < current) {
                       //unijeti current kao redni broj u bazu
-                      katData.updateRedniBrojKategorije(
-                          start + 1, katData.kategorijaLista[current].id);
-                      katData.updateRedniBrojKategorije(
-                          current + 1, katData.kategorijaLista[start].id);
+                      categoryNotifier.updateRedniBrojKategorije(
+                          start + 1, categoryNotifier.kategorijaLista[current].id);
+                      categoryNotifier.updateRedniBrojKategorije(
+                          current + 1, categoryNotifier.kategorijaLista[start].id);
                       print('start index: $start');
                       print('current index $current');
                       int end = current;
@@ -120,10 +120,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     // dragging from bottom to top
                     //unijeti current +1 kao redni broj u bazu
                     else if (start > current) {
-                      katData.updateRedniBrojKategorije(
-                          start + 1, katData.kategorijaLista[current].id);
-                      katData.updateRedniBrojKategorije(
-                          current + 1, katData.kategorijaLista[start].id);
+                      categoryNotifier.updateRedniBrojKategorije(
+                          start + 1, categoryNotifier.kategorijaLista[current].id);
+                      categoryNotifier.updateRedniBrojKategorije(
+                          current + 1, categoryNotifier.kategorijaLista[start].id);
                       print('start index: $start');
                       print('current index: $current');
                       CategoryModel startItem = _list[start];
@@ -136,21 +136,21 @@ class _HomeScreenState extends State<HomeScreen> {
                     setState(() {});
                   },
 
-                  //      final KategorijaModel kategorija = katData.kategorijaLista.elementAt(staraPozicija);
-                  //  katData.kategorijaLista.remove(kategorija);
-                  //  katData.kategorijaLista.insert(novaPozicija, kategorija);
+                  //      final KategorijaModel kategorija = categoryNotifier.kategorijaLista.elementAt(staraPozicija);
+                  //  categoryNotifier.kategorijaLista.remove(kategorija);
+                  //  categoryNotifier.kategorijaLista.insert(novaPozicija, kategorija);
                 );
                 //     ListView.builder(
-                // itemCount: katData.kategorijaLista.length,
+                // itemCount: categoryNotifier.kategorijaLista.length,
                 // itemBuilder: (ctx, index) {
-                //   return PotrosnjaKategorija(katData.kategorijaLista[index]); //izgled kategorije
+                //   return PotrosnjaKategorija(categoryNotifier.kategorijaLista[index]); //izgled kategorije
                 // });
               })),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () => ShowAddCategoryDialogService()
-            .showAddCategoryDialog(context, _scaffoldKey),
+        onPressed: () =>
+            ShowDialogService.addCategoryDialog(context, _scaffoldKey),
       ),
     );
   }

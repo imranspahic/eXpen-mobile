@@ -32,7 +32,7 @@ class _DodajVisePotrosnjiState extends State<DodajVisePotrosnji> {
   }
 
   void submitData() {
-    final potrosnjaData = Provider.of<ExpenseNotifier>(context, listen: false);
+    final ExpenseNotifier expenseNotifier = Provider.of<ExpenseNotifier>(context, listen: false);
     String uneseniNaziv = nazivController.text;
     final uneseniBrojPotrosnji = int.parse(brojPotrosnjiController.text);
     final uneseniTrosak = double.parse(trosakController.text);
@@ -133,16 +133,16 @@ class _DodajVisePotrosnjiState extends State<DodajVisePotrosnji> {
       return;
     } else if (datum != null && widget.potkategorija == null) {
    
-      potrosnjaData.dodajVisePotrosnji(widget.kategorija.naziv, uneseniNaziv, uneseniBrojPotrosnji,
+      expenseNotifier.dodajVisePotrosnji(widget.kategorija.naziv, uneseniNaziv, uneseniBrojPotrosnji,
           uneseniTrosak, datum, widget.kategorija.id, 'nemaPotkategorija');
     } else if (datum == null && widget.potkategorija == null) {
 
       datum = DateTime.now();
-      potrosnjaData.dodajVisePotrosnji(widget.kategorija.naziv, uneseniNaziv, uneseniBrojPotrosnji,
+      expenseNotifier.dodajVisePotrosnji(widget.kategorija.naziv, uneseniNaziv, uneseniBrojPotrosnji,
           uneseniTrosak, datum, widget.kategorija.id, 'nemaPotkategorija');
     } else if (datum != null && widget.potkategorija != null) {
   
-      potrosnjaData.dodajVisePotrosnji(widget.kategorija.naziv, 
+      expenseNotifier.dodajVisePotrosnji(widget.kategorija.naziv, 
           uneseniNaziv,
           uneseniBrojPotrosnji,
           uneseniTrosak,
@@ -152,7 +152,7 @@ class _DodajVisePotrosnjiState extends State<DodajVisePotrosnji> {
     } else if (datum == null && widget.potkategorija != null) {
     
       datum = DateTime.now();
-      potrosnjaData.dodajVisePotrosnji(widget.kategorija.naziv, 
+      expenseNotifier.dodajVisePotrosnji(widget.kategorija.naziv, 
           uneseniNaziv,
           uneseniBrojPotrosnji,
           uneseniTrosak,

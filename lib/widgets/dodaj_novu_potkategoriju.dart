@@ -27,8 +27,8 @@ class _DodajNovuPotKategorijuState extends State<DodajNovuPotKategoriju> {
       return;
     }
 
-    final potKatData = Provider.of<SubcategoryNotifier>(context, listen: false);
-    potKatData.dodajPotKategoriju(
+    final SubcategoryNotifier subcategoryNotifier = Provider.of<SubcategoryNotifier>(context, listen: false);
+    subcategoryNotifier.dodajPotKategoriju(
       uneseniNaziv,
       widget.kategorija.id,
     );

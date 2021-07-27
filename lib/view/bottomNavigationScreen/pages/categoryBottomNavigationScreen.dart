@@ -9,10 +9,10 @@ import 'package:expen/providers/categoryNotifier.dart';
 import '../../categoryScreen/pages/categoryPlannedSpendingScreen.dart';
 
 class CategoryBottomNavigationScreen extends StatefulWidget {
-  final jeLiDrawer;
+  final isDrawer;
 
   final CategoryModel kategorija;
-  CategoryBottomNavigationScreen(this.kategorija, this.jeLiDrawer);
+  CategoryBottomNavigationScreen(this.kategorija, this.isDrawer);
 
   @override
   _CategoryBottomNavigationScreenState createState() =>
@@ -22,34 +22,37 @@ class CategoryBottomNavigationScreen extends StatefulWidget {
 class _CategoryBottomNavigationScreenState
     extends State<CategoryBottomNavigationScreen> {
   List<ExpenseModel> get dostupnePotrosnjeUCijelojKategoriji {
-    final potrosnjaData = Provider.of<ExpenseNotifier>(context);
-    return potrosnjaData.listaSvihPotrosnji.where((item) {
+    final ExpenseNotifier expenseNotifier =
+        Provider.of<ExpenseNotifier>(context);
+    return expenseNotifier.listaSvihPotrosnji.where((item) {
       return item.idKategorije == widget.kategorija.id;
     }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
-    final potrosnjaData = Provider.of<ExpenseNotifier>(context);
-    final potKatData = Provider.of<SubcategoryNotifier>(context);
+    final ExpenseNotifier expenseNotifier =
+        Provider.of<ExpenseNotifier>(context);
+    final SubcategoryNotifier subcategoryNotifier =
+        Provider.of<SubcategoryNotifier>(context);
     final bottomNavigationNotifier =
         Provider.of<BottomNavigationNotifier>(context);
     final List<Object> _pages = [
       CategoryScreen(
         category: widget.kategorija,
         dostupnePotrosnje:
-            potrosnjaData.dobijdostupnePotrosnje(widget.kategorija.id),
-        dostupnePotkategorije:
-            potKatData.dobijdostupnePotkategorije(widget.kategorija.id),
-        jeLiDrawer: widget.jeLiDrawer,
+            expenseNotifier.dobijdostupnePotrosnje(widget.kategorija.id),
+        dostupnePotkategorije: subcategoryNotifier
+            .dobijdostupnePotkategorije(widget.kategorija.id),
+        isDrawer: widget.isDrawer,
       ),
       CategoryStatisticsScreen(
         kategorijaLista: widget.kategorija,
         dostupnePotrosnje: dostupnePotrosnjeUCijelojKategoriji,
         title: '',
         uPotkategoriji: false,
-        dostupnePotkategorije:
-            potKatData.dobijdostupnePotkategorije(widget.kategorija.id),
+        dostupnePotkategorije: subcategoryNotifier
+            .dobijdostupnePotkategorije(widget.kategorija.id),
       ),
       CategoryPlannedSpendingScreen(
         widget.kategorija,

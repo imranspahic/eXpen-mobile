@@ -71,7 +71,7 @@ class _RashodPregledEkranState extends State<RashodPregledEkran> {
 
   @override
   Widget build(BuildContext context) {
-    final katData = Provider.of<CategoryNotifier>(context, listen: false);
+    final CategoryNotifier categoryNotifier = Provider.of<CategoryNotifier>(context, listen: false);
     final rashodKatData = Provider.of<ExpenseCategoryNotifier>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
@@ -155,15 +155,15 @@ class _RashodPregledEkranState extends State<RashodPregledEkran> {
               future: rashodKategorijaFuture,
               builder: (ctx, snapshot) {
                 return Container(
-                  height: katData.kategorijaLista.length * 70.0 +
-                      katData.kategorijaLista.length * 15 +
-                      katData.kategorijaLista.length * 10,
+                  height: categoryNotifier.kategorijaLista.length * 70.0 +
+                      categoryNotifier.kategorijaLista.length * 15 +
+                      categoryNotifier.kategorijaLista.length * 10,
                   child: ListView.builder(
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: katData.kategorijaLista.length,
+                      itemCount: categoryNotifier.kategorijaLista.length,
                       itemBuilder: (ctx, index) {
                         return KategorijaWidget(
-                          kategorija: katData.kategorijaLista[index],
+                          kategorija: categoryNotifier.kategorijaLista[index],
                           mjesec: trenutnaVrijednostDropdown,
                         );
                       }),

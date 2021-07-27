@@ -198,8 +198,8 @@ class _ObavijestWidgetState extends State<ObavijestWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final katData = Provider.of<CategoryNotifier>(context);
-    final potKatData = Provider.of<SubcategoryNotifier>(context);
+    final CategoryNotifier categoryNotifier = Provider.of<CategoryNotifier>(context);
+    final SubcategoryNotifier subcategoryNotifier = Provider.of<SubcategoryNotifier>(context);
 
     return Card(
       child: Row(
@@ -233,7 +233,7 @@ class _ObavijestWidgetState extends State<ObavijestWidget> {
                           decoration: BoxDecoration(
                               border: Border.all(color: Colors.orange)),
                           child:  Text(
-                                katData.dobijNazivKategorije(
+                                categoryNotifier.dobijNazivKategorije(
                                     widget.obavijest.idKategorije)),
                           ),
                           SizedBox(width: 15),
@@ -244,7 +244,7 @@ class _ObavijestWidgetState extends State<ObavijestWidget> {
                           decoration: BoxDecoration(
                               border: Border.all(color: Colors.green)),
                           child:  Text(
-                                potKatData.dobijNazivPotKategorije(
+                                subcategoryNotifier.dobijNazivPotKategorije(
                                     widget.obavijest.idPotKategorije)),
                           ),
                           SizedBox(width: 15),

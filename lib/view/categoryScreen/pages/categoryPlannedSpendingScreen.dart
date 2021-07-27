@@ -18,8 +18,8 @@ class _CategoryPlannedSpendingScreenState extends State<CategoryPlannedSpendingS
       DateFormat.MMMM().format(DateTime.now()).toString();
 
   List<ExpenseModel> get dostupnePotrosnjeUCijelojKategoriji {
-    final potrosnjaData = Provider.of<ExpenseNotifier>(context);
-    return potrosnjaData.listaSvihPotrosnji.where((item) {
+    final ExpenseNotifier expenseNotifier = Provider.of<ExpenseNotifier>(context);
+    return expenseNotifier.listaSvihPotrosnji.where((item) {
       return item.idKategorije == widget.kategorija.id;
     }).toList();
   }

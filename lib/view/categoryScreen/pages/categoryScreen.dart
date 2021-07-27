@@ -1,33 +1,30 @@
+import 'package:expen/services/dialogServices/showDialogService.dart';
+import 'package:expen/services/navigatorServices/navigateToPageService.dart';
+import 'package:expen/utils/speedDial.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expen/providers/expenseNotifier.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:expen/view/dodaj_rashod_ekran.dart';
-import 'package:expen/view/planirane_potrosnje_ekran.dart';
 import 'package:expen/providers/categoryNotifier.dart';
 import 'dart:math';
 import 'package:expen/providers/subcategoryNotifier.dart';
 import '../../../widgets/badge.dart';
 import '../../edit_potkategorija_ekran.dart';
 import '../../bottomNavigationScreen/pages/subcategoryBottomNavigationScreen.dart';
-import '../../../widgets/dodaj_novu_potkategoriju.dart';
 import 'package:expen/providers/settingsNotifier.dart';
-import '../../../widgets/dodaj_novu_potrosnju.dart';
 import '../../../widgets/izbrisi_dialog.dart';
-import '../../dodaj_vise_potrosnji.dart';
 
 class CategoryScreen extends StatefulWidget {
   final CategoryModel category;
   List<ExpenseModel> dostupnePotrosnje;
   final List<SubcategoryModel> dostupnePotkategorije;
-  final bool jeLiDrawer;
+  final bool isDrawer;
 
   CategoryScreen(
       {this.category,
       this.dostupnePotrosnje,
       this.dostupnePotkategorije,
-      this.jeLiDrawer});
+      this.isDrawer});
 
   @override
   _CategoryScreenState createState() => _CategoryScreenState();
@@ -36,164 +33,24 @@ class CategoryScreen extends StatefulWidget {
 class _CategoryScreenState extends State<CategoryScreen> {
   Future potrosnjeFuture;
   Future potkategorijeFuture;
-
   bool listPregled = true;
-
   bool listPotKategorija = false;
 
   @override
-  void initState() {
-    super.initState();
-    // potrosnjeFuture = Provider.of<ExpenseNotifier>(context, listen: false)
-    //     .fetchAndSetPotrosnje();
-    // potkategorijeFuture =
-    //     Provider.of<SubcategoryNotifier>(context, listen: false)
-    //         .fetchAndSetPotkategorije();
-    // Provider.of<ExpenseCategoryNotifier>(context, listen: false)
-    //     .fetchAndSetRashodKategorija();
-  }
-
-  void pocniDodavatPotrosnje(ctx) {
-    showModalBottomSheet(
-        isScrollControlled: true,
-        context: ctx,
-        builder: (ctx) {
-          return DodajNovuPotrosnju(
-            kategorija: widget.category,
-            uPotkategoriji: false,
-            jeLiPlaniranaPotrosnja: false,
-          );
-        }).then((t) {
-      if (t[0] != null) {
-        Scaffold.of(context).showSnackBar(SnackBar(
-          content: Text('Potrošnja dodana'),
-          duration: Duration(seconds: 2),
-        ));
-      }
-    });
-  }
-
-  void otvoriDodavanjeVisePotrosnji(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-      return DodajVisePotrosnji(
-        kategorija: widget.category,
-        uPotkategoriji: false,
-      );
-    }));
-  }
-
-  void pocniDodavatPotKategoriju(ctx) {
-    showDialog(
-        context: ctx,
-        builder: (ctx) => SimpleDialog(children: <Widget>[
-              Container(
-                  height: 230,
-                  width: 400,
-                  child: DodajNovuPotKategoriju(widget.category)),
-            ])).then((value) {
-      if (value != null) {
-        Scaffold.of(context).showSnackBar(SnackBar(
-          content: Text('Potkategorija dodana'),
-          duration: Duration(seconds: 2),
-        ));
-      }
-    });
-  }
-
-  void dodajRashod(ctx) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
-      return DodajRashodEkran(
-        kategorija: widget.category,
-        isKategorija: true,
-      );
-    }));
-  }
-
-  void planiranePotrosnje(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
-      return PlaniranePotrosnjeEkran(
-        kategorija: widget.category,
-      );
-    }));
-  }
-
-  void otvoriPotKategoriju(BuildContext context, SubcategoryModel potkategorija) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-      return SubcategoryBottomNavigationScreen(potkategorija, widget.category);
-    }));
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final potrosnjaData = Provider.of<ExpenseNotifier>(context);
-    final potKategorijaData =
+    final ExpenseNotifier expenseNotifier =
+        Provider.of<ExpenseNotifier>(context);
+    final SubcategoryNotifier subcategoryNotifier =
         Provider.of<SubcategoryNotifier>(context, listen: false);
     final postavkeData = Provider.of<SettingsNotifier>(context);
-
     return Scaffold(
-      floatingActionButton: SpeedDial(
-        curve: Curves.bounceIn,
-        animatedIcon: AnimatedIcons.menu_close,
-        animatedIconTheme: IconThemeData(size: 24.0, color: Colors.white),
-        marginBottom: 25,
-        marginRight: 22,
-        overlayColor: Colors.white,
-        backgroundColor: Theme.of(context).accentColor,
-        foregroundColor: Colors.black,
-        elevation: 8.0,
-        overlayOpacity: 0.5,
-        heroTag: 'speed-dial-hero',
-        shape: CircleBorder(),
-        children: [
-          SpeedDialChild(
-            backgroundColor: Colors.red,
-            label: 'Dodaj potrošnju',
-            labelStyle: TextStyle(fontSize: 18),
-            child: Icon(
-              Icons.add,
-              size: 30,
-            ),
-            onTap: () => pocniDodavatPotrosnje(context),
-          ),
-          SpeedDialChild(
-            backgroundColor: Colors.blue,
-            label: 'Dodaj više potrošnji',
-            labelStyle: TextStyle(fontSize: 18),
-            child: Icon(Icons.playlist_add, size: 30),
-            onTap: () => otvoriDodavanjeVisePotrosnji(context),
-          ),
-          SpeedDialChild(
-              backgroundColor: Colors.green,
-              label: 'Dodaj potkategoriju',
-              labelStyle: TextStyle(fontSize: 18),
-              child: Icon(
-                Icons.add_box,
-                size: 27,
-              ),
-              onTap: () {
-                pocniDodavatPotKategoriju(context);
-              }),
-          SpeedDialChild(
-            backgroundColor: Colors.black,
-            label: 'Dodaj rashod',
-            labelStyle: TextStyle(fontSize: 18),
-            child: Icon(Icons.playlist_add, size: 30),
-            onTap: () => dodajRashod(context),
-          ),
-          SpeedDialChild(
-              backgroundColor: Colors.yellow[600],
-              label: 'Planirane potrošnje',
-              labelStyle: TextStyle(fontSize: 18),
-              child: Icon(Icons.work, size: 28),
-              onTap: () => planiranePotrosnje(context)),
-        ],
-      ),
+      floatingActionButton: buildSpeedDial(context, widget.category),
       appBar: AppBar(
         title: Text(widget.category.naziv),
         actions: <Widget>[
           Padding(
               padding: const EdgeInsets.only(right: 20.0, top: 5, bottom: 5),
-              child: widget.jeLiDrawer
+              child: widget.isDrawer
                   ? CircleAvatar(
                       radius: 25,
                       backgroundImage: widget.category.slikaUrl ==
@@ -216,21 +73,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       ),
                     ))
         ],
-        // actions: <Widget>[
-        //   postavkeData.vertikalniPrikaz
-        //       ? IconButton(
-        //           onPressed: () {
-        //             postavkeData.vertikalniPrikazToggle();
-        //           },
-        //           icon: Icon(Icons.widgets),
-        //         )
-        //       : IconButton(
-        //           onPressed: () {
-        //            postavkeData.vertikalniPrikazToggle();
-        //           },
-        //           icon: Icon(Icons.list),
-        //         )
-        // ],
       ),
       body: SingleChildScrollView(
         child: Stack(
@@ -261,17 +103,17 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         ),
                         direction: DismissDirection.endToStart,
                         onDismissed: (direction) {
-                          final potrosnjaData = Provider.of<ExpenseNotifier>(
-                              context,
-                              listen: false);
+                          final ExpenseNotifier expenseNotifier =
+                              Provider.of<ExpenseNotifier>(context,
+                                  listen: false);
                           final List<ExpenseModel> lista =
-                              potrosnjaData.potrosnjePoPotkaategorijilista(
+                              expenseNotifier.potrosnjePoPotkaategorijilista(
                                   widget.dostupnePotkategorije[index].idPot);
                           //izbriši potkategorije
-                          potKategorijaData.izbrisiPotkategoriju(
+                          subcategoryNotifier.izbrisiPotkategoriju(
                               widget.dostupnePotkategorije[index].idPot, lista);
                           //izbriši potrošnje u potkategoriji
-                          potrosnjaData.listaSvihPotrosnji.removeWhere((pot) {
+                          expenseNotifier.listaSvihPotrosnji.removeWhere((pot) {
                             return pot.idPotKategorije ==
                                 widget.dostupnePotkategorije[index].idPot;
                           });
@@ -285,41 +127,45 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           ));
                         },
                         child: ListTile(
-                          leading: Badge(
-                            child: Icon(
-                              IconData(widget.dostupnePotkategorije[index].icon,
-                                  fontFamily: 'MaterialIcons'),
-                              size: 60,
-                              color:
-                                  widget.dostupnePotkategorije[index].bojaIkone,
+                            leading: Badge(
+                              child: Icon(
+                                IconData(
+                                    widget.dostupnePotkategorije[index].icon,
+                                    fontFamily: 'MaterialIcons'),
+                                size: 60,
+                                color: widget
+                                    .dostupnePotkategorije[index].bojaIkone,
+                              ),
+                              value: expenseNotifier.badge(
+                                  widget.dostupnePotkategorije[index].idPot),
                             ),
-                            value: potrosnjaData.badge(
-                                widget.dostupnePotkategorije[index].idPot),
-                          ),
-                          trailing: IconButton(
-                            icon: Icon(
-                              Icons.edit,
-                              size: 30,
-                              color: Theme.of(context).accentColor,
+                            trailing: IconButton(
+                              icon: Icon(
+                                Icons.edit,
+                                size: 30,
+                                color: Theme.of(context).accentColor,
+                              ),
+                              onPressed: () {
+                                Navigator.of(context)
+                                    .push(MaterialPageRoute(builder: (ctx) {
+                                  return EditPotkategorijaEkran(
+                                      widget.dostupnePotkategorije[index]);
+                                })).then((value) async {
+                                  await Provider.of<SubcategoryNotifier>(
+                                          context,
+                                          listen: false)
+                                      .fetchAndSetPotkategorije();
+                                  setState(() {});
+                                });
+                              },
                             ),
-                            onPressed: () {
-                              Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (ctx) {
-                                return EditPotkategorijaEkran(
-                                    widget.dostupnePotkategorije[index]);
-                              })).then((value) async {
-                                await Provider.of<SubcategoryNotifier>(context,
-                                        listen: false)
-                                    .fetchAndSetPotkategorije();
-                                setState(() {});
-                              });
-                            },
-                          ),
-                          title:
-                              Text(widget.dostupnePotkategorije[index].naziv),
-                          onTap: () => otvoriPotKategoriju(
-                              context, widget.dostupnePotkategorije[index]),
-                        ),
+                            title:
+                                Text(widget.dostupnePotkategorije[index].naziv),
+                            onTap: () => NavigateToPageService.navigate(
+                                context,
+                                SubcategoryBottomNavigationScreen(
+                                    widget.dostupnePotkategorije[index],
+                                    widget.category))),
                       );
                     },
                   ),
@@ -342,16 +188,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                     child: Card(
                                       elevation: 3,
                                       child: ListTile(
-                                          onTap: () {
-                                            showDialog(
-                                                context: context,
-                                                builder: (ctx) {
-                                                  return PrikaziPotrosnju(
-                                                      potrosnja: widget
-                                                              .dostupnePotrosnje[
-                                                          index]);
-                                                });
-                                          },
+                                          onTap: () => ShowDialogService
+                                              .expenseViewDialog(
+                                                  context,
+                                                  widget.dostupnePotrosnje[
+                                                      index]),
                                           leading: Container(
                                               margin:
                                                   EdgeInsets.only(right: 10),
@@ -385,14 +226,14 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                                     context: context,
                                                     builder: (ctx) {
                                                       return IzbrisiDialog(
-                                                        izbrisi: potrosnjaData
+                                                        izbrisi: expenseNotifier
                                                             .izbrisiPotrosnju,
                                                         potrosnja: widget
                                                                 .dostupnePotrosnje[
                                                             index],
                                                       );
                                                     });
-                                                // potrosnjaData.izbrisiPotrosnju(
+                                                // expenseNotifier.izbrisiPotrosnju(
                                                 //     widget
                                                 //         .dostupnePotrosnje[index]
                                                 //         .id);
@@ -477,91 +318,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class PrikaziPotrosnju extends StatefulWidget {
-  final ExpenseModel potrosnja;
-  PrikaziPotrosnju({this.potrosnja});
-  @override
-  _PrikaziPotrosnjuState createState() => _PrikaziPotrosnjuState();
-}
-
-class _PrikaziPotrosnjuState extends State<PrikaziPotrosnju> {
-  @override
-  Widget build(BuildContext context) {
-    return SimpleDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-      children: <Widget>[
-        Container(
-          width: MediaQuery.of(context).size.width * 0.7,
-          height: MediaQuery.of(context).size.height * 0.43,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-            child: Column(children: <Widget>[
-              FittedBox(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(Icons.payment, color: Colors.orange[700], size: 60),
-                    SizedBox(width: 10),
-                    Text(
-                      widget.potrosnja.naziv,
-                      style: Theme.of(context)
-                          .textTheme
-                          .subtitle1
-                          .copyWith(color: Colors.orange[800]),
-                    ),
-                  ],
-                ),
-              ),
-              Divider(color: Colors.orange, thickness: 2),
-              SizedBox(height: 25),
-              Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(Icons.monetization_on, color: Colors.amber, size: 40),
-                    SizedBox(width: 10),
-                    Text(
-                      '${widget.potrosnja.trosak} KM',
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 15),
-              Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(Icons.date_range, color: Colors.purple, size: 40),
-                    SizedBox(width: 10),
-                    Text(
-                      '${DateFormat('dd.MM.yyyy.').format(widget.potrosnja.datum)}',
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
-                  ],
-                ),
-              ),
-              Spacer(),
-              Container(
-                  width: 100,
-                  child: RaisedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    color: Colors.orange,
-                    child: Text(
-                      'OK',
-                      style: TextStyle(color: Colors.white, fontSize: 18),
-                    ),
-                  )),
-            ]),
-          ),
-        )
-      ],
     );
   }
 }

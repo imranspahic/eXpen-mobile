@@ -59,7 +59,7 @@ class _DodajRashodEkranState extends State<DodajRashodEkran> {
     if (prikazaniMjesec == null) {
       return;
     }
-    // final katData = Provider.of<KategorijaLista>(context, listen: false);
+    // final CategoryNotifier categoryNotifier = Provider.of<KategorijaLista>(context, listen: false);
     final plataData = Provider.of<SalaryNotifier>(context, listen: false);
     final rashodKategorijaData = Provider.of<ExpenseCategoryNotifier>(context, listen: false);
 

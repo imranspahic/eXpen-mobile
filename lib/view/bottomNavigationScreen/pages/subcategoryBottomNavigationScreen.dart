@@ -21,8 +21,9 @@ class SubcategoryBottomNavigationScreen extends StatefulWidget {
 class _SubcategoryBottomNavigationScreenState
     extends State<SubcategoryBottomNavigationScreen> {
   List<ExpenseModel> get dostupnePotrosnje {
-    final potrosnjaData = Provider.of<ExpenseNotifier>(context);
-    return potrosnjaData.listaSvihPotrosnji.where((item) {
+    final ExpenseNotifier expenseNotifier =
+        Provider.of<ExpenseNotifier>(context);
+    return expenseNotifier.listaSvihPotrosnji.where((item) {
       return item.idKategorije == widget.kategorija.id &&
           item.idPotKategorije == widget.potkategorija.idPot;
     }).toList();
@@ -30,10 +31,11 @@ class _SubcategoryBottomNavigationScreenState
 
   @override
   Widget build(BuildContext context) {
-    final potrosnjaData = Provider.of<ExpenseNotifier>(context);
+    final ExpenseNotifier expenseNotifier =
+        Provider.of<ExpenseNotifier>(context);
     final bottomNavigationNotifier =
         Provider.of<BottomNavigationNotifier>(context);
-    potrosnjaData.dobijDostupnePotrosnje(dostupnePotrosnje);
+    expenseNotifier.dobijDostupnePotrosnje(dostupnePotrosnje);
 
     final List<Object> _pages = [
       SubcategoryScreen(widget.potkategorija, widget.kategorija),

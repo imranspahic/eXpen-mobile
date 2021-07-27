@@ -53,13 +53,13 @@ class _SubcategoryScreenState extends State<SubcategoryScreen> {
   }
 
   List<ExpenseModel> get dostupnePotrosnjePotkategorija {
-    final potrosnjaData = Provider.of<ExpenseNotifier>(context, listen: false);
-    final potKatData = Provider.of<SubcategoryNotifier>(context, listen: false);
+    final ExpenseNotifier expenseNotifier = Provider.of<ExpenseNotifier>(context, listen: false);
+    final SubcategoryNotifier subcategoryNotifier = Provider.of<SubcategoryNotifier>(context, listen: false);
 
-    return potrosnjaData.listaSvihPotrosnji.where((item) {
+    return expenseNotifier.listaSvihPotrosnji.where((item) {
       if (item.idKategorije == widget.kategorija.id &&
           item.idPotKategorije == widget.potKategorija.idPot) {
-        potKatData.dodajUPotKatList(item);
+        subcategoryNotifier.dodajUPotKatList(item);
 
         return true;
       } else {
@@ -71,7 +71,7 @@ class _SubcategoryScreenState extends State<SubcategoryScreen> {
   @override
   Widget build(BuildContext context) {
 
-    final potrosnjaData = Provider.of<ExpenseNotifier>(context);
+    final ExpenseNotifier expenseNotifier = Provider.of<ExpenseNotifier>(context);
     return Scaffold(
         floatingActionButton: SpeedDial(
           curve: Curves.bounceIn,
@@ -188,7 +188,7 @@ class _SubcategoryScreenState extends State<SubcategoryScreen> {
                                 dostupnePotrosnjePotkategorija[index].datum)),
                             trailing: IconButton(
                                 icon: Icon(Icons.delete),
-                                onPressed: () => potrosnjaData.izbrisiPotrosnju(
+                                onPressed: () => expenseNotifier.izbrisiPotrosnju(
                                     dostupnePotrosnjePotkategorija[index].id))),
                       ),
                     ],
