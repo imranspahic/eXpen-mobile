@@ -1,5 +1,5 @@
+import 'package:expen/services/categoryServices/changeCategoryNameService.dart';
 import 'package:flutter/material.dart';
-import 'package:expen/viewModel/categoryViewModel/changeCategoryNameViewModel.dart';
 
 class ChangeCategoryNameDialog extends StatefulWidget {
   final String kategorijaId;
@@ -52,8 +52,9 @@ class _ChangeCategoryNameDialogState extends State<ChangeCategoryNameDialog> {
                       Container(
                           width: 100,
                           child: RaisedButton(
-                            onPressed: () => changeCategoryName(
-                                _nazivController, context, widget.kategorijaId),
+                            onPressed: () => ChangeCategoryNameService()
+                                .changeCategoryName(_nazivController, context,
+                                    widget.kategorijaId),
                             color: Colors.orange,
                             child: Text(
                               'Sačuvaj',

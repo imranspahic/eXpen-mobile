@@ -1,18 +1,18 @@
-import 'package:expen/services/settingsServices/profileServices.dart';
+import 'package:expen/services/settingsServices/dataSyncServices.dart';
 import 'package:flutter/material.dart';
 
-class SettingsSyncCreateProfile extends StatelessWidget {
+class SettingsSyncData extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
-        ProfileServices.createProfile(context);
+        DataSyncService().uploadDataToServer(context);
       },
       title: Text(
-        'Kreiraj profil',
+        'Sinkroniziraj podatke',
         style: TextStyle(fontSize: 22),
       ),
-      subtitle: Text('Kreiraj profil za eXpen web'),
+      subtitle: Text('Upload podatke na eXpen server'),
       trailing: Padding(
         padding: const EdgeInsets.only(right: 8.0),
         child: Container(child: Icon(Icons.account_circle_outlined, size: 35)),

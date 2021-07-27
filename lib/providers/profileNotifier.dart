@@ -1,4 +1,4 @@
-import 'package:expen/viewModel/userViewModel/setUserDataSharedPrefsVM.dart';
+import 'package:expen/services/sharedPrefsServices/setSharedPrefsService.dart';
 import 'package:flutter/cupertino.dart';
 
 class ProfileNotifier extends ChangeNotifier {
@@ -18,7 +18,7 @@ class ProfileNotifier extends ChangeNotifier {
     userData["createdAt"] = createdAt;
     userData["email"] = responseData["email"];
     userData["username"] = responseData["username"];
-    setUserDataSharedPrefs(userData);
+    SetSharedPrefsService().setUserDataSharedPrefs(userData);
     if (hasListener) {
       notifyListeners();
     }

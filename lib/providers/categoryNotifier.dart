@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:expen/providers/subcategoryNotifier.dart';
-import 'package:expen/viewModel/settingsViewModel/getProfileStateViewModel.dart';
+import 'package:expen/services/settingsServices/profileServices.dart';
 import '../database/rashod_plata_database.dart' as rpDB;
 import 'package:expen/database/glavni_podaci_database.dart';
 import 'package:expen/providers/expenseNotifier.dart';
@@ -168,7 +168,7 @@ class CategoryNotifier with ChangeNotifier {
       return a.redniBroj.compareTo(b.redniBroj);
     });
 
-    getProfileState(context);
+    ProfileServices.getProfileState(context);
 
     notifyListeners();
   }

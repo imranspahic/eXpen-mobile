@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:expen/providers/profileNotifier.dart';
+import 'package:expen/services/categoryServices/showAddCategoryDialogService.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expen/view/homeScreen/widgets/homeScreenAppBar.dart';
-import 'package:expen/viewModel/categoryViewModel/showAddCategoryDialogViewModel.dart';
 import 'package:expen/providers/expenseNotifier.dart';
 import 'package:expen/providers/categoryNotifier.dart';
 import 'package:expen/providers/settingsNotifier.dart';
@@ -149,7 +149,8 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () => showAddCategoryDialog(context, _scaffoldKey),
+        onPressed: () => ShowAddCategoryDialogService()
+            .showAddCategoryDialog(context, _scaffoldKey),
       ),
     );
   }

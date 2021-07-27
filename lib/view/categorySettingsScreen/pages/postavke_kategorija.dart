@@ -1,7 +1,7 @@
+import 'package:expen/services/categoryServices/changeCategoryNameService.dart';
+import 'package:expen/services/categoryServices/pickCategoryImageService.dart';
 import 'package:flutter/material.dart';
 import 'package:expen/view/categorySettingsScreen/widgets/gridOpcija.dart';
-import 'package:expen/viewModel/categoryViewModel/pickCategoryImageViewModel.dart';
-import 'package:expen/viewModel/categoryViewModel/showChangeCategoryNameDialog.dart';
 import 'package:expen/providers/categoryNotifier.dart';
 import 'package:provider/provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -91,7 +91,6 @@ class _PostavkeKategorijaState extends State<PostavkeKategorija> {
               ),
               SizedBox(height: 15),
               Flexible(
-               
                 child: GridView(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
@@ -103,14 +102,14 @@ class _PostavkeKategorijaState extends State<PostavkeKategorija> {
                     GridOpcija(
                       naziv: 'Izaberi/promijeni sliku',
                       ikona: Icons.image,
-                      funkcija: () => pickCategoryImage(
-                          context, _scaffoldKey, widget.kategorija),
+                      funkcija: () =>  PickCategoryImageService().pickCategoryImage(context, _scaffoldKey, widget.kategorija),
                     ),
                     GridOpcija(
                       naziv: 'Promijeni naziv',
                       ikona: Icons.edit,
-                      funkcija: () => showChangeCategoryNameDialog(
-                          context, widget.kategorija.id),
+                      funkcija: () => ChangeCategoryNameService()
+                          .showChangeCategoryNameDialog(
+                              context, widget.kategorija.id),
                     ),
                     GridOpcija(
                       naziv: 'Postavi ikonu za potrošnje',
@@ -126,7 +125,6 @@ class _PostavkeKategorijaState extends State<PostavkeKategorija> {
               ),
               Divider()
 
-           
               // GestureDetector(
               //   onTap: _izaberiSliku,
               //   child: Container(

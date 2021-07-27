@@ -1,5 +1,5 @@
+import 'package:expen/services/categoryServices/addNewCategoryService.dart';
 import 'package:flutter/material.dart';
-import 'package:expen/viewModel/categoryViewModel/addNewCategoryViewModel.dart';
 
 class AddNewCategoryDialog extends StatefulWidget {
   @override
@@ -39,7 +39,8 @@ class _AddNewCategoryDialogState extends State<AddNewCategoryDialog> {
               'Dodaj kategoriju',
               style: Theme.of(context).textTheme.button,
             ),
-            onPressed: () => addNewCategory(context, categoryNameController),
+            onPressed: () => AddNewCategoryService()
+                .addNewCategory(context, categoryNameController),
             color: Theme.of(context).primaryColor,
             textColor: Colors.white,
           ),

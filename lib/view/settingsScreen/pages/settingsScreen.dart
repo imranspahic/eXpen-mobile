@@ -1,8 +1,8 @@
 import 'package:expen/providers/profileNotifier.dart';
 import 'package:expen/utils/error_dialog.dart';
-import 'package:expen/utils/loader.dart';
 import 'package:expen/view/settingsScreen/widgets/settingsProfileInformation.dart';
 import 'package:expen/view/settingsScreen/widgets/settingsSyncCreateProfile.dart';
+import 'package:expen/view/settingsScreen/widgets/settinsSyncData.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expen/providers/settingsNotifier.dart';
@@ -59,6 +59,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       : SettingsSyncCreateProfile();
                 },
               ),
+              SettingsSyncData(),
               ListTile(
                 title: Text('Prikaži error'),
                 subtitle: Text('Prikaži error dialog'),

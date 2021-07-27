@@ -1,8 +1,8 @@
+import 'package:expen/services/categoryServices/showAddCategoryDialogService.dart';
 import 'package:flutter/material.dart';
 import 'package:expen/providers/notificationNotifier.dart';
 import 'package:provider/provider.dart';
 import 'package:expen/view/obavijesti_ekran.dart';
-import 'package:expen/viewModel/categoryViewModel/showAddCategoryDialogViewModel.dart';
 
 AppBar homeScreenAppBar(
     BuildContext context, GlobalKey<ScaffoldState> scaffoldKey) {
@@ -31,7 +31,7 @@ AppBar homeScreenAppBar(
           }),
       IconButton(
           icon: Icon(Icons.add),
-          onPressed: () => showAddCategoryDialog(context, scaffoldKey))
+          onPressed: () => ShowAddCategoryDialogService().showAddCategoryDialog(context, scaffoldKey))
     ],
   );
 }

@@ -1,4 +1,4 @@
-import 'package:expen/viewModel/userViewModel/getUserDataSharedPrefsVM.dart';
+import 'package:expen/services/sharedPrefsServices/getSharedPrefsService.dart';
 import 'package:flutter/material.dart';
 import 'package:expen/database/glavni_podaci_database.dart';
 
@@ -8,7 +8,7 @@ class SettingsNotifier extends ChangeNotifier {
   bool brisanjeKategorija;
 
   //Postavke sigurnost
-  bool zastitaLozinkom;
+  bool zastitaLozinkom = false;
 
   Map<String, double> rashodSveKategorijeMapa = {
     'Januar': 0.0,
@@ -86,32 +86,27 @@ class SettingsNotifier extends ChangeNotifier {
     print("INITTTTT");
     if (isStart) {
       print("SDASFASFA");
-      await getUserDataSharedPrefs(context);
+      await GetSharedPrefsService().getUserDataSharedPrefs(context);
     }
     final dataList = await DatabaseHelper.fetchTable('postavke');
 
     if (dataList[0]['prikazPotrosnji'] == 0) {
       vertikalniPrikaz = false;
-      notifyListeners();
     } else {
       vertikalniPrikaz = true;
-      notifyListeners();
     }
 
     if (dataList[0]['brisanjeKategorija'] == 0) {
       brisanjeKategorija = false;
-      notifyListeners();
     } else {
       brisanjeKategorija = true;
-      notifyListeners();
     }
 
     if (dataList[0]['zastitaLozinkom'] == 0) {
       zastitaLozinkom = false;
-      notifyListeners();
     } else {
       zastitaLozinkom = true;
-      notifyListeners();
     }
+    notifyListeners();
   }
 }
