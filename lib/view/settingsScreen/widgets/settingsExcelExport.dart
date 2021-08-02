@@ -26,7 +26,7 @@ class SettingsExcelExport extends StatelessWidget {
         final SubcategoryNotifier subcategoryNotifier =
             Provider.of<SubcategoryNotifier>(context, listen: false);
 
-        List<Expense> data = providerData.listaSvihPotrosnji;
+        List<Expense> data = providerData.expenses;
         data.forEach((potrosnja) {
           if (potrosnja.naziv.contains('š')) {
             potrosnja.naziv = potrosnja.naziv.replaceFirst(RegExp('š'), 's');

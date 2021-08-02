@@ -1,4 +1,5 @@
 import 'package:expen/models/Category.dart';
+import 'package:expen/providers/categoryNotifier.dart';
 import 'package:flutter/material.dart';
 import 'package:expen/providers/notificationNotifier.dart';
 import 'package:expen/view/a%C5%BEuriranje_opcije.dart';
@@ -11,12 +12,9 @@ import 'package:expen/view/rashod_pregled_ekran.dart';
 import 'package:expen/view/bottomNavigationScreen/pages/categoryBottomNavigationScreen.dart';
 import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:provider/provider.dart';
 
 class MainDrawer extends StatelessWidget {
-  final List<Category> potrosnjaLista;
-  final List<NotificationModel> listaObavijesti;
-  MainDrawer(this.potrosnjaLista, this.listaObavijesti);
-
   void otvoriPlata(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
       return DodajRashodEkran(
@@ -164,6 +162,13 @@ class MainDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final NotificationNotifier notificationNotifier =
+        Provider.of<NotificationNotifier>(context);
+    final CategoryNotifier categoryNotifier =
+        Provider.of<CategoryNotifier>(context, listen: false);
+    final List<Category> categories = categoryNotifier.kategorijaLista;
+    final List<NotificationModel> unreadNotificatioms =
+        notificationNotifier.listaNeprocitanihObavijesti();
     return Drawer(
       child: SingleChildScrollView(
         child: Column(
@@ -240,17 +245,17 @@ class MainDrawer extends StatelessWidget {
                           border: Border.all(color: Colors.black26, width: 1)),
                       margin: EdgeInsets.symmetric(horizontal: 10),
                       height: min(
-                          potrosnjaLista.length * 52.5 +
-                              potrosnjaLista.length * 5 +
-                              (5 - potrosnjaLista.length),
+                          categories.length * 52.5 +
+                              categories.length * 5 +
+                              (5 - categories.length),
                           double.infinity),
                       child: ListView.builder(
                           physics: NeverScrollableScrollPhysics(),
                           padding: EdgeInsets.symmetric(vertical: 5),
-                          itemCount: potrosnjaLista.length,
+                          itemCount: categories.length,
                           itemBuilder: (ctx, index) {
                             return buildDrawerContent(
-                                context, potrosnjaLista[index]);
+                                context, categories[index]);
                           }),
                     ),
                     // if(potrosnjaLista.length >= 8)
@@ -291,22 +296,22 @@ class MainDrawer extends StatelessWidget {
                           border: Border.all(color: Colors.black26, width: 1)),
                       margin: EdgeInsets.symmetric(horizontal: 10),
                       height: min(
-                          listaObavijesti.length * 70.5 +
-                              listaObavijesti.length * 5 +
-                              (5 - listaObavijesti.length),
+                          unreadNotificatioms.length * 70.5 +
+                              unreadNotificatioms.length * 5 +
+                              (5 - unreadNotificatioms.length),
                           220),
                       child: ListView.builder(
                           physics: NeverScrollableScrollPhysics(),
                           padding: EdgeInsets.symmetric(vertical: 5),
-                          itemCount: listaObavijesti.length,
+                          itemCount: unreadNotificatioms.length,
                           itemBuilder: (ctx, index) {
                             return buildObavijest(
-                                context, listaObavijesti[index]);
+                                context, unreadNotificatioms[index]);
                           }),
                     ),
                   ],
                 ),
-                if (listaObavijesti.length > 3)
+                if (unreadNotificatioms.length > 3)
                   Center(
                     child: RaisedButton(
                         onPressed: () {
@@ -316,7 +321,7 @@ class MainDrawer extends StatelessWidget {
                           }));
                         },
                         child: Text(
-                          'Prikaži još ${listaObavijesti.length - 3}...',
+                          'Prikaži još ${unreadNotificatioms.length - 3}...',
                           style: TextStyle(color: Colors.white),
                         ),
                         color: Colors.red[600]),

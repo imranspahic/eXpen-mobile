@@ -25,7 +25,7 @@ class _CategoryBottomNavigationScreenState
   List<Expense> get dostupnePotrosnjeUCijelojKategoriji {
     final ExpenseNotifier expenseNotifier =
         Provider.of<ExpenseNotifier>(context);
-    return expenseNotifier.listaSvihPotrosnji.where((item) {
+    return expenseNotifier.expenses.where((item) {
       return item.idKategorije == widget.kategorija.id;
     }).toList();
   }

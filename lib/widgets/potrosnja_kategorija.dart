@@ -35,16 +35,6 @@ class _PotrosnjaKategorijaState extends State<PotrosnjaKategorija> {
   var ukupUPot = 0;
 
   @override
-  void initState() {
-    potKategorijafuture =
-        Provider.of<SubcategoryNotifier>(context, listen: false)
-            .fetchAndSetPotkategorije();
-    potrosnjefuture = Provider.of<ExpenseNotifier>(context, listen: false)
-        .fetchAndSetPotrosnje();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final CategoryNotifier categoryNotifier =
         Provider.of<CategoryNotifier>(context);

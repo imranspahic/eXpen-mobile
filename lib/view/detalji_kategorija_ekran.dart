@@ -39,7 +39,7 @@ class _DetaljiKategorijaEkranState extends State<DetaljiKategorijaEkran> {
 
     List<Expense> filterovanaLista;
 
-    filterovanaLista = expenseNotifier.listaSvihPotrosnji.where((item) {
+    filterovanaLista = expenseNotifier.expenses.where((item) {
       var vrijednostMjesec = item.datum.month;
       String vrijednostString;
       switch (vrijednostMjesec) {
@@ -151,7 +151,7 @@ class _DetaljiKategorijaEkranState extends State<DetaljiKategorijaEkran> {
     final expenseNotifier = Provider.of<ExpenseNotifier>(context, listen: false);
     final CategoryNotifier categoryNotifier = Provider.of<CategoryNotifier>(context, listen: false);
     List<Expense> potrosnjeKategorija = [];
-    potrosnjeKategorija = expenseNotifier.listaSvihPotrosnji
+    potrosnjeKategorija = expenseNotifier.expenses
         .where((element) =>
             element.idKategorije == categoryNotifier.kategorijaLista[index].id)
         .toList();
@@ -218,7 +218,7 @@ class _DetaljiKategorijaEkranState extends State<DetaljiKategorijaEkran> {
     final expenseNotifier = Provider.of<ExpenseNotifier>(context, listen: false);
     final CategoryNotifier categoryNotifier = Provider.of<CategoryNotifier>(context, listen: false);
     List<Expense> potrosnjeKategorija = [];
-    potrosnjeKategorija = expenseNotifier.listaSvihPotrosnji
+    potrosnjeKategorija = expenseNotifier.expenses
         .where((element) =>
             element.idKategorije == categoryNotifier.kategorijaLista[index].id)
         .toList();

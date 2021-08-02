@@ -4,21 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:expen/database/glavni_podaci_database.dart';
 
 class ExpenseNotifier with ChangeNotifier {
-  List<Expense> listaSvihPotrosnji = [];
-  List<Expense> listaPlaniranihPotrosnji = [];
+  List<Expense> expenses = [];
+  List<Expense> plannedExpenses = [];
 
+  ///Expenses in category without subcategory
   List<Expense> _expensesByCategory = [];
   List<Expense> get expensesByCategory => _expensesByCategory;
 
   void setExpensesByCategory(Category category) =>
-      _expensesByCategory = listaSvihPotrosnji
+      _expensesByCategory = expenses
           .where((Expense expense) =>
               expense.idKategorije == category.id &&
               expense.idPotKategorije == "nemaPotkategorija")
           .toList();
 
   void izbrisiPotrosnju(String id) {
-    listaSvihPotrosnji.removeWhere((item) {
+    expenses.removeWhere((item) {
       return item.id == id;
     });
     notifyListeners();
@@ -27,7 +28,7 @@ class ExpenseNotifier with ChangeNotifier {
 
   int potrosnjePoKategoriji(String katId) {
     List<Expense> lista = [];
-    lista = listaSvihPotrosnji
+    lista = expenses
         .where((element) => element.idKategorije == katId)
         .toList();
     return lista.length;
@@ -35,7 +36,7 @@ class ExpenseNotifier with ChangeNotifier {
 
   double trosakPoKategoriji(String katId) {
     List<Expense> lista = [];
-    lista = listaSvihPotrosnji
+    lista = expenses
         .where((element) => element.idKategorije == katId)
         .toList();
     double ukupno = 0.0;
@@ -47,7 +48,7 @@ class ExpenseNotifier with ChangeNotifier {
 
   double ukupniTrosakSvihPotrosnji() {
     double trosak = 0.0;
-    listaSvihPotrosnji.forEach((element) {
+    expenses.forEach((element) {
       trosak = trosak + element.trosak;
     });
     return trosak;
@@ -55,7 +56,7 @@ class ExpenseNotifier with ChangeNotifier {
 
   List<Expense> potrosnjePoKategorijilista(String katId) {
     List<Expense> lista = [];
-    lista = listaSvihPotrosnji
+    lista = expenses
         .where((element) => element.idKategorije == katId)
         .toList();
     return lista;
@@ -63,7 +64,7 @@ class ExpenseNotifier with ChangeNotifier {
 
   List<Expense> potrosnjePoPotkaategorijilista(String potKatId) {
     List<Expense> lista = [];
-    lista = listaSvihPotrosnji
+    lista = expenses
         .where((element) => element.idPotKategorije == potKatId)
         .toList();
     return lista;
@@ -73,7 +74,7 @@ class ExpenseNotifier with ChangeNotifier {
     List<Expense> temp = [];
     List<Expense> listaPot = [];
     double ukupniTrosak = 0.0;
-    listaSvihPotrosnji.forEach((potrosnja) {
+    expenses.forEach((potrosnja) {
       if (potrosnja.idKategorije == katId) {
         temp.add(potrosnja);
       }
@@ -103,10 +104,10 @@ class ExpenseNotifier with ChangeNotifier {
       idPotKategorije: potkategorijaId,
     );
 
-    listaSvihPotrosnji.add(novaPotrosnja);
+    expenses.add(novaPotrosnja);
 
     //sortiraj liste po datumu od najveceg ka najmanjem
-    listaSvihPotrosnji.sort((a, b) => -a.datum.compareTo(b.datum));
+    expenses.sort((a, b) => -a.datum.compareTo(b.datum));
 
     notifyListeners();
     DatabaseHelper.insertRowIntoTable('potrosnje', {
@@ -121,9 +122,10 @@ class ExpenseNotifier with ChangeNotifier {
   }
 
   Future<void> fetchAndSetPotrosnje() async {
+    print("fetching potrosnje");
     final dataList = await DatabaseHelper.fetchTable('potrosnje');
 
-    listaSvihPotrosnji = dataList
+    expenses = dataList
         .map((p) => Expense(
               id: p['id'],
               naziv: p['naziv'],
@@ -140,7 +142,7 @@ class ExpenseNotifier with ChangeNotifier {
 
   Future<void> fetchAndSetPlaniranePotrosnje() async {
     final dataList = await DatabaseHelper.fetchTable('planiranePotrosnje');
-    listaPlaniranihPotrosnji = dataList
+    plannedExpenses = dataList
         .map((p) => Expense(
               id: p['id'],
               naziv: p['naziv'],
@@ -165,10 +167,10 @@ class ExpenseNotifier with ChangeNotifier {
       idPotKategorije: potkategorijaId,
     );
 
-    listaPlaniranihPotrosnji.add(novaPlaniranaPotrosnja);
+    plannedExpenses.add(novaPlaniranaPotrosnja);
 
     //sortiraj liste po datumu od najveceg ka najmanjem
-    // listaPlaniranihPotrosnji.sort((a, b) => -a.datum.compareTo(b.datum));
+    // plannedExpenses.sort((a, b) => -a.datum.compareTo(b.datum));
 
     notifyListeners();
     DatabaseHelper.insertRowIntoTable('planiranePotrosnje', {
@@ -184,7 +186,7 @@ class ExpenseNotifier with ChangeNotifier {
 
   List<Expense> dobijPlaniranePotrosnjeKategorije(String katId) {
     List<Expense> tempList;
-    tempList = listaPlaniranihPotrosnji.where((item) {
+    tempList = plannedExpenses.where((item) {
       return item.idKategorije == katId &&
           item.idPotKategorije == 'nemaPotkategorija';
     }).toList();
@@ -195,7 +197,7 @@ class ExpenseNotifier with ChangeNotifier {
   List<Expense> dobijPlaniranePotrosnjePotkategorije(
       String katId, String potId) {
     List<Expense> tempList;
-    tempList = listaPlaniranihPotrosnji.where((item) {
+    tempList = plannedExpenses.where((item) {
       return item.idKategorije == katId && item.idPotKategorije == potId;
     }).toList();
 
@@ -203,7 +205,7 @@ class ExpenseNotifier with ChangeNotifier {
   }
 
   void izbrisiPlaniranuPotrosnju(String id) {
-    listaPlaniranihPotrosnji.removeWhere((item) {
+    plannedExpenses.removeWhere((item) {
       return item.id == id;
     });
     notifyListeners();
@@ -251,7 +253,7 @@ class ExpenseNotifier with ChangeNotifier {
                 datum: datumDanasnji,
               );
             }).toList();
-            // if(listaSvihPotrosnji.any((potrosnja)  {
+            // if(expenses.any((potrosnja)  {
             //   return potrosnja.id == potrosnje[0].id;
             // })) {
             //   print('Već dodano');
@@ -274,7 +276,7 @@ class ExpenseNotifier with ChangeNotifier {
             }
 
             for (int i = 0; i < potrosnje.length; i++) {
-              listaSvihPotrosnji.add(potrosnje[i]);
+              expenses.add(potrosnje[i]);
 
               DatabaseHelper.insertRowIntoTable('potrosnje', {
                 'id':
@@ -341,7 +343,7 @@ class ExpenseNotifier with ChangeNotifier {
                 datum: datumDanasnji,
               );
             }).toList();
-            // if(listaSvihPotrosnji.any((potrosnja)  {
+            // if(expenses.any((potrosnja)  {
             //   return potrosnja.id == potrosnje[0].id;
             // })) {
             //   print('Već dodano');
@@ -364,7 +366,7 @@ class ExpenseNotifier with ChangeNotifier {
             }
 
             for (int i = 0; i < potrosnje.length; i++) {
-              listaSvihPotrosnji.add(potrosnje[i]);
+              expenses.add(potrosnje[i]);
 
               DatabaseHelper.insertRowIntoTable('potrosnje', {
                 'id':
@@ -437,9 +439,9 @@ class ExpenseNotifier with ChangeNotifier {
         idPotKategorije: potkategorijaId,
       );
 
-      listaSvihPotrosnji.add(novaPotrosnja);
+      expenses.add(novaPotrosnja);
       //sortiraj liste po datumu od najveceg ka najmanjem
-      listaSvihPotrosnji.sort((a, b) => -a.datum.compareTo(b.datum));
+      expenses.sort((a, b) => -a.datum.compareTo(b.datum));
       notifyListeners();
     }
     DatabaseHelper.insertMultipleExpenses('potrosnje', nazivKategorije,
@@ -447,12 +449,12 @@ class ExpenseNotifier with ChangeNotifier {
   }
 
   List<Expense> get ukupnoPotrosnji {
-    return listaSvihPotrosnji;
+    return expenses;
   }
 
   String badge(String idPot) {
     List<Expense> s = [];
-    s = listaSvihPotrosnji.where((test) {
+    s = expenses.where((test) {
       return test.idPotKategorije == idPot;
     }).toList();
 

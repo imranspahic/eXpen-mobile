@@ -9,7 +9,9 @@ class GetSharedPrefsService {
     final SharedPreferences prefInstance =
         await SharedPreferences.getInstance();
     Map<String, dynamic> responseData = {};
+
     responseData["username"] = prefInstance.getString("username");
+    if (responseData["username"] == null) return;
     responseData["email"] = prefInstance.getString("email");
     print("EXEC");
     responseData["accessToken"] = prefInstance.getString("accessToken");

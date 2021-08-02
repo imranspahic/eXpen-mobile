@@ -21,7 +21,7 @@ class PdfBuilderFunc {
     final ExpenseNotifier expenseNotifier =
         Provider.of<ExpenseNotifier>(buildContext, listen: false);
     List<Expense> data = !isGeneralno ? 
-        expenseNotifier.potrosnjePoKategorijilista(kategorija.id) : expenseNotifier.listaSvihPotrosnji;
+        expenseNotifier.potrosnjePoKategorijilista(kategorija.id) : expenseNotifier.expenses;
     data.sort((a, b) {
       return -a.trosak.compareTo(b.trosak);
     });
@@ -219,7 +219,7 @@ class PdfBuilderFunc {
                       child: pw.Text(
                           !isGeneralno
                               ? '${expenseNotifier.potrosnjePoKategorijilista(kategorija.id).length}'
-                              : '${expenseNotifier.listaSvihPotrosnji.length}',
+                              : '${expenseNotifier.expenses.length}',
                           style: pw.TextStyle(
                               fontSize: 30,
                               fontWeight: pw.FontWeight.bold,

@@ -16,7 +16,7 @@ class DeleteSubcategoryService {
     //izbriši potkategorije
     subcategoryNotifier.izbrisiPotkategoriju(subcategoryID, lista);
     //izbriši potrošnje u potkategoriji
-    expenseNotifier.listaSvihPotrosnji.removeWhere((pot) {
+    expenseNotifier.expenses.removeWhere((pot) {
       return pot.idPotKategorije == subcategoryID;
     });
     Scaffold.of(context).hideCurrentSnackBar();

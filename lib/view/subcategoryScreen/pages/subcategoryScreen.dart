@@ -61,7 +61,7 @@ class _SubcategoryScreenState extends State<SubcategoryScreen> {
     final SubcategoryNotifier subcategoryNotifier =
         Provider.of<SubcategoryNotifier>(context, listen: false);
 
-    return expenseNotifier.listaSvihPotrosnji.where((item) {
+    return expenseNotifier.expenses.where((item) {
       if (item.idKategorije == widget.kategorija.id &&
           item.idPotKategorije == widget.potKategorija.idPot) {
         subcategoryNotifier.dodajUPotKatList(item);

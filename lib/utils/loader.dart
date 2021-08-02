@@ -1,9 +1,11 @@
 import 'dart:async';
-
 import 'package:expen/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
 class ExpenLoader extends StatefulWidget {
+  final bool isDialog;
+
+  ExpenLoader({this.isDialog = true});
   @override
   _ExpenLoaderState createState() => _ExpenLoaderState();
 }
@@ -58,7 +60,7 @@ class _ExpenLoaderState extends State<ExpenLoader>
           Container(
             height: SizeConfig.blockSizeVertical * 100,
             width: SizeConfig.blockSizeHorizontal * 100,
-            color: Color.fromRGBO(0, 0, 0, 0.3),
+            color: widget.isDialog ? Color.fromRGBO(0, 0, 0, 0.3) : Colors.white
           ),
           Center(
             child: AnimatedOpacity(
