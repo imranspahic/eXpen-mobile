@@ -8,6 +8,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:csv/csv.dart';
 import 'package:intl/intl.dart';
 import 'package:expen/view/settingsScreen/widgets/excelExportDialog.dart';
+import 'package:expen/models/Expense.dart';
 
 class SettingsExcelExport extends StatelessWidget {
   const SettingsExcelExport({
@@ -25,7 +26,7 @@ class SettingsExcelExport extends StatelessWidget {
         final SubcategoryNotifier subcategoryNotifier =
             Provider.of<SubcategoryNotifier>(context, listen: false);
 
-        List<ExpenseModel> data = providerData.listaSvihPotrosnji;
+        List<Expense> data = providerData.listaSvihPotrosnji;
         data.forEach((potrosnja) {
           if (potrosnja.naziv.contains('š')) {
             potrosnja.naziv = potrosnja.naziv.replaceFirst(RegExp('š'), 's');

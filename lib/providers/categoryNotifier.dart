@@ -1,65 +1,17 @@
 import 'dart:convert';
-import 'dart:typed_data';
-import 'package:expen/providers/subcategoryNotifier.dart';
+import 'package:expen/models/Expense.dart';
+import 'package:expen/models/Subcategory.dart';
 import 'package:expen/services/settingsServices/profileServices.dart';
 import '../database/rashod_plata_database.dart' as rpDB;
 import 'package:expen/database/glavni_podaci_database.dart';
-import 'package:expen/providers/expenseNotifier.dart';
 import 'package:flutter/material.dart';
-
-class CategoryModel {
-  String id;
-  String naziv;
-  Color bojaPozadine;
-  String slikaUrl;
-  Map<String, double> mapaRashoda;
-  bool isExpanded;
-  Uint8List slikaEncoded;
-  int redniBroj;
-  int mjesecnoDodavanje;
-  String jeLiMjesecnoDodano;
-
-  CategoryModel({
-    @required this.naziv,
-    this.bojaPozadine,
-    this.id,
-    this.slikaUrl,
-    this.mapaRashoda,
-    this.isExpanded = false,
-    this.slikaEncoded,
-    this.redniBroj,
-    this.mjesecnoDodavanje,
-    this.jeLiMjesecnoDodano,
-  });
-}
+import 'package:expen/models/Category.dart';
 
 class CategoryNotifier with ChangeNotifier {
-  List<CategoryModel> kategorijaLista = [
-    // KategorijaModel(
-    //   naziv: 'Imran',
-    //   bojaPozadine: Colors.green,
-    //   slikaUrl: 'assets/images/imran.jpeg',
-    //   rashodGodina: 0,
-    //   mapaRashoda: {
-    //     'Januar': 0.0,
-    //     'Februar': 0.0,
-    //     'Mart': 0.0,
-    //     'April': 0.0,
-    //     'Maj': 0.0,
-    //     'Juni': 0.0,
-    //     'Juli': 0.0,
-    //     'August': 0.0,
-    //     'Septembar': 0.0,
-    //     'Oktobar': 0.0,
-    //     'Novembar': 0.0,
-    //     'Decembar': 0.0,
-    //   },
-    //   isExpanded: false
-    // ),
-  ];
+  List<Category> kategorijaLista = [];
 
   String dobijNazivKategorije(String idKat) {
-    CategoryModel kat = kategorijaLista.singleWhere((element) {
+    Category kat = kategorijaLista.singleWhere((element) {
       return element.id == idKat;
     }, orElse: () {
       return null;
@@ -84,7 +36,7 @@ class CategoryNotifier with ChangeNotifier {
   }
 
   void dodajKategoriju(String nazivNovi, int redniBroj) {
-    var novaKategorija = CategoryModel(
+    var novaKategorija = Category(
       naziv: nazivNovi,
       id: DateTime.now().toString(),
       mapaRashoda: {
@@ -135,9 +87,9 @@ class CategoryNotifier with ChangeNotifier {
   Future<void> fetchAndSetKategorije(BuildContext context) async {
     final dataList = await DatabaseHelper.fetchTable('kategorije');
 
-    List<CategoryModel> s = [];
+    List<Category> s = [];
     dataList.forEach((e) {
-      s.add(CategoryModel(
+      s.add(Category(
           naziv: e['naziv'],
           id: e['id'],
           slikaUrl: e['slikaUrl'],
@@ -173,8 +125,8 @@ class CategoryNotifier with ChangeNotifier {
     notifyListeners();
   }
 
-  void izbrisiKategoriju(String id, List<ExpenseModel> listaPotrosnji,
-      List<SubcategoryModel> listaPotkategorija) {
+  void izbrisiKategoriju(String id, List<Expense> listaPotrosnji,
+      List<Subcategory> listaPotkategorija) {
     kategorijaLista.removeWhere((item) {
       return item.id == id;
     });
@@ -188,7 +140,7 @@ class CategoryNotifier with ChangeNotifier {
   }
 
   void updateSlikuKategorije(String slikaPath, String id) {
-    CategoryModel kategorija =
+    Category kategorija =
         kategorijaLista.singleWhere((element) => element.id == id);
     kategorija.slikaUrl = slikaPath;
     kategorija.slikaEncoded = base64Decode(slikaPath);
@@ -211,12 +163,12 @@ class CategoryNotifier with ChangeNotifier {
     notifyListeners();
   }
 
-  CategoryModel dobijKategorijuPoId(String id) {
+  Category dobijKategorijuPoId(String id) {
     return kategorijaLista.singleWhere((element) => element.id == id);
   }
 
   void updateNazivKategorije(String naziv, String id) {
-    CategoryModel kategorija =
+    Category kategorija =
         kategorijaLista.singleWhere((element) => element.id == id);
     kategorija.naziv = naziv;
     notifyListeners();

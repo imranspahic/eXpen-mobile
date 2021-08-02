@@ -1,5 +1,5 @@
-import 'package:expen/providers/categoryNotifier.dart';
-import 'package:expen/providers/expenseNotifier.dart';
+import 'package:expen/models/Category.dart';
+import 'package:expen/models/Expense.dart';
 import 'package:expen/view/categoryScreen/widgets/expenseDialog.dart';
 import 'package:expen/view/homeScreen/widgets/addNewCategoryDialog.dart';
 import 'package:expen/widgets/dodaj_novu_potkategoriju.dart';
@@ -23,7 +23,7 @@ class ShowDialogService {
     });
   }
 
-  static expenseViewDialog(BuildContext context, ExpenseModel expense) {
+  static expenseViewDialog(BuildContext context, Expense expense) {
     return showDialog(
         context: context,
         builder: (ctx) {
@@ -31,7 +31,7 @@ class ShowDialogService {
         });
   }
 
-  static expenseAddDialog(BuildContext context, CategoryModel category) {
+  static expenseAddDialog(BuildContext context, Category category) {
     showModalBottomSheet(
         isScrollControlled: true,
         context: context,
@@ -51,7 +51,7 @@ class ShowDialogService {
     });
   }
 
-  static subcategoryAddDialog(BuildContext context, CategoryModel category) {
+  static subcategoryAddDialog(BuildContext context, Category category) {
     showDialog(
         context: context,
         builder: (ctx) => SimpleDialog(children: <Widget>[

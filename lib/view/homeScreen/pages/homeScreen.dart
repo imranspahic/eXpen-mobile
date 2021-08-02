@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:expen/models/Category.dart';
 import 'package:expen/providers/profileNotifier.dart';
 import 'package:expen/services/dialogServices/showDialogService.dart';
 import 'package:flutter/material.dart';
@@ -95,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: PotrosnjaKategorija(item)))
                       .toList(),
                   onReorder: (start, current) {
-                    List<CategoryModel> _list = categoryNotifier.kategorijaLista;
+                    List<Category> _list = categoryNotifier.kategorijaLista;
                     if (current >= _list.length) {
                       current = _list.length - 1;
                     }
@@ -108,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       print('start index: $start');
                       print('current index $current');
                       int end = current;
-                      CategoryModel startItem = _list[start];
+                      Category startItem = _list[start];
                       int i = 0;
                       int local = start;
                       do {
@@ -126,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           current + 1, categoryNotifier.kategorijaLista[start].id);
                       print('start index: $start');
                       print('current index: $current');
-                      CategoryModel startItem = _list[start];
+                      Category startItem = _list[start];
                       for (int i = start; i > current; i--) {
                         _list[i] = _list[i - 1];
                       }

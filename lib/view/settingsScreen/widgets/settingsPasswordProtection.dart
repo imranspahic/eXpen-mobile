@@ -8,10 +8,10 @@ import 'package:expen/view/settingsScreen/widgets/confirmOldPasswordDialog.dart'
 class SettingsPasswordProtection extends StatelessWidget {
   const SettingsPasswordProtection({
     Key key,
-    @required this.postavkeData,
+    @required this.settingsNotifier,
   }) : super(key: key);
 
-  final SettingsNotifier postavkeData;
+  final SettingsNotifier settingsNotifier;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class SettingsPasswordProtection extends StatelessWidget {
       trailing: Container(
           child: Switch(
               activeColor: Colors.deepPurple,
-              value: postavkeData.zastitaLozinkom,
+              value: settingsNotifier.zastitaLozinkom,
               onChanged: (val) async {
                 final dbData = await DatabaseHelper.fetchTable('postavke');
                 final sifra = dbData[0]['sifra'];

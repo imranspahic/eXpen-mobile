@@ -1,13 +1,15 @@
+import 'package:expen/models/Category.dart';
 import 'package:flutter/material.dart';
 import 'package:expen/providers/categoryNotifier.dart';
 import 'package:expen/providers/expenseNotifier.dart';
 import '../../../providers/expenseCategoryNotifier.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:expen/models/Expense.dart';
 
 class CategoryPlannedSpendingScreen extends StatefulWidget {
-  final CategoryModel kategorija;
-  final List<ExpenseModel> dostupnePotrosnje;
+  final Category kategorija;
+  final List<Expense> dostupnePotrosnje;
   CategoryPlannedSpendingScreen(this.kategorija, this.dostupnePotrosnje);
   @override
   _CategoryPlannedSpendingScreenState createState() => _CategoryPlannedSpendingScreenState();
@@ -17,7 +19,7 @@ class _CategoryPlannedSpendingScreenState extends State<CategoryPlannedSpendingS
   String trenutnaVrijednostDropdown =
       DateFormat.MMMM().format(DateTime.now()).toString();
 
-  List<ExpenseModel> get dostupnePotrosnjeUCijelojKategoriji {
+  List<Expense> get dostupnePotrosnjeUCijelojKategoriji {
     final ExpenseNotifier expenseNotifier = Provider.of<ExpenseNotifier>(context);
     return expenseNotifier.listaSvihPotrosnji.where((item) {
       return item.idKategorije == widget.kategorija.id;
@@ -88,7 +90,7 @@ class _CategoryPlannedSpendingScreenState extends State<CategoryPlannedSpendingS
   }
 
   String trosakMjesec(String mjesec) {
-    List<ExpenseModel> filterovanaLista;
+    List<Expense> filterovanaLista;
 
     filterovanaLista = widget.dostupnePotrosnje.where((item) {
       var vrijednostMjesec = item.datum.month;

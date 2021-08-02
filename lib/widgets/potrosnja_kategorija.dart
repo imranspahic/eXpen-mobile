@@ -1,17 +1,20 @@
+import 'package:expen/models/Category.dart';
+import 'package:expen/services/categoryServices/openCategoryService.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expen/view/categorySettingsScreen/pages/postavke_kategorija.dart';
 import 'package:expen/providers/expenseNotifier.dart';
-import 'package:expen/view/bottomNavigationScreen/pages/categoryBottomNavigationScreen.dart';
 import 'package:expen/providers/settingsNotifier.dart';
 import 'package:expen/providers/categoryNotifier.dart';
 import 'package:expen/providers/subcategoryNotifier.dart';
+import 'package:expen/models/Expense.dart';
+import 'package:expen/models/Subcategory.dart';
 
 class PotrosnjaKategorija extends StatefulWidget {
   //statefull zbog ukupno potrosnji varijable koja se mijenja
 
-  final CategoryModel kategorija;
-  PotrosnjaKategorija(this.kategorija);
+  final Category category;
+  PotrosnjaKategorija(this.category);
 
   @override
   _PotrosnjaKategorijaState createState() => _PotrosnjaKategorijaState();
@@ -20,7 +23,7 @@ class PotrosnjaKategorija extends StatefulWidget {
 class _PotrosnjaKategorijaState extends State<PotrosnjaKategorija> {
   void postavkeKategorija(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
-      return PostavkeKategorija(kategorija: widget.kategorija);
+      return PostavkeKategorija(kategorija: widget.category);
     }));
   }
 
@@ -41,20 +44,17 @@ class _PotrosnjaKategorijaState extends State<PotrosnjaKategorija> {
     super.initState();
   }
 
-  void otvoriKategoriju(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-      return CategoryBottomNavigationScreen(widget.kategorija, false);
-    }));
-  }
-
   @override
   Widget build(BuildContext context) {
-    final CategoryNotifier categoryNotifier = Provider.of<CategoryNotifier>(context);
-    final SubcategoryNotifier subcategoryNotifier = Provider.of<SubcategoryNotifier>(context);
+    final CategoryNotifier categoryNotifier =
+        Provider.of<CategoryNotifier>(context);
+    final SubcategoryNotifier subcategoryNotifier =
+        Provider.of<SubcategoryNotifier>(context);
     final expenseNotifier = Provider.of<ExpenseNotifier>(context);
-    final postavkeData = Provider.of<SettingsNotifier>(context);
+    final SettingsNotifier settingsNotifier =
+        Provider.of<SettingsNotifier>(context);
     return InkWell(
-      onTap: () => otvoriKategoriju(context),
+      onTap: () => OpenCategoryService.open(context, widget.category),
       child: Card(
         margin: EdgeInsets.all(10),
         shape: RoundedRectangleBorder(
@@ -66,17 +66,17 @@ class _PotrosnjaKategorijaState extends State<PotrosnjaKategorija> {
             Stack(children: <Widget>[
               ClipRRect(
                 child:
-                    widget.kategorija.slikaUrl == 'assets/images/nema-slike.jpg'
+                    widget.category.slikaUrl == 'assets/images/nema-slike.jpg'
                         ? Image.asset(
-                            widget.kategorija.slikaUrl,
+                            widget.category.slikaUrl,
                             fit: BoxFit.cover,
                             width: double.infinity,
                             height: 250,
                           )
                         : Hero(
-                            tag: widget.kategorija.id,
+                            tag: widget.category.id,
                             child: Image.memory(
-                              widget.kategorija.slikaEncoded,
+                              widget.category.slikaEncoded,
                               fit: BoxFit.cover,
                               width: double.infinity,
                               height: 250,
@@ -97,7 +97,7 @@ class _PotrosnjaKategorijaState extends State<PotrosnjaKategorija> {
                       color: Colors.black54,
                       child: FittedBox(
                         child: Text(
-                          widget.kategorija.naziv,
+                          widget.category.naziv,
                           style: Theme.of(context).textTheme.subtitle2,
                           textAlign: TextAlign.right,
                           softWrap: true,
@@ -127,8 +127,7 @@ class _PotrosnjaKategorijaState extends State<PotrosnjaKategorija> {
                             builder: (ctx, snapshot) => Text(
                               //ukupno potkategorija prikaz
                               subcategoryNotifier
-                                  .potKategorijePoKategoriji(
-                                      widget.kategorija.id)
+                                  .potKategorijePoKategoriji(widget.category.id)
                                   .toString(),
                               style: TextStyle(
                                   fontSize: 22,
@@ -152,7 +151,7 @@ class _PotrosnjaKategorijaState extends State<PotrosnjaKategorija> {
                             builder: (ctx, snapshot) => Text(
                               //ukupno potrosnji prikaz
                               expenseNotifier
-                                  .potrosnjePoKategoriji(widget.kategorija.id)
+                                  .potrosnjePoKategoriji(widget.category.id)
                                   .toString(),
                               style: TextStyle(
                                   fontSize: 22,
@@ -168,7 +167,7 @@ class _PotrosnjaKategorijaState extends State<PotrosnjaKategorija> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          postavkeData.brisanjeKategorija
+                          settingsNotifier.brisanjeKategorija
                               ? IconButton(
                                   icon: Icon(
                                     Icons.delete,
@@ -179,21 +178,22 @@ class _PotrosnjaKategorijaState extends State<PotrosnjaKategorija> {
                                     final ExpenseNotifier expenseNotifier =
                                         Provider.of<ExpenseNotifier>(context,
                                             listen: false);
-                                    final SubcategoryNotifier subcategoryNotifier =
+                                    final SubcategoryNotifier
+                                        subcategoryNotifier =
                                         Provider.of<SubcategoryNotifier>(
                                             context,
                                             listen: false);
-                                    List<ExpenseModel> listaPotrosnji =
+                                    List<Expense> listaPotrosnji =
                                         expenseNotifier
                                             .potrosnjePoKategorijilista(
-                                                widget.kategorija.id);
-                                    List<SubcategoryModel> listaPotkategorija =
+                                                widget.category.id);
+                                    List<Subcategory> listaPotkategorija =
                                         subcategoryNotifier
                                             .potKategorijePoKategorijilista(
-                                                widget.kategorija.id);
+                                                widget.category.id);
 
                                     categoryNotifier.izbrisiKategoriju(
-                                        widget.kategorija.id,
+                                        widget.category.id,
                                         listaPotrosnji,
                                         listaPotkategorija);
                                   })

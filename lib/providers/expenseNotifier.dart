@@ -1,52 +1,21 @@
-import 'package:expen/providers/categoryNotifier.dart';
-import 'package:intl/intl.dart';
+import 'package:expen/models/Category.dart';
+import 'package:expen/models/Expense.dart';
 import 'package:flutter/material.dart';
 import 'package:expen/database/glavni_podaci_database.dart';
 
-class ExpenseModel extends CategoryNotifier {
-  String id;
-  String naziv;
-  double trosak;
-  DateTime datum;
-  String nazivKategorije;
-  String idKategorije;
-  String idPotKategorije;
-
-  String getIndex(int row, int i) {
-    switch (i) {
-      case 0:
-        return (row + 1).toString();
-        break;
-      case 1:
-        return this.naziv;
-        break;
-      case 2:
-        return this.trosak.toString();
-        break;
-      case 3:
-        return DateFormat('dd. MM. yyyy.').format(this.datum);
-        break;
-      case 4:
-        return this.nazivKategorije;
-        break;
-      default:
-        return '';
-    }
-  }
-
-  ExpenseModel(
-      {@required this.id,
-      @required this.naziv,
-      @required this.trosak,
-      this.datum,
-      this.nazivKategorije,
-      this.idKategorije,
-      this.idPotKategorije});
-}
-
 class ExpenseNotifier with ChangeNotifier {
-  List<ExpenseModel> listaSvihPotrosnji = [];
-  List<ExpenseModel> listaPlaniranihPotrosnji = [];
+  List<Expense> listaSvihPotrosnji = [];
+  List<Expense> listaPlaniranihPotrosnji = [];
+
+  List<Expense> _expensesByCategory = [];
+  List<Expense> get expensesByCategory => _expensesByCategory;
+
+  void setExpensesByCategory(Category category) =>
+      _expensesByCategory = listaSvihPotrosnji
+          .where((Expense expense) =>
+              expense.idKategorije == category.id &&
+              expense.idPotKategorije == "nemaPotkategorija")
+          .toList();
 
   void izbrisiPotrosnju(String id) {
     listaSvihPotrosnji.removeWhere((item) {
@@ -57,7 +26,7 @@ class ExpenseNotifier with ChangeNotifier {
   }
 
   int potrosnjePoKategoriji(String katId) {
-    List<ExpenseModel> lista = [];
+    List<Expense> lista = [];
     lista = listaSvihPotrosnji
         .where((element) => element.idKategorije == katId)
         .toList();
@@ -65,7 +34,7 @@ class ExpenseNotifier with ChangeNotifier {
   }
 
   double trosakPoKategoriji(String katId) {
-    List<ExpenseModel> lista = [];
+    List<Expense> lista = [];
     lista = listaSvihPotrosnji
         .where((element) => element.idKategorije == katId)
         .toList();
@@ -84,16 +53,16 @@ class ExpenseNotifier with ChangeNotifier {
     return trosak;
   }
 
-  List<ExpenseModel> potrosnjePoKategorijilista(String katId) {
-    List<ExpenseModel> lista = [];
+  List<Expense> potrosnjePoKategorijilista(String katId) {
+    List<Expense> lista = [];
     lista = listaSvihPotrosnji
         .where((element) => element.idKategorije == katId)
         .toList();
     return lista;
   }
 
-  List<ExpenseModel> potrosnjePoPotkaategorijilista(String potKatId) {
-    List<ExpenseModel> lista = [];
+  List<Expense> potrosnjePoPotkaategorijilista(String potKatId) {
+    List<Expense> lista = [];
     lista = listaSvihPotrosnji
         .where((element) => element.idPotKategorije == potKatId)
         .toList();
@@ -101,8 +70,8 @@ class ExpenseNotifier with ChangeNotifier {
   }
 
   double trosakPotrosnjiPoMjesecuKategorije(String katId, int mjesec) {
-    List<ExpenseModel> temp = [];
-    List<ExpenseModel> listaPot = [];
+    List<Expense> temp = [];
+    List<Expense> listaPot = [];
     double ukupniTrosak = 0.0;
     listaSvihPotrosnji.forEach((potrosnja) {
       if (potrosnja.idKategorije == katId) {
@@ -124,7 +93,7 @@ class ExpenseNotifier with ChangeNotifier {
 
   void dodajPotrosnju(String nazivKategorije, String nazivNovi, double trosak,
       DateTime datum, String id, String potkategorijaId) {
-    final novaPotrosnja = ExpenseModel(
+    final novaPotrosnja = Expense(
       id: DateTime.now().toString(),
       naziv: nazivNovi,
       trosak: trosak,
@@ -155,7 +124,7 @@ class ExpenseNotifier with ChangeNotifier {
     final dataList = await DatabaseHelper.fetchTable('potrosnje');
 
     listaSvihPotrosnji = dataList
-        .map((p) => ExpenseModel(
+        .map((p) => Expense(
               id: p['id'],
               naziv: p['naziv'],
               trosak: p['trosak'],
@@ -172,7 +141,7 @@ class ExpenseNotifier with ChangeNotifier {
   Future<void> fetchAndSetPlaniranePotrosnje() async {
     final dataList = await DatabaseHelper.fetchTable('planiranePotrosnje');
     listaPlaniranihPotrosnji = dataList
-        .map((p) => ExpenseModel(
+        .map((p) => Expense(
               id: p['id'],
               naziv: p['naziv'],
               trosak: p['trosak'],
@@ -187,7 +156,7 @@ class ExpenseNotifier with ChangeNotifier {
 
   void dodajPlaniranuPotrosnju(String nazivKategorije, String nazivNovi,
       double trosak, String id, String potkategorijaId) {
-    final novaPlaniranaPotrosnja = ExpenseModel(
+    final novaPlaniranaPotrosnja = Expense(
       id: DateTime.now().toString(),
       naziv: nazivNovi,
       trosak: trosak,
@@ -213,8 +182,8 @@ class ExpenseNotifier with ChangeNotifier {
     });
   }
 
-  List<ExpenseModel> dobijPlaniranePotrosnjeKategorije(String katId) {
-    List<ExpenseModel> tempList;
+  List<Expense> dobijPlaniranePotrosnjeKategorije(String katId) {
+    List<Expense> tempList;
     tempList = listaPlaniranihPotrosnji.where((item) {
       return item.idKategorije == katId &&
           item.idPotKategorije == 'nemaPotkategorija';
@@ -223,9 +192,9 @@ class ExpenseNotifier with ChangeNotifier {
     return tempList;
   }
 
-  List<ExpenseModel> dobijPlaniranePotrosnjePotkategorije(
+  List<Expense> dobijPlaniranePotrosnjePotkategorije(
       String katId, String potId) {
-    List<ExpenseModel> tempList;
+    List<Expense> tempList;
     tempList = listaPlaniranihPotrosnji.where((item) {
       return item.idKategorije == katId && item.idPotKategorije == potId;
     }).toList();
@@ -270,9 +239,9 @@ class ExpenseNotifier with ChangeNotifier {
           }).toList();
           print(listaPotrosnjiZaDodat);
           if (listaPotrosnjiZaDodat.isNotEmpty) {
-            List<ExpenseModel> potrosnje = [];
+            List<Expense> potrosnje = [];
             potrosnje = listaPotrosnjiZaDodat.map((potrosnja) {
-              return ExpenseModel(
+              return Expense(
                 id: potrosnja['id'],
                 naziv: potrosnja['naziv'],
                 trosak: potrosnja['trosak'],
@@ -360,9 +329,9 @@ class ExpenseNotifier with ChangeNotifier {
           }).toList();
           print(listaPotrosnjiZaDodat);
           if (listaPotrosnjiZaDodat.isNotEmpty) {
-            List<ExpenseModel> potrosnje = [];
+            List<Expense> potrosnje = [];
             potrosnje = listaPotrosnjiZaDodat.map((potrosnja) {
-              return ExpenseModel(
+              return Expense(
                 id: potrosnja['id'],
                 naziv: potrosnja['naziv'],
                 trosak: potrosnja['trosak'],
@@ -444,8 +413,8 @@ class ExpenseNotifier with ChangeNotifier {
     return listaObavijesti;
   }
 
-  List<ExpenseModel> dostupnePotrosnje = [];
-  void dobijDostupnePotrosnje(List<ExpenseModel> dostupnePotrosnje) {
+  List<Expense> dostupnePotrosnje = [];
+  void dobijDostupnePotrosnje(List<Expense> dostupnePotrosnje) {
     dostupnePotrosnje = dostupnePotrosnje;
   }
 
@@ -458,7 +427,7 @@ class ExpenseNotifier with ChangeNotifier {
       String id,
       String potkategorijaId) {
     for (int i = 0; i < brojPotrosnji; i++) {
-      final novaPotrosnja = ExpenseModel(
+      final novaPotrosnja = Expense(
         id: DateTime.now().toString() + i.toString(),
         naziv: nazivNovi,
         trosak: trosak,
@@ -473,28 +442,16 @@ class ExpenseNotifier with ChangeNotifier {
       listaSvihPotrosnji.sort((a, b) => -a.datum.compareTo(b.datum));
       notifyListeners();
     }
-    DatabaseHelper.insertMultipleExpenses('potrosnje', nazivKategorije, nazivNovi,
-        brojPotrosnji, trosak, datum, id, potkategorijaId);
+    DatabaseHelper.insertMultipleExpenses('potrosnje', nazivKategorije,
+        nazivNovi, brojPotrosnji, trosak, datum, id, potkategorijaId);
   }
 
-  List<ExpenseModel> get ukupnoPotrosnji {
+  List<Expense> get ukupnoPotrosnji {
     return listaSvihPotrosnji;
   }
 
-  List<ExpenseModel> dobijdostupnePotrosnje(String katId) {
-    List<ExpenseModel> tempList;
-    tempList = listaSvihPotrosnji.where((item) {
-      return item.idKategorije == katId &&
-          item.idPotKategorije == 'nemaPotkategorija';
-    }).toList();
-    tempList.sort((a, b) {
-      return -a.datum.compareTo(b.datum);
-    });
-    return tempList;
-  }
-
   String badge(String idPot) {
-    List<ExpenseModel> s = [];
+    List<Expense> s = [];
     s = listaSvihPotrosnji.where((test) {
       return test.idPotKategorije == idPot;
     }).toList();

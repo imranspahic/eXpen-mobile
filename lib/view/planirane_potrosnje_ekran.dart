@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:expen/models/Category.dart';
 import 'package:flutter/material.dart';
 import 'package:expen/providers/expenseNotifier.dart';
 import 'package:expen/providers/subcategoryNotifier.dart';
@@ -6,10 +7,11 @@ import 'package:expen/providers/categoryNotifier.dart';
 import 'package:provider/provider.dart';
 import '../widgets/dodaj_novu_potrosnju.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:expen/models/Subcategory.dart';
 
 class PlaniranePotrosnjeEkran extends StatefulWidget {
-  final CategoryModel kategorija;
-  final SubcategoryModel potKategorija;
+  final Category kategorija;
+  final Subcategory potKategorija;
 
   PlaniranePotrosnjeEkran({this.kategorija, this.potKategorija});
 
@@ -27,16 +29,18 @@ class _PlaniranePotrosnjeEkranState extends State<PlaniranePotrosnjeEkran> {
         isScrollControlled: true,
         context: ctx,
         builder: (ctx) {
-          return widget.potKategorija == null ? DodajNovuPotrosnju(
-            kategorija: widget.kategorija,
-            uPotkategoriji: false,
-            jeLiPlaniranaPotrosnja: true,
-          ) : DodajNovuPotrosnju(
-            kategorija: widget.kategorija,
-            potkategorija: widget.potKategorija,
-            uPotkategoriji: true,
-            jeLiPlaniranaPotrosnja: true,
-          );
+          return widget.potKategorija == null
+              ? DodajNovuPotrosnju(
+                  kategorija: widget.kategorija,
+                  uPotkategoriji: false,
+                  jeLiPlaniranaPotrosnja: true,
+                )
+              : DodajNovuPotrosnju(
+                  kategorija: widget.kategorija,
+                  potkategorija: widget.potKategorija,
+                  uPotkategoriji: true,
+                  jeLiPlaniranaPotrosnja: true,
+                );
         }).then((t) {
       if (t[0] != null) {
         Scaffold.of(context).showSnackBar(SnackBar(
@@ -46,6 +50,7 @@ class _PlaniranePotrosnjeEkranState extends State<PlaniranePotrosnjeEkran> {
       }
     });
   }
+
   void _izaberiDan() async {
     int s;
 
@@ -79,26 +84,24 @@ class _PlaniranePotrosnjeEkranState extends State<PlaniranePotrosnjeEkran> {
                   ),
                   itemCount: 28,
                   itemBuilder: (ctx, index) {
-                   return buildDan(index+1);
+                    return buildDan(index + 1);
                   },
                 ),
               ),
             ],
           );
         });
-       
-      
-      if(s!=null) {
-        if(widget.potKategorija==null) {
-          Provider.of<CategoryNotifier>(context,listen:false).updateMjesecnoDodavanjeKategorije(widget.kategorija.id, s);
-        }
-        else {
-          Provider.of<SubcategoryNotifier>(context,listen:false).updateMjesecnoDodavanjePotkategorije(widget.potKategorija.idPot, s);
-        }
-        
+
+    if (s != null) {
+      if (widget.potKategorija == null) {
+        Provider.of<CategoryNotifier>(context, listen: false)
+            .updateMjesecnoDodavanjeKategorije(widget.kategorija.id, s);
+      } else {
+        Provider.of<SubcategoryNotifier>(context, listen: false)
+            .updateMjesecnoDodavanjePotkategorije(
+                widget.potKategorija.idPot, s);
       }
-    
-  
+    }
   }
 
   @override
@@ -123,13 +126,16 @@ class _PlaniranePotrosnjeEkranState extends State<PlaniranePotrosnjeEkran> {
         child: GridTile(
           child: Container(
             alignment: Alignment.center,
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-              child: AutoSizeText(broj.toString(),
-                    style: TextStyle(
-                        color: Theme.of(context).primaryColor, fontSize: 25, fontWeight: FontWeight.bold),
-                        minFontSize: 15,
-                    ),
-              ),
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+            child: AutoSizeText(
+              broj.toString(),
+              style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold),
+              minFontSize: 15,
+            ),
+          ),
           // footer: Container(
           //     alignment: Alignment.center,
           //     child: FittedBox(
@@ -190,10 +196,14 @@ class _PlaniranePotrosnjeEkranState extends State<PlaniranePotrosnjeEkran> {
                               color: Colors.black),
                           children: [
                         TextSpan(
-                          text: widget.potKategorija==null ? 'Dodaj potrošnje za kategoriju ' : 'Dodaj potrošnje za potkategoriju ',
+                          text: widget.potKategorija == null
+                              ? 'Dodaj potrošnje za kategoriju '
+                              : 'Dodaj potrošnje za potkategoriju ',
                         ),
                         TextSpan(
-                            text: widget.potKategorija==null? '${widget.kategorija.naziv}': '${widget.potKategorija.naziv}',
+                            text: widget.potKategorija == null
+                                ? '${widget.kategorija.naziv}'
+                                : '${widget.potKategorija.naziv}',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.orange)),
@@ -223,8 +233,9 @@ class _PlaniranePotrosnjeEkranState extends State<PlaniranePotrosnjeEkran> {
                                     children: [
                                   TextSpan(text: 'Dan dodavanja: '),
                                   TextSpan(
-                                      text: widget.potKategorija==null ?
-                                          '${widget.kategorija.mjesecnoDodavanje}.' : '${widget.potKategorija.mjesecnoDodavanje}.',
+                                      text: widget.potKategorija == null
+                                          ? '${widget.kategorija.mjesecnoDodavanje}.'
+                                          : '${widget.potKategorija.mjesecnoDodavanje}.',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black))
@@ -250,23 +261,32 @@ class _PlaniranePotrosnjeEkranState extends State<PlaniranePotrosnjeEkran> {
                 flex: 2,
                 child: Container(
                     height: min(
-                      widget.potKategorija==null ?
-                        planiranePotrosnjeData
-                                .dobijPlaniranePotrosnjeKategorije(widget.kategorija.id)
-                                .length *
-                            80.0 : planiranePotrosnjeData
-                                .dobijPlaniranePotrosnjePotkategorije(widget.kategorija.id, widget.potKategorija.idPot)
-                                .length *
-                            80.0 ,
+                        widget.potKategorija == null
+                            ? planiranePotrosnjeData
+                                    .dobijPlaniranePotrosnjeKategorije(
+                                        widget.kategorija.id)
+                                    .length *
+                                80.0
+                            : planiranePotrosnjeData
+                                    .dobijPlaniranePotrosnjePotkategorije(
+                                        widget.kategorija.id,
+                                        widget.potKategorija.idPot)
+                                    .length *
+                                80.0,
                         double.infinity),
                     child: FutureBuilder(
                       future: planiranePotrosnjeFuture,
                       builder: (ctx, p) => ListView.builder(
-                          itemCount: widget.potKategorija==null ? planiranePotrosnjeData
-                              .dobijPlaniranePotrosnjeKategorije(widget.kategorija.id)
-                              .length : planiranePotrosnjeData
-                              .dobijPlaniranePotrosnjePotkategorije(widget.kategorija.id, widget.potKategorija.idPot)
-                              .length,
+                          itemCount: widget.potKategorija == null
+                              ? planiranePotrosnjeData
+                                  .dobijPlaniranePotrosnjeKategorije(
+                                      widget.kategorija.id)
+                                  .length
+                              : planiranePotrosnjeData
+                                  .dobijPlaniranePotrosnjePotkategorije(
+                                      widget.kategorija.id,
+                                      widget.potKategorija.idPot)
+                                  .length,
                           itemBuilder: (ctx, index) {
                             return Column(
                               children: <Widget>[
@@ -288,9 +308,10 @@ class _PlaniranePotrosnjeEkranState extends State<PlaniranePotrosnjeEkran> {
                                                     width: 2,
                                                     color: Theme.of(context)
                                                         .primaryColor)),
-                                            child: Text( widget.potKategorija == null ?
-                                              '${planiranePotrosnjeData.dobijPlaniranePotrosnjeKategorije(widget.kategorija.id)[index].trosak.toStringAsFixed(0)} KM' 
-                                              : '${planiranePotrosnjeData.dobijPlaniranePotrosnjePotkategorije(widget.kategorija.id, widget.potKategorija.idPot)[index].trosak.toStringAsFixed(0)} KM',
+                                            child: Text(
+                                              widget.potKategorija == null
+                                                  ? '${planiranePotrosnjeData.dobijPlaniranePotrosnjeKategorije(widget.kategorija.id)[index].trosak.toStringAsFixed(0)} KM'
+                                                  : '${planiranePotrosnjeData.dobijPlaniranePotrosnjePotkategorije(widget.kategorija.id, widget.potKategorija.idPot)[index].trosak.toStringAsFixed(0)} KM',
                                               style: TextStyle(
                                                   fontSize: 20,
                                                   fontWeight: FontWeight.w600,
@@ -298,32 +319,40 @@ class _PlaniranePotrosnjeEkranState extends State<PlaniranePotrosnjeEkran> {
                                                       .accentColor),
                                             )),
                                         title: Text(
-                                          widget.potKategorija==null?
-                                          planiranePotrosnjeData
-                                              .dobijPlaniranePotrosnjeKategorije(
-                                                  widget.kategorija.id)[index]
-                                              .naziv : planiranePotrosnjeData
-                                              .dobijPlaniranePotrosnjePotkategorije(
-                                                  widget.kategorija.id, widget.potKategorija.idPot)[index]
-                                              .naziv,
+                                          widget.potKategorija == null
+                                              ? planiranePotrosnjeData
+                                                  .dobijPlaniranePotrosnjeKategorije(
+                                                      widget
+                                                          .kategorija.id)[index]
+                                                  .naziv
+                                              : planiranePotrosnjeData
+                                                  .dobijPlaniranePotrosnjePotkategorije(
+                                                      widget.kategorija.id,
+                                                      widget.potKategorija
+                                                          .idPot)[index]
+                                                  .naziv,
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                         trailing: IconButton(
                                             icon: Icon(Icons.delete),
                                             onPressed: () {
                                               planiranePotrosnjeData
-                                                  .izbrisiPlaniranuPotrosnju(
-                                                    widget.potKategorija==null? 
-                                                      planiranePotrosnjeData
+                                                  .izbrisiPlaniranuPotrosnju(widget
+                                                              .potKategorija ==
+                                                          null
+                                                      ? planiranePotrosnjeData
                                                           .dobijPlaniranePotrosnjeKategorije(
                                                               widget.kategorija
                                                                   .id)[index]
-                                                          .id : 
-                                                         planiranePotrosnjeData
+                                                          .id
+                                                      : planiranePotrosnjeData
                                                           .dobijPlaniranePotrosnjePotkategorije(
                                                               widget.kategorija
-                                                                  .id, widget.potKategorija.idPot )[index]
-                                                          .id )  ;
+                                                                  .id,
+                                                              widget
+                                                                  .potKategorija
+                                                                  .idPot)[index]
+                                                          .id);
                                             })),
                                   ),
                                 ),

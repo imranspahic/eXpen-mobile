@@ -1,10 +1,10 @@
+import 'package:expen/models/Category.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:expen/providers/categoryNotifier.dart';
 import 'package:expen/providers/subcategoryNotifier.dart';
 
 class DodajNovuPotKategoriju extends StatefulWidget {
-  final CategoryModel kategorija;
+  final Category kategorija;
   DodajNovuPotKategoriju(this.kategorija);
 
   @override

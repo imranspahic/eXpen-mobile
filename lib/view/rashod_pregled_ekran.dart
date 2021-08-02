@@ -1,3 +1,4 @@
+import 'package:expen/models/Category.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -214,7 +215,7 @@ class _RashodPregledEkranState extends State<RashodPregledEkran> {
 }
 
 class KategorijaWidget extends StatelessWidget {
-  final CategoryModel kategorija;
+  final Category kategorija;
   final String mjesec;
   KategorijaWidget({this.kategorija, this.mjesec});
   @override

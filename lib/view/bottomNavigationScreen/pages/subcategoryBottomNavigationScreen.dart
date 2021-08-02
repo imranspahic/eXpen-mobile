@@ -1,15 +1,16 @@
+import 'package:expen/models/Category.dart';
 import 'package:expen/providers/bottomNavigationNotifier.dart';
 import 'package:flutter/material.dart';
 import '../../subcategoryScreen/pages/subcategoryScreen.dart';
 import 'package:expen/providers/expenseNotifier.dart';
-import 'package:expen/providers/categoryNotifier.dart';
-import 'package:expen/providers/subcategoryNotifier.dart';
+import 'package:expen/models/Subcategory.dart';
 import '../../categoryScreen/pages/categoryStatisticsScreen.dart';
 import 'package:provider/provider.dart';
+import 'package:expen/models/Expense.dart';
 
 class SubcategoryBottomNavigationScreen extends StatefulWidget {
-  final SubcategoryModel potkategorija;
-  final CategoryModel kategorija;
+  final Subcategory potkategorija;
+  final Category kategorija;
 
   SubcategoryBottomNavigationScreen(this.potkategorija, this.kategorija);
 
@@ -20,7 +21,7 @@ class SubcategoryBottomNavigationScreen extends StatefulWidget {
 
 class _SubcategoryBottomNavigationScreenState
     extends State<SubcategoryBottomNavigationScreen> {
-  List<ExpenseModel> get dostupnePotrosnje {
+  List<Expense> get dostupnePotrosnje {
     final ExpenseNotifier expenseNotifier =
         Provider.of<ExpenseNotifier>(context);
     return expenseNotifier.listaSvihPotrosnji.where((item) {

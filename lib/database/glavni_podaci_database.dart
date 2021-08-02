@@ -1,8 +1,8 @@
-import 'package:expen/providers/expenseNotifier.dart';
+import 'package:expen/models/Expense.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 import 'package:path/path.dart' as path;
 import 'package:sqflite/sqlite_api.dart';
-import 'package:expen/providers/subcategoryNotifier.dart';
+import 'package:expen/models/Subcategory.dart';
 
 class DatabaseHelper {
   // OTVORI ILI NAPRAVI BAZU PODATAKA
@@ -83,7 +83,7 @@ class DatabaseHelper {
   }
 
   static Future<void> deleteExpensesFromTable(
-      String table, List<ExpenseModel> lista) async {
+      String table, List<Expense> lista) async {
     final database = await DatabaseHelper.database();
     lista.forEach((element) {
       database.delete(table, where: 'id = ?', whereArgs: [element.id]);
@@ -91,7 +91,7 @@ class DatabaseHelper {
   }
 
   static Future<void> izbrisiPotkategorijeuKategoriji(
-      String table, List<SubcategoryModel> lista) async {
+      String table, List<Subcategory> lista) async {
     final database = await DatabaseHelper.database();
     lista.forEach((element) {
       database.delete(table, where: 'idPot= ?', whereArgs: [element.idPot]);

@@ -1,4 +1,4 @@
-import 'package:expen/providers/categoryNotifier.dart';
+import 'package:expen/models/Category.dart';
 import 'package:expen/services/dialogServices/showDialogService.dart';
 import 'package:expen/services/navigatorServices/navigateToPageService.dart';
 import 'package:expen/view/dodaj_rashod_ekran.dart';
@@ -7,7 +7,7 @@ import 'package:expen/view/planirane_potrosnje_ekran.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
-Widget buildSpeedDial(BuildContext context, CategoryModel category) {
+Widget buildSpeedDial(BuildContext context, Category category) {
   return SpeedDial(
     curve: Curves.bounceIn,
     animatedIcon: AnimatedIcons.menu_close,

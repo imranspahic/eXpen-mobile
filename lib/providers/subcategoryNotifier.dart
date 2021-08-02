@@ -1,39 +1,30 @@
-import 'package:expen/providers/expenseNotifier.dart';
+import 'package:expen/models/Category.dart';
+import 'package:expen/models/Expense.dart';
 import 'package:flutter/material.dart';
 import 'package:expen/database/glavni_podaci_database.dart';
-
-class SubcategoryModel {
-  String naziv;
-  String idKat;
-  String idPot;
-  int icon;
-  Color bojaIkone;
-  int mjesecnoDodavanje;
-  String jeLiMjesecnoDodano;
-
-  SubcategoryModel(
-      {this.naziv,
-      this.idKat,
-      this.idPot,
-      this.icon,
-      this.bojaIkone,
-      this.mjesecnoDodavanje,
-      this.jeLiMjesecnoDodano});
-}
+import 'package:expen/models/Subcategory.dart';
 
 class SubcategoryNotifier with ChangeNotifier {
-  List<SubcategoryModel> potKategorijaLista = [];
+  List<Subcategory> potKategorijaLista = [];
+
+  List<Subcategory> _subcategoriesByCategory = [];
+  List<Subcategory> get subcategoriesByCategory => _subcategoriesByCategory;
+
+  void setSubcategoriesByCategory(Category category) =>
+      _subcategoriesByCategory = potKategorijaLista
+          .where((Subcategory subcategory) => subcategory.idKat == category.id)
+          .toList();
 
   var ukupnoPotrosnjiUPotkategoriji = 0;
 
   int potKategorijePoKategoriji(String id) {
-    List<SubcategoryModel> lista = [];
+    List<Subcategory> lista = [];
     lista = potKategorijaLista.where((element) => element.idKat == id).toList();
     return lista.length;
   }
 
   String dobijNazivPotKategorije(String idPot) {
-    SubcategoryModel potKat = potKategorijaLista.singleWhere((element) {
+    Subcategory potKat = potKategorijaLista.singleWhere((element) {
       return element.idPot == idPot;
     }, orElse: () {
       return null;
@@ -44,8 +35,8 @@ class SubcategoryNotifier with ChangeNotifier {
     return potKat.naziv;
   }
 
-  List<SubcategoryModel> potKategorijePoKategorijilista(String id) {
-    List<SubcategoryModel> lista = [];
+  List<Subcategory> potKategorijePoKategorijilista(String id) {
+    List<Subcategory> lista = [];
     lista = potKategorijaLista.where((element) => element.idKat == id).toList();
     return lista;
   }
@@ -63,7 +54,7 @@ class SubcategoryNotifier with ChangeNotifier {
   void dodajPotKategoriju(String nazivNovi, String idKat) {
     int val = Colors.grey.value;
 
-    var novaPotKategorija = SubcategoryModel(
+    var novaPotKategorija = Subcategory(
       naziv: nazivNovi,
       idKat: idKat,
       idPot: DateTime.now().toString(),
@@ -92,7 +83,7 @@ class SubcategoryNotifier with ChangeNotifier {
     final dataList = await DatabaseHelper.fetchTable('potkategorije');
 
     potKategorijaLista = dataList.map((pk) {
-      return SubcategoryModel(
+      return Subcategory(
         naziv: pk['naziv'],
         idKat: pk['idKat'],
         idPot: pk['idPot'],
@@ -116,9 +107,9 @@ class SubcategoryNotifier with ChangeNotifier {
 
   int ukupnePotrosnjeUPotkategoriji = 0;
 
-  List<ExpenseModel> dostPotKat = [];
+  List<Expense> dostPotKat = [];
 
-  void dodajUPotKatList(ExpenseModel item) {
+  void dodajUPotKatList(Expense item) {
     if (dostPotKat.contains(item)) {
       return;
     } else {
@@ -136,7 +127,7 @@ class SubcategoryNotifier with ChangeNotifier {
     notifyListeners();
   }
 
-  void izbrisiPotkategoriju(String id, List<ExpenseModel> listaPotrosnji) {
+  void izbrisiPotkategoriju(String id, List<Expense> listaPotrosnji) {
     potKategorijaLista.removeWhere((test) {
       return test.idPot == id;
     });
@@ -146,11 +137,11 @@ class SubcategoryNotifier with ChangeNotifier {
     DatabaseHelper.deleteExpensesFromTable('potrosnje', listaPotrosnji);
   }
 
-  List<SubcategoryModel> get ukupnoPotkategorija {
+  List<Subcategory> get ukupnoPotkategorija {
     return potKategorijaLista;
   }
 
-  List<SubcategoryModel> dobijdostupnePotkategorije(String idKat) {
+  List<Subcategory> xdobijdostupnePotkategorije(String idKat) {
     return potKategorijaLista.where((item) {
       return item.idKat == idKat;
     }).toList();

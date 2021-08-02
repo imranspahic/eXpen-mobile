@@ -8,6 +8,7 @@ import '../providers/expenseCategoryNotifier.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:intl/intl.dart';
 import 'dart:math';
+import 'package:expen/models/Expense.dart';
 
 class DetaljiKategorijaEkran extends StatefulWidget {
   @override
@@ -36,7 +37,7 @@ class _DetaljiKategorijaEkranState extends State<DetaljiKategorijaEkran> {
     final ExpenseNotifier expenseNotifier =
         Provider.of<ExpenseNotifier>(context, listen: false);
 
-    List<ExpenseModel> filterovanaLista;
+    List<Expense> filterovanaLista;
 
     filterovanaLista = expenseNotifier.listaSvihPotrosnji.where((item) {
       var vrijednostMjesec = item.datum.month;
@@ -149,12 +150,12 @@ class _DetaljiKategorijaEkranState extends State<DetaljiKategorijaEkran> {
   int potrosnjeMjesec(String mjesec, int index) {
     final expenseNotifier = Provider.of<ExpenseNotifier>(context, listen: false);
     final CategoryNotifier categoryNotifier = Provider.of<CategoryNotifier>(context, listen: false);
-    List<ExpenseModel> potrosnjeKategorija = [];
+    List<Expense> potrosnjeKategorija = [];
     potrosnjeKategorija = expenseNotifier.listaSvihPotrosnji
         .where((element) =>
             element.idKategorije == categoryNotifier.kategorijaLista[index].id)
         .toList();
-    List<ExpenseModel> filterovanaLista;
+    List<Expense> filterovanaLista;
 
     filterovanaLista = potrosnjeKategorija.where((item) {
       var vrijednostMjesec = item.datum.month;
@@ -216,13 +217,13 @@ class _DetaljiKategorijaEkranState extends State<DetaljiKategorijaEkran> {
   String trosakMjesec(String mjesec, int index) {
     final expenseNotifier = Provider.of<ExpenseNotifier>(context, listen: false);
     final CategoryNotifier categoryNotifier = Provider.of<CategoryNotifier>(context, listen: false);
-    List<ExpenseModel> potrosnjeKategorija = [];
+    List<Expense> potrosnjeKategorija = [];
     potrosnjeKategorija = expenseNotifier.listaSvihPotrosnji
         .where((element) =>
             element.idKategorije == categoryNotifier.kategorijaLista[index].id)
         .toList();
 
-    List<ExpenseModel> filterovanaLista;
+    List<Expense> filterovanaLista;
 
     filterovanaLista = potrosnjeKategorija.where((item) {
       var vrijednostMjesec = item.datum.month;

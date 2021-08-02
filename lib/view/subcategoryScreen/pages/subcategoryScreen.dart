@@ -1,18 +1,19 @@
+import 'package:expen/models/Category.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expen/providers/expenseNotifier.dart';
 import 'package:expen/view/dodaj_vise_potrosnji.dart';
-import 'package:expen/providers/categoryNotifier.dart';
 import 'package:expen/providers/subcategoryNotifier.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import '../../../widgets/dodaj_novu_potrosnju.dart';
+import 'package:expen/models/Expense.dart';
 import '../../planirane_potrosnje_ekran.dart';
-
+import 'package:expen/models/Subcategory.dart';
 
 class SubcategoryScreen extends StatefulWidget {
-  final SubcategoryModel potKategorija;
-  final CategoryModel kategorija;
+  final Subcategory potKategorija;
+  final Category kategorija;
 
   SubcategoryScreen(this.potKategorija, this.kategorija);
 
@@ -35,7 +36,6 @@ class _SubcategoryScreenState extends State<SubcategoryScreen> {
         });
   }
 
-  
   void otvoriDodavanjeVisePotrosnji(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(builder: (_) {
       return DodajVisePotrosnji(
@@ -48,13 +48,18 @@ class _SubcategoryScreenState extends State<SubcategoryScreen> {
 
   void planiranePotrosnje(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
-      return PlaniranePotrosnjeEkran(kategorija: widget.kategorija, potKategorija: widget.potKategorija,);
+      return PlaniranePotrosnjeEkran(
+        kategorija: widget.kategorija,
+        potKategorija: widget.potKategorija,
+      );
     }));
   }
 
-  List<ExpenseModel> get dostupnePotrosnjePotkategorija {
-    final ExpenseNotifier expenseNotifier = Provider.of<ExpenseNotifier>(context, listen: false);
-    final SubcategoryNotifier subcategoryNotifier = Provider.of<SubcategoryNotifier>(context, listen: false);
+  List<Expense> get dostupnePotrosnjePotkategorija {
+    final ExpenseNotifier expenseNotifier =
+        Provider.of<ExpenseNotifier>(context, listen: false);
+    final SubcategoryNotifier subcategoryNotifier =
+        Provider.of<SubcategoryNotifier>(context, listen: false);
 
     return expenseNotifier.listaSvihPotrosnji.where((item) {
       if (item.idKategorije == widget.kategorija.id &&
@@ -70,8 +75,8 @@ class _SubcategoryScreenState extends State<SubcategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-    final ExpenseNotifier expenseNotifier = Provider.of<ExpenseNotifier>(context);
+    final ExpenseNotifier expenseNotifier =
+        Provider.of<ExpenseNotifier>(context);
     return Scaffold(
         floatingActionButton: SpeedDial(
           curve: Curves.bounceIn,
@@ -105,37 +110,37 @@ class _SubcategoryScreenState extends State<SubcategoryScreen> {
               onTap: () => otvoriDodavanjeVisePotrosnji(context),
             ),
             SpeedDialChild(
-            backgroundColor: Colors.yellow[600],
-            label: 'Planirane potrošnje',
-            labelStyle: TextStyle(fontSize: 18),
-            child: Icon(Icons.work, size: 28),
-            onTap: () => planiranePotrosnje(context)
-          ),
-            
+                backgroundColor: Colors.yellow[600],
+                label: 'Planirane potrošnje',
+                labelStyle: TextStyle(fontSize: 18),
+                child: Icon(Icons.work, size: 28),
+                onTap: () => planiranePotrosnje(context)),
           ],
         ),
         appBar: AppBar(
           title:
               Text('${widget.kategorija.naziv}: ${widget.potKategorija.naziv}'),
-              actions: <Widget>[
-                Stack(children: <Widget>[
-                     Padding(
-              padding: const EdgeInsets.only(right: 20.0, top: 5, bottom: 5),
-              child:
-                CircleAvatar(
-                  radius: 25,
-                  backgroundImage: widget.kategorija.slikaUrl == 'assets/images/nema-slike.jpg' ? AssetImage(widget.kategorija.slikaUrl) : MemoryImage(
-                        widget.kategorija.slikaEncoded
-                        
-                        ),),
-              ),
-            
-            // Positioned(
-            //   bottom: 0,
-            //   right: 10,
-            //   child: Icon(IconData(widget.potKategorija.icon, fontFamily: 'MaterialIcons'), size: 34, color: widget.potKategorija.bojaIkone,))
-                ],)
-           
+          actions: <Widget>[
+            Stack(
+              children: <Widget>[
+                Padding(
+                  padding:
+                      const EdgeInsets.only(right: 20.0, top: 5, bottom: 5),
+                  child: CircleAvatar(
+                    radius: 25,
+                    backgroundImage: widget.kategorija.slikaUrl ==
+                            'assets/images/nema-slike.jpg'
+                        ? AssetImage(widget.kategorija.slikaUrl)
+                        : MemoryImage(widget.kategorija.slikaEncoded),
+                  ),
+                ),
+
+                // Positioned(
+                //   bottom: 0,
+                //   right: 10,
+                //   child: Icon(IconData(widget.potKategorija.icon, fontFamily: 'MaterialIcons'), size: 34, color: widget.potKategorija.bojaIkone,))
+              ],
+            )
           ],
         ),
         body: Column(children: <Widget>[
@@ -143,7 +148,8 @@ class _SubcategoryScreenState extends State<SubcategoryScreen> {
             padding: EdgeInsets.all(10),
             child: ListTile(
               leading: Icon(
-               IconData(widget.potKategorija.icon, fontFamily: 'MaterialIcons'), 
+                IconData(widget.potKategorija.icon,
+                    fontFamily: 'MaterialIcons'),
                 size: 60,
                 color: widget.potKategorija.bojaIkone,
               ),
@@ -181,15 +187,20 @@ class _SubcategoryScreenState extends State<SubcategoryScreen> {
                                       fontWeight: FontWeight.w600,
                                       color: Theme.of(context).accentColor),
                                 )),
-
-                            title: dostupnePotrosnjePotkategorija[index].naziv =='' ? Container() : Text(
-                                dostupnePotrosnjePotkategorija[index].naziv),
+                            title:
+                                dostupnePotrosnjePotkategorija[index].naziv ==
+                                        ''
+                                    ? Container()
+                                    : Text(dostupnePotrosnjePotkategorija[index]
+                                        .naziv),
                             subtitle: Text(DateFormat.yMMMd().format(
                                 dostupnePotrosnjePotkategorija[index].datum)),
                             trailing: IconButton(
                                 icon: Icon(Icons.delete),
-                                onPressed: () => expenseNotifier.izbrisiPotrosnju(
-                                    dostupnePotrosnjePotkategorija[index].id))),
+                                onPressed: () =>
+                                    expenseNotifier.izbrisiPotrosnju(
+                                        dostupnePotrosnjePotkategorija[index]
+                                            .id))),
                       ),
                     ],
                   );

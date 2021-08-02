@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:expen/providers/expenseNotifier.dart';
+import 'package:expen/models/Expense.dart';
 import '../providers/notesNotifier.dart';
 
 class IzbrisiDialog extends StatelessWidget {
   final Function izbrisi;
   final NoteModel biljeska;
-  final ExpenseModel potrosnja;
+  final Expense potrosnja;
   IzbrisiDialog({this.izbrisi, this.biljeska, this.potrosnja});
   @override
   Widget build(BuildContext context) {

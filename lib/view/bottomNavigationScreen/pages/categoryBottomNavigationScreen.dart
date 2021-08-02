@@ -1,17 +1,18 @@
+import 'package:expen/models/Category.dart';
 import 'package:expen/providers/bottomNavigationNotifier.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../categoryScreen/pages/categoryScreen.dart';
+import '../../categoryScreen/pages/categoryMainScreen.dart';
 import 'package:expen/providers/expenseNotifier.dart';
 import 'package:expen/providers/subcategoryNotifier.dart';
 import '../../categoryScreen/pages/categoryStatisticsScreen.dart';
-import 'package:expen/providers/categoryNotifier.dart';
+import 'package:expen/models/Expense.dart';
 import '../../categoryScreen/pages/categoryPlannedSpendingScreen.dart';
 
 class CategoryBottomNavigationScreen extends StatefulWidget {
   final isDrawer;
 
-  final CategoryModel kategorija;
+  final Category kategorija;
   CategoryBottomNavigationScreen(this.kategorija, this.isDrawer);
 
   @override
@@ -21,7 +22,7 @@ class CategoryBottomNavigationScreen extends StatefulWidget {
 
 class _CategoryBottomNavigationScreenState
     extends State<CategoryBottomNavigationScreen> {
-  List<ExpenseModel> get dostupnePotrosnjeUCijelojKategoriji {
+  List<Expense> get dostupnePotrosnjeUCijelojKategoriji {
     final ExpenseNotifier expenseNotifier =
         Provider.of<ExpenseNotifier>(context);
     return expenseNotifier.listaSvihPotrosnji.where((item) {
@@ -38,21 +39,15 @@ class _CategoryBottomNavigationScreenState
     final bottomNavigationNotifier =
         Provider.of<BottomNavigationNotifier>(context);
     final List<Object> _pages = [
-      CategoryScreen(
+      CategoryMainScreen(
         category: widget.kategorija,
-        dostupnePotrosnje:
-            expenseNotifier.dobijdostupnePotrosnje(widget.kategorija.id),
-        dostupnePotkategorije: subcategoryNotifier
-            .dobijdostupnePotkategorije(widget.kategorija.id),
         isDrawer: widget.isDrawer,
       ),
       CategoryStatisticsScreen(
         kategorijaLista: widget.kategorija,
         dostupnePotrosnje: dostupnePotrosnjeUCijelojKategoriji,
         title: '',
-        uPotkategoriji: false,
-        dostupnePotkategorije: subcategoryNotifier
-            .dobijdostupnePotkategorije(widget.kategorija.id),
+        uPotkategoriji: false
       ),
       CategoryPlannedSpendingScreen(
         widget.kategorija,

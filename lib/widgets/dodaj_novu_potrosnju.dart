@@ -1,3 +1,4 @@
+import 'package:expen/models/Category.dart';
 import 'package:flutter/material.dart';
 import 'package:expen/providers/expenseNotifier.dart';
 import 'package:intl/intl.dart';
@@ -5,11 +6,11 @@ import 'package:provider/provider.dart';
 import 'package:expen/providers/notificationNotifier.dart';
 import 'package:expen/providers/categoryNotifier.dart';
 import 'package:expen/providers/expenseCategoryNotifier.dart';
-import 'package:expen/providers/subcategoryNotifier.dart';
+import 'package:expen/models/Subcategory.dart';
 
 class DodajNovuPotrosnju extends StatefulWidget {
-  final CategoryModel kategorija;
-  final SubcategoryModel potkategorija;
+  final Category kategorija;
+  final Subcategory potkategorija;
   final bool uPotkategoriji;
   final bool jeLiPlaniranaPotrosnja;
   DodajNovuPotrosnju(

@@ -1,19 +1,19 @@
-
+import 'package:expen/models/Category.dart';
 import 'package:flutter/material.dart';
 import 'package:expen/providers/subcategoryNotifier.dart';
-import 'package:expen/providers/expenseNotifier.dart';
+import 'package:expen/models/Expense.dart';
 import 'package:pie_chart/pie_chart.dart';
-import 'package:expen/providers/categoryNotifier.dart';
 import 'package:intl/intl.dart';
+import 'package:expen/models/Subcategory.dart';
 import 'package:provider/provider.dart';
 
 class CategoryStatisticsScreen extends StatefulWidget {
-  final CategoryModel kategorijaLista;
-  final List<ExpenseModel> dostupnePotrosnje;
+  final Category kategorijaLista;
+  final List<Expense> dostupnePotrosnje;
   final String title;
   final bool uPotkategoriji;
-  final SubcategoryModel potKategorija;
-  final List<SubcategoryModel> dostupnePotkategorije;
+  final Subcategory potKategorija;
+  final List<Subcategory> dostupnePotkategorije;
 
   CategoryStatisticsScreen(
       {this.kategorijaLista,
@@ -24,7 +24,8 @@ class CategoryStatisticsScreen extends StatefulWidget {
       this.dostupnePotkategorije});
 
   @override
-  _CategoryStatisticsScreenState createState() => _CategoryStatisticsScreenState();
+  _CategoryStatisticsScreenState createState() =>
+      _CategoryStatisticsScreenState();
 }
 
 class _CategoryStatisticsScreenState extends State<CategoryStatisticsScreen> {
@@ -87,7 +88,7 @@ class _CategoryStatisticsScreenState extends State<CategoryStatisticsScreen> {
   }
 
   int potrosnjeMjesec(String mjesec) {
-    List<ExpenseModel> filterovanaLista;
+    List<Expense> filterovanaLista;
 
     filterovanaLista = widget.dostupnePotrosnje.where((item) {
       var vrijednostMjesec = item.datum.month;
@@ -139,7 +140,7 @@ class _CategoryStatisticsScreenState extends State<CategoryStatisticsScreen> {
   }
 
   String trosakMjesec(String mjesec) {
-    List<ExpenseModel> filterovanaLista;
+    List<Expense> filterovanaLista;
 
     filterovanaLista = widget.dostupnePotrosnje.where((item) {
       var vrijednostMjesec = item.datum.month;
@@ -195,7 +196,7 @@ class _CategoryStatisticsScreenState extends State<CategoryStatisticsScreen> {
   }
 
   List<double> postotakMjesec(String mjesec) {
-    List<ExpenseModel> filterovanaLista;
+    List<Expense> filterovanaLista;
 
     filterovanaLista = widget.dostupnePotrosnje.where((item) {
       var vrijednostMjesec = item.datum.month;
@@ -275,10 +276,11 @@ class _CategoryStatisticsScreenState extends State<CategoryStatisticsScreen> {
   }
 
   List<double> convert2() {
-    final SubcategoryNotifier subcategoryNotifier = Provider.of<SubcategoryNotifier>(context);
+    final SubcategoryNotifier subcategoryNotifier =
+        Provider.of<SubcategoryNotifier>(context);
 
     for (var i = 0; i < widget.dostupnePotkategorije.length; i++) {
-      List<ExpenseModel> pocetna = [];
+      List<Expense> pocetna = [];
       pocetna = subcategoryNotifier.dostPotKat.where((test) {
         return test.idPotKategorije == widget.dostupnePotkategorije[i].idPot;
       }).toList();
@@ -318,14 +320,20 @@ class _CategoryStatisticsScreenState extends State<CategoryStatisticsScreen> {
               icon: Icon(Icons.arrow_back),
               onPressed: () => Navigator.pop(context, widget.dostupnePotrosnje),
             ),
-              actions: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(right: 20.0, top: 5, bottom: 5),
-              child: CircleAvatar(
-                radius: 25,
-                backgroundImage: widget.kategorijaLista.slikaUrl == 'assets/images/nema-slike.jpg' ? AssetImage(widget.kategorijaLista.slikaUrl) : MemoryImage(widget.kategorijaLista.slikaEncoded,),),
-            )
-          ],
+            actions: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(right: 20.0, top: 5, bottom: 5),
+                child: CircleAvatar(
+                  radius: 25,
+                  backgroundImage: widget.kategorijaLista.slikaUrl ==
+                          'assets/images/nema-slike.jpg'
+                      ? AssetImage(widget.kategorijaLista.slikaUrl)
+                      : MemoryImage(
+                          widget.kategorijaLista.slikaEncoded,
+                        ),
+                ),
+              )
+            ],
           ),
           body: SingleChildScrollView(
             child: Column(children: <Widget>[
@@ -618,7 +626,9 @@ class _CategoryStatisticsScreenState extends State<CategoryStatisticsScreen> {
                                                       style: TextStyle(
                                                           fontSize: 30)))),
                                           subtitle: Divider(
-                                              color: widget.dostupnePotkategorije[index].bojaIkone,
+                                              color: widget
+                                                  .dostupnePotkategorije[index]
+                                                  .bojaIkone,
                                               height: 10,
                                               thickness: 2),
                                         );

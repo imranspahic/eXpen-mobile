@@ -32,7 +32,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final postavkeData = Provider.of<SettingsNotifier>(context);
+    final SettingsNotifier settingsNotifier = Provider.of<SettingsNotifier>(context);
     return Scaffold(
       key: _scaffoldKey,
       appBar: settingsAppBar(),
@@ -42,11 +42,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: Column(
             children: <Widget>[
               SettingsHeader('Prikaz', Icons.view_carousel),
-              SettingsExpenseView(postavkeData: postavkeData),
-              SettingsCategoryDelete(postavkeData: postavkeData),
-              SettingsExpenseDelete(postavkeData: postavkeData),
+              SettingsExpenseView(settingsNotifier: settingsNotifier),
+              SettingsCategoryDelete(settingsNotifier: settingsNotifier),
+              SettingsExpenseDelete(settingsNotifier: settingsNotifier),
               SettingsHeader('Sigurnost', Icons.lock),
-              SettingsPasswordProtection(postavkeData: postavkeData),
+              SettingsPasswordProtection(settingsNotifier: settingsNotifier),
               SettingsPasswordChange(scaffoldKey: _scaffoldKey),
               SettingsHeader('Podaci', Icons.note),
               SettingsExcelExport(),

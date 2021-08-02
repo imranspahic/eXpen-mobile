@@ -3,9 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:expen/providers/subcategoryNotifier.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
+import 'package:expen/models/Subcategory.dart';
 
 class EditPotkategorijaEkran extends StatefulWidget {
-  final SubcategoryModel potKategorija;
+  final Subcategory potKategorija;
   EditPotkategorijaEkran(this.potKategorija);
 
   @override

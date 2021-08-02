@@ -5,10 +5,10 @@ import 'package:provider/provider.dart';
 class SettingsExpenseDelete extends StatelessWidget {
   const SettingsExpenseDelete({
     Key key,
-    @required this.postavkeData,
+    @required this.settingsNotifier,
   }) : super(key: key);
 
-  final SettingsNotifier postavkeData;
+  final SettingsNotifier settingsNotifier;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class SettingsExpenseDelete extends StatelessWidget {
       trailing: Container(
           child: Switch(
               activeColor: Colors.deepPurple,
-              value: postavkeData.brisanjeKategorija,
+              value: settingsNotifier.brisanjeKategorija,
               onChanged: (val) {
                 Provider.of<SettingsNotifier>(context, listen: false)
                     .brisanjeKategorijaToggle();

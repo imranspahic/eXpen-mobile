@@ -1,3 +1,4 @@
+import 'package:expen/models/Category.dart';
 import 'package:expen/services/categoryServices/changeCategoryNameService.dart';
 import 'package:expen/services/categoryServices/pickCategoryImageService.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,7 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../../widgets/pdf_dialog.dart';
 
 class PostavkeKategorija extends StatefulWidget {
-  final CategoryModel kategorija;
+  final Category kategorija;
   PostavkeKategorija({this.kategorija});
 
   @override

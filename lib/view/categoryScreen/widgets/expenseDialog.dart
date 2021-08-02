@@ -1,9 +1,9 @@
-import 'package:expen/providers/expenseNotifier.dart';
+import 'package:expen/models/Expense.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class ExpenseDialog extends StatefulWidget {
-  final ExpenseModel potrosnja;
+  final Expense potrosnja;
   ExpenseDialog({this.potrosnja});
   @override
   _ExpenseDialogState createState() => _ExpenseDialogState();

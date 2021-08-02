@@ -1,11 +1,12 @@
 import 'dart:convert';
+import 'package:expen/models/Category.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:expen/providers/categoryNotifier.dart';
 import 'package:provider/provider.dart';
 
 class PickCategoryImageService {
-  pickCategoryImage(BuildContext context, GlobalKey<ScaffoldState> _scaffoldKey, CategoryModel category) async {
+  pickCategoryImage(BuildContext context, GlobalKey<ScaffoldState> _scaffoldKey, Category category) async {
     final picker = ImagePicker();
     final slika = await picker.getImage(source: ImageSource.gallery);
     List<int> slikaBytes = await slika.readAsBytes();

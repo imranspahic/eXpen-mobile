@@ -1,13 +1,13 @@
+import 'package:expen/models/Category.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expen/providers/salaryNotifier.dart';
 import 'package:expen/providers/expenseCategoryNotifier.dart';
-import 'package:expen/providers/categoryNotifier.dart';
 import 'package:expen/providers/settingsNotifier.dart';
 //RASHOD ZA POTKATEGORIJU
 
 class DodajRashodEkran extends StatefulWidget {
-  final CategoryModel kategorija;
+  final Category kategorija;
   final bool isKategorija;
   DodajRashodEkran({this.kategorija, this.isKategorija});
   @override

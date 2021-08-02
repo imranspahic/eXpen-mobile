@@ -1,5 +1,5 @@
+import 'package:expen/models/Category.dart';
 import 'package:flutter/material.dart';
-import 'package:expen/providers/categoryNotifier.dart';
 import 'package:expen/providers/notificationNotifier.dart';
 import 'package:expen/view/a%C5%BEuriranje_opcije.dart';
 import 'package:expen/view/biljeske_ekran.dart';
@@ -13,7 +13,7 @@ import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
 
 class MainDrawer extends StatelessWidget {
-  final List<CategoryModel> potrosnjaLista;
+  final List<Category> potrosnjaLista;
   final List<NotificationModel> listaObavijesti;
   MainDrawer(this.potrosnjaLista, this.listaObavijesti);
 
@@ -61,7 +61,7 @@ class MainDrawer extends StatelessWidget {
     }));
   }
 
-  Widget buildDrawerContent(BuildContext context, CategoryModel kategorija) {
+  Widget buildDrawerContent(BuildContext context, Category kategorija) {
     return InkWell(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (_) {
