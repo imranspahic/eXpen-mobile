@@ -2,7 +2,7 @@ import 'package:expen/models/Category.dart';
 import 'package:expen/providers/notificationNotifier.dart';
 import 'package:expen/providers/profileNotifier.dart';
 import 'package:expen/services/dialogServices/showDialogService.dart';
-import 'package:expen/view/drawerScreen/pages/main_drawer.dart';
+import 'package:expen/view/drawerScreen/pages/drawer.dart';
 import 'package:expen/widgets/potrosnja_kategorija.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       key: _scaffoldKey,
-      drawer: MainDrawer(),
+      drawer: ExpenDrawer(),
       appBar: homeScreenAppBar(
         context,
         _scaffoldKey,

@@ -1,12 +1,10 @@
 import 'dart:async';
-
 import 'package:expen/providers/categoryNotifier.dart';
 import 'package:expen/providers/expenseNotifier.dart';
 import 'package:expen/providers/homeInitializeNotifier.dart';
 import 'package:expen/providers/notificationNotifier.dart';
 import 'package:expen/providers/settingsNotifier.dart';
 import 'package:expen/providers/subcategoryNotifier.dart';
-import 'package:expen/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
