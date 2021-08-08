@@ -1,5 +1,6 @@
 import 'package:expen/providers/bottomNavigationNotifier.dart';
 import 'package:expen/providers/homeInitializeNotifier.dart';
+import 'package:expen/providers/lockNotifier.dart';
 import 'package:expen/providers/profileNotifier.dart';
 import 'package:expen/providers/expenseNotifier.dart';
 import 'package:expen/providers/settingsNotifier.dart';
@@ -32,7 +33,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (ctx) => ExpenseCategoryNotifier()),
         ChangeNotifierProvider(create: (ctx) => ProfileNotifier()),
         ChangeNotifierProvider(create: (ctx) => BottomNavigationNotifier()),
-        ChangeNotifierProvider(create: (ctx) => HomeInitializeNotifier())
+        ChangeNotifierProvider(create: (ctx) => HomeInitializeNotifier()),
+        ChangeNotifierProvider(create: (ctx) => LockNotifier())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
