@@ -3,7 +3,6 @@ import 'package:expen/providers/profileNotifier.dart';
 import 'package:expen/services/dialogServices/showDialogService.dart';
 import 'package:expen/view/drawerScreen/pages/drawer.dart';
 import 'package:expen/view/homeScreen/widgets/categoryTile.dart';
-import 'package:expen/widgets/potrosnja_kategorija.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expen/view/homeScreen/widgets/homeScreenAppBar.dart';
