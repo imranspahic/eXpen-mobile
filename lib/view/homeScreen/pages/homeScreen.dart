@@ -1,8 +1,8 @@
 import 'package:expen/models/Category.dart';
-import 'package:expen/providers/notificationNotifier.dart';
 import 'package:expen/providers/profileNotifier.dart';
 import 'package:expen/services/dialogServices/showDialogService.dart';
 import 'package:expen/view/drawerScreen/pages/drawer.dart';
+import 'package:expen/view/homeScreen/widgets/categoryTile.dart';
 import 'package:expen/widgets/potrosnja_kategorija.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final CategoryNotifier categoryNotifier =
         Provider.of<CategoryNotifier>(context);
-   
+
     final profileNotifier = Provider.of<ProfileNotifier>(context);
 
     print("ACCES TOKEN = ${profileNotifier.userData["accessToken"]}");
@@ -38,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
             .map((item) => Container(
                 height: 320,
                 key: Key(item.id),
-                child: PotrosnjaKategorija(item)))
+                child: CategoryTile(item)))
             .toList(),
         onReorder: (start, current) {
           List<Category> _list = categoryNotifier.kategorijaLista;
@@ -81,17 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
           setState(() {});
         },
-
-        //      final KategorijaModel kategorija = categoryNotifier.kategorijaLista.elementAt(staraPozicija);
-        //  categoryNotifier.kategorijaLista.remove(kategorija);
-        //  categoryNotifier.kategorijaLista.insert(novaPozicija, kategorija);
-      )
-      //     ListView.builder(
-      // itemCount: categoryNotifier.kategorijaLista.length,
-      // itemBuilder: (ctx, index) {
-      //   return PotrosnjaKategorija(categoryNotifier.kategorijaLista[index]); //izgled kategorije
-      // });
-      ,
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),

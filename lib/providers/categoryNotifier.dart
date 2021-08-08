@@ -8,6 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:expen/models/Category.dart';
 
 class CategoryNotifier with ChangeNotifier {
+  CategoryNotifier._internal();
+  static final CategoryNotifier _instance = CategoryNotifier._internal();
+  factory CategoryNotifier() => _instance;
+
   List<Category> kategorijaLista = [];
 
   String dobijNazivKategorije(String idKat) {

@@ -5,6 +5,10 @@ import 'package:expen/database/glavni_podaci_database.dart';
 import 'package:expen/models/Subcategory.dart';
 
 class SubcategoryNotifier with ChangeNotifier {
+  SubcategoryNotifier._internal();
+  static final SubcategoryNotifier _instance = SubcategoryNotifier._internal();
+  factory SubcategoryNotifier() => _instance;
+
   List<Subcategory> potKategorijaLista = [];
 
   List<Subcategory> _subcategoriesByCategory = [];

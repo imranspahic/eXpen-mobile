@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:expen/database/glavni_podaci_database.dart';
 
 class ExpenseNotifier with ChangeNotifier {
+  ExpenseNotifier._internal();
+  static final ExpenseNotifier _instance = ExpenseNotifier._internal();
+  factory ExpenseNotifier() => _instance;
+
   List<Expense> expenses = [];
   List<Expense> plannedExpenses = [];
 
@@ -28,17 +32,13 @@ class ExpenseNotifier with ChangeNotifier {
 
   int potrosnjePoKategoriji(String katId) {
     List<Expense> lista = [];
-    lista = expenses
-        .where((element) => element.idKategorije == katId)
-        .toList();
+    lista = expenses.where((element) => element.idKategorije == katId).toList();
     return lista.length;
   }
 
   double trosakPoKategoriji(String katId) {
     List<Expense> lista = [];
-    lista = expenses
-        .where((element) => element.idKategorije == katId)
-        .toList();
+    lista = expenses.where((element) => element.idKategorije == katId).toList();
     double ukupno = 0.0;
     lista.forEach((element) {
       ukupno = ukupno + element.trosak;
@@ -56,9 +56,7 @@ class ExpenseNotifier with ChangeNotifier {
 
   List<Expense> potrosnjePoKategorijilista(String katId) {
     List<Expense> lista = [];
-    lista = expenses
-        .where((element) => element.idKategorije == katId)
-        .toList();
+    lista = expenses.where((element) => element.idKategorije == katId).toList();
     return lista;
   }
 

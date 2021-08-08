@@ -3,9 +3,9 @@ import 'package:expen/providers/expenseNotifier.dart';
 import 'package:expen/providers/subcategoryNotifier.dart';
 import 'package:expen/services/navigatorServices/navigateToPageService.dart';
 import 'package:expen/services/subcategoryServices/deleteSubcategoryService.dart';
+import 'package:expen/utils/reusableWidgets.dart';
 import 'package:expen/view/bottomNavigationScreen/pages/subcategoryBottomNavigationScreen.dart';
 import 'package:expen/view/edit_potkategorija_ekran.dart';
-import 'package:expen/widgets/badge.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expen/models/Subcategory.dart';
@@ -35,14 +35,13 @@ class SubcategoryTile extends StatelessWidget {
       onDismissed: (direction) =>
           DeleteSubcategoryService.delete(context, subcategory.idPot),
       child: ListTile(
-          leading: Badge(
-            child: Icon(
-              IconData(subcategory.icon, fontFamily: 'MaterialIcons'),
-              size: 60,
-              color: subcategory.bojaIkone,
-            ),
-            value: expenseNotifier.badge(subcategory.idPot),
-          ),
+          leading: ReusableWidgets.badge(context,
+              child: Icon(
+                IconData(subcategory.icon, fontFamily: 'MaterialIcons'),
+                size: 60,
+                color: subcategory.bojaIkone,
+              ),
+              value: expenseNotifier.badge(subcategory.idPot)),
           trailing: IconButton(
             icon: Icon(
               Icons.edit,
